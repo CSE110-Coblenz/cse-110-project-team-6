@@ -1,4 +1,4 @@
-import type { Group } from "konva/lib/Group";
+import Konva from "konva";
 
 /* Color palette */
 export enum Color {
@@ -36,13 +36,33 @@ export interface ScreenSwitch {
     switchScreen(screen: Screen): void;
 }
 
-export interface View {
-    getGroup(): Group;
-    show(): void;
-    hide(): void;
-};
+export abstract class View {
+    private group: Konva.Group;
+
+    constructor() {
+        this.group = new Konva.Group({ visible: false });
+    }
+
+    getGroup(): Konva.Group { return this.group; }
+
+    show(): void {
+        this.group.visible(true);
+        this.group.getLayer()?.draw();
+    }
+
+    hide(): void {
+        this.group.visible(false);
+        this.group.getLayer()?.draw();
+    }
+}
 
 export abstract class Controller {
+    private screenSwitch: ScreenSwitch;
+
+    constructor(screenSwitch: ScreenSwitch) {
+        this.screenSwitch = screenSwitch;
+    }
+
     abstract getView(): View;
     show(): void { this.getView().show(); }
     hide(): void { this.getView().hide(); }
