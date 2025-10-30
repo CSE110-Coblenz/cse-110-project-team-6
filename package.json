@@ -1,0 +1,30 @@
+{
+  "name": "geometropolis",
+  "version": "1.0.0",
+  "description": "Geometropolis is an educational 2-D city-building game meant to challenge and teach important math skills to middle school children.",
+  "main": "index.js",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CSE110-Coblenz/cse-110-project-team-6.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CSE110-Coblenz/cse-110-project-team-6/issues"
+  },
+  "homepage": "https://github.com/CSE110-Coblenz/cse-110-project-team-6#readme",
+  "dependencies": {
+    "konva": "^10.0.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12"
+  }
+}
