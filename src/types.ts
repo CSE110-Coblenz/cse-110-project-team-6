@@ -1,5 +1,7 @@
 import Konva from "konva";
 
+import { STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
+
 /* Color palette */
 export enum Color {
     DarkRed = "#B13E53",
@@ -40,7 +42,15 @@ export abstract class View {
     private group: Konva.Group;
 
     constructor() {
-        this.group = new Konva.Group({ visible: false });
+        this.group = new Konva.Group(
+            {
+                visible: false,
+                x: 0,
+                y: 0,
+                width: STAGE_WIDTH,
+                height: STAGE_HEIGHT
+            }
+        );
     }
 
     getGroup(): Konva.Group { return this.group; }
