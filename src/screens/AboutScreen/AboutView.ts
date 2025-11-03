@@ -210,8 +210,7 @@ export class AboutView extends View {
         closeGroup.add(closeX2);
         group.add(closeGroup);
 
-        // Interactions
+        // Interactions: only close when clicking the close button
         closeGroup.on("click tap", () => this.hide());
-        overlay.on("click tap", () => this.hide());
     }
 }
