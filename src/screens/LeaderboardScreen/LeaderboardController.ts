@@ -12,4 +12,8 @@ export class LeaderboardController extends Controller {
     }
 
     getView(): LeaderboardView { return this.view; }
+
+    public showLeaderboard(entries: {username: string; score: number;}[]) : void {
+        this.view.setEntries(entries);
+    }
 }
