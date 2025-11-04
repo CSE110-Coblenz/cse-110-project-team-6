@@ -10,12 +10,13 @@ import { SettingsController } from "./screens/SettingsScreen/SettingsController.
 import { StoneMinigameController } from "./screens/StoneMinigameScreen/StoneMinigameController.ts";
 import { TitleController } from "./screens/TitleScreen/TitleController.ts";
 import { WoodMinigameController } from "./screens/WoodMinigameScreen/WoodMinigameController.ts";
-import { RulesController } from "./screens/RulesScreen/RulesController.ts";
+import { RulesController } from "./screens/RulesScreen/RulesView.ts";
 import { loadAssets } from "./assets.ts";
 
 class Application implements ScreenSwitch {
     private stage: Konva.Stage;
     private layer: Konva.Layer;
+    private previousScreen: Screen | null = null;
 
     private aboutController: AboutController;
     private leaderboardController: LeaderboardController;
@@ -24,6 +25,7 @@ class Application implements ScreenSwitch {
     private stoneMinigameController: StoneMinigameController;
     private titleController: TitleController;
     private woodMinigameController: WoodMinigameController;
+    private rulesController: RulesController;
 
     constructor(container: string) {
         // Initialize stage
@@ -47,6 +49,7 @@ class Application implements ScreenSwitch {
         this.stoneMinigameController = new StoneMinigameController(this);
         this.titleController = new TitleController(this);
         this.woodMinigameController = new WoodMinigameController(this);
+        this.rulesController = new RulesController(this);
 
         // Add screen groups to layer
         this.layer.add(this.aboutController.getView().getGroup());
@@ -56,6 +59,7 @@ class Application implements ScreenSwitch {
         this.layer.add(this.stoneMinigameController.getView().getGroup());
         this.layer.add(this.titleController.getView().getGroup());
         this.layer.add(this.woodMinigameController.getView().getGroup());
+        this.layer.add(this.rulesController.getView().getGroup());
     }
 
     run(): void {
@@ -67,6 +71,12 @@ class Application implements ScreenSwitch {
     }
 
     switchScreen(screen: Screen): void {
+        // Track previous screen before switching
+        const currentScreen = this.getCurrentScreen();
+        if (currentScreen && currentScreen.type !== screen.type) {
+            this.previousScreen = currentScreen;
+        }
+
         // Hide all screens
         this.aboutController.hide();
         this.leaderboardController.hide();
@@ -75,6 +85,7 @@ class Application implements ScreenSwitch {
         this.stoneMinigameController.hide();
         this.titleController.hide();
         this.woodMinigameController.hide();
+        this.rulesController.hide();
 
         // Show requested screen
         switch (screen.type) {
@@ -99,9 +110,47 @@ class Application implements ScreenSwitch {
             case ScreenType.WoodMinigame:
                 this.woodMinigameController.show();
                 break;
+            case ScreenType.Rules:
+                this.rulesController.show();
+                break;
             default:
                 throw new TypeError(screen.type);
         }
+
+        // Redraw layer after switching screens
+        this.layer.draw();
+    }
+
+    getPreviousScreen(): Screen | null {
+        return this.previousScreen;
+    }
+
+    private getCurrentScreen(): Screen | null {
+        if (this.aboutController.getView().getGroup().visible()) {
+            return { type: ScreenType.About };
+        }
+        if (this.leaderboardController.getView().getGroup().visible()) {
+            return { type: ScreenType.Leaderboard };
+        }
+        if (this.mainGameController.getView().getGroup().visible()) {
+            return { type: ScreenType.MainGame };
+        }
+        if (this.settingsController.getView().getGroup().visible()) {
+            return { type: ScreenType.Settings };
+        }
+        if (this.stoneMinigameController.getView().getGroup().visible()) {
+            return { type: ScreenType.StoneMinigame };
+        }
+        if (this.titleController.getView().getGroup().visible()) {
+            return { type: ScreenType.Title };
+        }
+        if (this.woodMinigameController.getView().getGroup().visible()) {
+            return { type: ScreenType.WoodMinigame };
+        }
+        if (this.rulesController.getView().getGroup().visible()) {
+            return { type: ScreenType.Rules };
+        }
+        return null;
     }
 }
 
