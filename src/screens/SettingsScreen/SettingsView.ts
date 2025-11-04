@@ -1,6 +1,6 @@
-import { View } from "../../types.ts";
-import { STAGE_HEIGHT, STAGE_WIDTH } from "../../constants.ts";
 import { Assets } from "../../assets.ts";
+import { STAGE_HEIGHT, STAGE_WIDTH } from "../../constants.ts";
+import { View } from "../../types.ts";
 
 export class SettingsView extends View {  
   constructor() {
