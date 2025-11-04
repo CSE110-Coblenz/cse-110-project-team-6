@@ -30,8 +30,9 @@ export class SettingsView extends View {
     // Title
     const settingsTitle = new Konva.Image({
       image: Assets["/settings.png"],
-      x: PANEL_WIDTH / 2 - 100,
+      x: PANEL_WIDTH / 2 - 75,
       y: PANEL_HEIGHT / 20,
+      offsetX: Image.length / 2,
       scale: { x: 0.25, y: 0.25 }
     });
 
