@@ -88,6 +88,25 @@ export abstract class View {
     }
 }
 
+export class Container {
+    private group: Konva.Group;
+    private container: Konva.Rect;
+
+    constructor(x: number, y: number, width: number, height: number) {
+        this.group = new Konva.Group(
+            { x: x, y: y, width: width, height: height }
+        );
+
+        this.container = new Konva.Rect(
+            { x: 0, y: 0, width: this.group.width(), height: this.group.height() }
+        );
+        this.group.add(this.container);
+    }
+
+    getGroup(): Konva.Group { return this.group; }
+    getContainer(): Konva.Rect { return this.container; }
+}
+
 export abstract class Controller {
     private screenSwitch: ScreenSwitch;
 
