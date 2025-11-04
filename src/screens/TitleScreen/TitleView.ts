@@ -44,15 +44,15 @@ export class TitleView extends View {
 
 		//Buttons
 		Konva.Image.fromURL("/startGame.png", (image) => {
-			image.x((STAGE_WIDTH * 0.3) - 256 - STAGE_WIDTH * 0.005);
+			image.x((STAGE_WIDTH * 0.3) - (image.width()*0.4) - STAGE_WIDTH * 0.005);
 			image.y(STAGE_HEIGHT * 0.275);
 			image.scale({ x: 0.4, y: 0.4});
 
 
 			image.on('mouseover', () => {
 				document.body.style.cursor = 'pointer';
-				image.x((STAGE_WIDTH * 0.3) - 264 - STAGE_WIDTH * 0.005);
-				image.y((STAGE_HEIGHT * 0.275) - 2.1);
+				image.x((STAGE_WIDTH * 0.3) - (image.width() * 0.4) - (((image.width() * 0.425) - (image.width()*0.4)) / 2) - STAGE_WIDTH * 0.005);
+				image.y((STAGE_HEIGHT * 0.275) - (((image.height() * 0.425) - (image.height()*0.4)) / 2));
 				image.scale({ x: 0.425, y: 0.425});
 
 				this.hoverSound.currentTime = 0; 
@@ -61,7 +61,7 @@ export class TitleView extends View {
 			});
 			image.on('mouseout', () => {
 				document.body.style.cursor = 'default';
-				image.x((STAGE_WIDTH * 0.3) - 256 - STAGE_WIDTH * 0.005);
+				image.x((STAGE_WIDTH * 0.3) - (image.width()*0.4) - STAGE_WIDTH * 0.005);
 				image.y(STAGE_HEIGHT * 0.275);
 				image.scale({ x: 0.4, y: 0.4});
 			});
@@ -80,8 +80,8 @@ export class TitleView extends View {
 
 			image.on('mouseover', () => {
 				document.body.style.cursor = 'pointer';
-				image.x((STAGE_WIDTH * 0.3) - 8 + STAGE_WIDTH * 0.005);
-				image.y((STAGE_HEIGHT * 0.275) - 2.1);
+				image.x((STAGE_WIDTH * 0.3) - (((image.width() * 0.425) - (image.width()*0.4)) / 2) + STAGE_WIDTH * 0.005);
+				image.y((STAGE_HEIGHT * 0.275) - (((image.height() * 0.425) - (image.height()*0.4)) / 2));
 				image.scale({ x: 0.425, y: 0.425});
 
 				this.hoverSound.currentTime = 0; 
@@ -101,14 +101,14 @@ export class TitleView extends View {
 
 
 		Konva.Image.fromURL("/highScores.png", (image) => {
-			image.x((STAGE_WIDTH * 0.3) - 256 - STAGE_WIDTH * 0.005);
+			image.x((STAGE_WIDTH * 0.3) - (image.width()*0.4) - STAGE_WIDTH * 0.005);
 			image.y(STAGE_HEIGHT * 0.385);
 			image.scale({ x: 0.4, y: 0.4});
 
 			image.on('mouseover', () => {
 				document.body.style.cursor = 'pointer';
-				image.x((STAGE_WIDTH * 0.3) - 264 - STAGE_WIDTH * 0.005);
-				image.y((STAGE_HEIGHT * 0.385) - 2.1);
+				image.x((STAGE_WIDTH * 0.3) - (image.width() * 0.4) - (((image.width() * 0.425) - (image.width()*0.4)) / 2) - STAGE_WIDTH * 0.005);
+				image.y((STAGE_HEIGHT * 0.385) - (((image.height() * 0.425) - (image.height()*0.4)) / 2));
 				image.scale({ x: 0.425, y: 0.425});
 
 				this.hoverSound.currentTime = 0; 
@@ -116,7 +116,7 @@ export class TitleView extends View {
 			});
 			image.on('mouseout', () => {
 				document.body.style.cursor = 'default';
-				image.x((STAGE_WIDTH * 0.3) - 256 - STAGE_WIDTH * 0.005);
+				image.x((STAGE_WIDTH * 0.3) - (image.width()*0.4) - STAGE_WIDTH * 0.005);
 				image.y(STAGE_HEIGHT * 0.385);
 				image.scale({ x: 0.4, y: 0.4});
 			});
@@ -133,8 +133,8 @@ export class TitleView extends View {
 
 			image.on('mouseover', () => {
 				document.body.style.cursor = 'pointer';
-				image.x((STAGE_WIDTH * 0.3) - 8 + STAGE_WIDTH * 0.005);
-				image.y((STAGE_HEIGHT * 0.385) - 2.1);
+				image.x((STAGE_WIDTH * 0.3) - (((image.width() * 0.425) - (image.width()*0.4)) / 2) + STAGE_WIDTH * 0.005);
+				image.y((STAGE_HEIGHT * 0.385) - (((image.height() * 0.425) - (image.height()*0.4)) / 2));
 				image.scale({ x: 0.425, y: 0.425});
 
 				this.hoverSound.currentTime = 0; 
