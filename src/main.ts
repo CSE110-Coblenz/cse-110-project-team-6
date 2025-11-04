@@ -67,6 +67,12 @@ class Application implements ScreenSwitch {
     switchScreen(screen: Screen): void {
         // Hide all screens
         this.aboutController.hide();
+        this.leaderboardController.hide();
+        this.mainGameController.hide();
+        this.settingsController.hide();
+        this.stoneMinigameController.hide();
+        this.titleController.hide();
+        this.woodMinigameController.hide();
 
         // Show requested screen
         switch (screen.type) {
