@@ -37,6 +37,17 @@ export enum ScreenType {
     WoodMinigame = "WOODMINIGAME"
 }
 
+export enum Building {
+    Apartment = "apartment",
+    Bank = "bank",
+    Hospital = "hospital",
+    Hotel = "hotel",
+    Library = "library",
+    Restaurant = "restaurant",
+    School = "school",
+    Store = "store"
+}
+
 export type Screen = { type: ScreenType };
 
 export interface ScreenSwitch {
