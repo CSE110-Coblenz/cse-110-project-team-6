@@ -32,8 +32,7 @@ export class SettingsView extends View {
       image: Assets["/settings.png"],
       x: PANEL_WIDTH / 2 - 100,
       y: PANEL_HEIGHT / 20,
-      scale: { x: 0.3, y: 0.3 }
-
+      scale: { x: 0.25, y: 0.25 }
     });
 
 this.group.add(settingsTitle);
@@ -51,7 +50,7 @@ this.group.add(settingsTitle);
 
     const videoLabel = new Konva.Text({
       x: PANEL_WIDTH / 8,
-      y: PANEL_HEIGHT / 8 + 150,
+      y: PANEL_HEIGHT / 8 + 200,
       text: "Video",
       fontSize: 24,
       fontStyle: "bold",
@@ -61,8 +60,8 @@ this.group.add(settingsTitle);
 
     // Sliders
     const addSlider = (label: string, y: number) => {
-      const minX = 325;
-      const maxX = 750;
+      const minX = 200;
+      const maxX = 500;
 
       const text = new Konva.Text({
         x: PANEL_WIDTH / 8,
@@ -75,13 +74,13 @@ this.group.add(settingsTitle);
       const line = new Konva.Line({
         points: [minX, y + 10, maxX, y + 10],
         stroke: "#1A1C2C",
-        strokeWidth: 3,
+        strokeWidth: 2,
       });
 
       const knob = new Konva.Circle({
         x: (minX + maxX) / 2,
         y: y + 10,
-        radius: 16,
+        radius: 8,
         fill: "#1A1C2C",
         draggable: true,
       });
@@ -124,9 +123,9 @@ this.group.add(settingsTitle);
         this.group.add(text, line, knob, percent);
     };
 
-    addSlider("Main Volume", PANEL_HEIGHT / 8 + 60);
-    addSlider("Sound Effects", PANEL_HEIGHT / 8 + 120);
-    addSlider("Music", PANEL_HEIGHT / 8 + 180);
+    addSlider("Main Volume", PANEL_HEIGHT / 8 + 40);
+    addSlider("Sound Effects", PANEL_HEIGHT / 8 + 80);
+    addSlider("Music", PANEL_HEIGHT / 8 + 120);
 
     // Checkbox
     const addCheckbox = (label: string, y: number) => {
@@ -139,10 +138,11 @@ this.group.add(settingsTitle);
       });
 
       const box = new Konva.Rect({
-        x: PANEL_WIDTH / 8 + 80,
-        y: y - 10,
-        width: 50, 
-        height: 50,
+        x: PANEL_WIDTH / 8 + 60,
+        y: y - 5,
+        width: 25, 
+        height: 25,
+        cornerRadius: 10,
         fill: "#B13E53",
         stroke: "#1A1C2C",
       });
@@ -165,7 +165,7 @@ this.group.add(settingsTitle);
       this.group.add(text, box);
     };
 
-    addCheckbox("Mute", PANEL_HEIGHT / 8 + 240);
+    addCheckbox("Mute", PANEL_HEIGHT / 8 + 160);
 
     // Dropdown options
     const addDropdown = (label: string, y: number, value: string) => {
@@ -173,32 +173,32 @@ this.group.add(settingsTitle);
         x: PANEL_WIDTH / 8,
         y,
         text: `${label}:`,
-        fontSize: 24,
+        fontSize: 16,
         fill: "#1A1C2C",
       });
 
       const box = new Konva.Rect({
         x: PANEL_WIDTH / 3,
-        y: y - 10,
-        width: 350,
-        height: 50,
+        y: y,
+        width: 250,
+        height: 20,
         stroke: "#1A1C2C",
         cornerRadius: 20,
       });
 
       const val = new Konva.Text({
-        x: PANEL_WIDTH / 2 - 50,
-        y,
+        x: PANEL_WIDTH / 2 - 20,
+        y: y,
         text: value,
-        fontSize: 28,
+        fontSize: 16,
         fill: "#1A1C2C",
       });
 
       const arrow = new Konva.Text({
-        x: PANEL_WIDTH / 2 + 150,
+        x: PANEL_WIDTH / 2 + 120,
         y,
         text: "▼",
-        fontSize: 28,
+        fontSize: 20,
         fill: "#38B764",
       });
 
@@ -216,8 +216,8 @@ this.group.add(settingsTitle);
       this.group.add(text, box, val, arrow);
     };
 
-    addDropdown("Resolution", PANEL_HEIGHT / 8 + 360, "1920x1080");
-    addDropdown("Window", PANEL_HEIGHT / 8 + 400, "Fullscreen");
+    addDropdown("Resolution", PANEL_HEIGHT / 8 + 240, "1920x1080");
+    addDropdown("Window", PANEL_HEIGHT / 8 + 280, "Fullscreen");
 
     // Exit button
     const exitSize = 40;
