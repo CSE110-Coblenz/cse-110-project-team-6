@@ -2,7 +2,7 @@ import Konva from "konva";
 
 import { NAME, CELL_WIDTH, CELL_HEIGHT, ICON_SIZE } from "../../constants.ts";
 import type { Point } from "../../types.ts";
-import { Building, Color, View } from "../../types.ts";
+import { Building, Color, MenuItem, View } from "../../types.ts";
 
 export class MainGameView extends View {
     private titleContainer: TitleContainer;
@@ -73,9 +73,7 @@ class Container {
 
 class TitleContainer extends Container {
     private text: Konva.Text;
-    private iconInformation: Konva.Image | null = null;
-    private iconSettings: Konva.Image | null = null;
-    private iconExit: Konva.Image | null = null;
+    private menuBar: MenuBar;
 
     constructor(x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
@@ -87,40 +85,62 @@ class TitleContainer extends Container {
         this.text.y(group.height() / 2 - this.text.height() / 2);
         group.add(this.text);
 
-        Konva.Image.fromURL(
-            "../../assets/icons/information.png", (img) => {
-                img.x(group.width() * 0.94);
-                img.y(0);
-                img.width(0.02 * group.width());
-                img.height(0.02 * group.width());
+        this.menuBar = new MenuBar(group.width() - Object.keys(MenuItem).length * ICON_SIZE, 0);
+        group.add(this.menuBar.getGroup());
+    }
+}
 
-                this.iconInformation = img;
-                group.add(this.iconInformation);
-            }
-        );
-        Konva.Image.fromURL(
-            "../../assets/icons/setting.png", (img) => {
-                img.x(group.width() * 0.96);
-                img.y(0);
-                img.width(0.02 * group.width());
-                img.height(0.02 * group.width());
+class MenuBar extends Container {
+    private icons: MenuIcon[];
 
-                this.iconSettings = img;
-                group.add(this.iconSettings);
-            }
-        );
-        Konva.Image.fromURL(
-            "../../assets/icons/exit.png", (img) => {
-                img.x(group.width() * 0.98);
-                img.y(0);
-                img.width(0.02 * group.width());
-                img.height(0.02 * group.width());
+    constructor(x: number, y: number) {
+        super(x, y, Object.keys(MenuItem).length * ICON_SIZE, ICON_SIZE);
 
-                this.iconExit = img;
-                group.add(this.iconExit);
+        const group = this.getGroup();
+
+        this.icons = [
+            new MenuIcon(MenuItem.Information),
+            new MenuIcon(MenuItem.Settings),
+            new MenuIcon(MenuItem.Exit)
+        ];
+        this.icons.forEach(
+            (value, index, array) => {
+                const iconGroup = value.getGroup();
+                iconGroup.x(index * ICON_SIZE);
+                iconGroup.y(0);
+
+                group.add(iconGroup);
             }
         );
     }
+}
+
+class MenuIcon {
+    private item: MenuItem;
+    private path: string;
+
+    private group: Konva.Group;
+
+    private icon?: Konva.Image;
+
+    constructor(item: MenuItem) {
+        this.item = item;
+        this.path = `../../assets/icons/${this.item}.png`;
+
+        this.group = new Konva.Group({ width: ICON_SIZE, height: ICON_SIZE });
+
+        Konva.Image.fromURL(
+            this.path, (img) => {
+                this.icon = img;
+                this.icon.width(ICON_SIZE);
+                this.icon.height(ICON_SIZE);
+
+                this.group.add(this.icon);
+            }
+        );
+    }
+
+    getGroup(): Konva.Group { return this.group; }
 }
 
 class InventoryContainer extends Container {
@@ -279,7 +299,7 @@ class BuildingsContainer extends Container {
 
         const group = this.getGroup();
 
-        this.text = new Konva.Text({ fontSize: 24, text: "Available Buildings" });
+        this.text = new Konva.Text({ fontSize: 36, text: "Buildings" });
         this.text.x(group.width() / 2 - this.text.width() / 2);
         this.text.y(0);
         group.add(this.text);
