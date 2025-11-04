@@ -37,6 +37,12 @@ export enum ScreenType {
     WoodMinigame = "WOODMINIGAME"
 }
 
+export enum MenuItem {
+    Information = "information",
+    Settings = "settings",
+    Exit = "exit"
+}
+
 export enum Building {
     Apartment = "APARTMENT",
     Bank = "BANK",
