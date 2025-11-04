@@ -2,7 +2,7 @@ import Konva from "konva";
 
 import { NAME, CELL_WIDTH, CELL_HEIGHT } from "../../constants.ts";
 import type { Point } from "../../types.ts";
-import { Color, View } from "../../types.ts";
+import { Building, Color, View } from "../../types.ts";
 
 export class MainGameView extends View {
     private titleContainer: TitleContainer;
@@ -191,7 +191,85 @@ class GridCell {
 }
 
 class BuildingsContainer extends Container {
+    private text: Konva.Text;
+
+    private buildings: BuildingIcon[];
+
     constructor(x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
+
+        const group = this.getGroup();
+
+        this.text = new Konva.Text({ fontSize: 24, text: "Available Buildings" });
+        this.text.x(group.width() / 2 - this.text.width() / 2);
+        this.text.y(0);
+        group.add(this.text);
+
+        this.buildings = [];
+        const iconWidth = width / 2;
+        const iconHeight = (height - this.text.height()) / 4;
+        let index = 0;
+        for (const building in Building) {
+            let row = Math.floor(index / 2);
+            let col = index % 2;
+
+            let name = Building[building as keyof typeof Building];
+            let buildingIcon = new BuildingIcon(
+                name, `../../assets/buildings/${name}.png`,
+                col * iconWidth, row * iconHeight + (this.text.y() + this.text.height()),
+                iconWidth, iconHeight
+            );
+            this.buildings.push(buildingIcon);
+            group.add(buildingIcon.getGroup());
+            ++index;
+        }
     }
+}
+
+class BuildingIcon {
+    private name: string;
+    private path: string;
+
+    private group: Konva.Group;
+
+    private container: Konva.Rect;
+    private icon?: Konva.Image;
+    private text: Konva.Text;
+
+    constructor(name: string, path: string, x: number, y: number, width: number, height: number) {
+        this.name = name;
+        this.path = path;
+
+        this.group = new Konva.Group({ x: x, y: y, width: width, height: height });
+
+        this.container = new Konva.Rect(
+            {
+                stroke: Color.Black,
+                x: 0,
+                y: 0,
+                width: width,
+                height: height
+            }
+        );
+        this.group.add(this.container);
+
+        const iconSize = width * 0.80;
+        Konva.Image.fromURL(
+            this.path, (img) => {
+                this.icon = img;
+                this.icon.width(iconSize);
+                this.icon.height(iconSize);
+                this.icon.x(this.group.width() / 2 - this.icon.width() / 2);
+                this.icon.y(0);
+                this.group.add(this.icon);
+            }
+        );
+
+        this.text = new Konva.Text({ fontSize: 18, text: this.name });
+        this.text.x(this.group.width() / 2 - this.text.width() / 2);
+        this.text.y(this.group.height() - this.text.height());
+        this.group.add(this.text);
+    }
+
+    getGroup(): Konva.Group { return this.group; }
 }
