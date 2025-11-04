@@ -108,15 +108,22 @@ export class AboutView extends View {
         });
         group.add(titleBar);
 
-        // Layout constants
-        const leftColumnX = 184; // 160 margin + 24 padding
-        const rightColumnX = 640; // left content start
-        const firstRowY = 210; // below title
-        const rowGap = 180;
+        // Layout constants scaled from original 1920x1080 to current STAGE size
+        const BASE_WIDTH = 1920;
+        const BASE_HEIGHT = 1080;
+        const scaleX = STAGE_WIDTH / BASE_WIDTH;
+        const scaleY = STAGE_HEIGHT / BASE_HEIGHT;
+        const uniformScale = Math.min(scaleX, scaleY);
+
+        const shiftX = 144 * scaleX; // move content 6 baselines to the right (base 144px)
+        const leftColumnX = 184 * scaleX + shiftX; // base 184 + shift
+        const rightColumnX = 640 * scaleX + shiftX; // base 640 + shift
+        const firstRowY = 210 * scaleY; // base 210
+        const rowGap = 180 * scaleY; // base 180
 
         // Left labels
         const labelStyle = {
-            fontSize: 40,
+            fontSize: 40 * uniformScale,
             fontStyle: "bold" as const,
             fill: "black"
         };
@@ -127,9 +134,10 @@ export class AboutView extends View {
             text: "Version",
             ...labelStyle
         });
+        const developersRowY = firstRowY + rowGap;
         const devsLabel = new Konva.Text({
             x: leftColumnX,
-            y: firstRowY + rowGap,
+            y: developersRowY,
             text: "Developers",
             ...labelStyle
         });
@@ -145,7 +153,7 @@ export class AboutView extends View {
 
         // Right values
         const valueStyle = {
-            fontSize: 40,
+            fontSize: 40 * uniformScale,
             fill: "black"
         };
 
@@ -157,7 +165,7 @@ export class AboutView extends View {
         });
         const developersValue = new Konva.Text({
             x: rightColumnX,
-            y: firstRowY + rowGap,
+            y: developersRowY,
             text: [
                 "Lee, Jacob",
                 "Mitchell, Nathan",
@@ -177,6 +185,10 @@ export class AboutView extends View {
         });
         group.add(versionValue);
         group.add(developersValue);
+        // Vertically center the "Developers" label relative to the whole list block
+        const developersLabelCenteredY = developersValue.y() + (developersValue.height() - devsLabel.height()) / 2;
+        const devsLabelAdjustedY = developersLabelCenteredY - 24 * scaleY; // move up by one baseline
+        devsLabel.y(devsLabelAdjustedY);
         group.add(contactValue);
 
         // Close button (top-right of panel)
