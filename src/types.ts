@@ -27,7 +27,8 @@ export enum ScreenType {
     Settings = "SETTINGS",
     StoneMinigame = "STONEMINIGAME",
     Title = "TITLE",
-    WoodMinigame = "WOODMINIGAME"
+    WoodMinigame = "WOODMINIGAME",
+    Rules= "RULES"
 }
 
 export type Screen = { type: ScreenType };
