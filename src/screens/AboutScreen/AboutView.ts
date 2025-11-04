@@ -1,6 +1,4 @@
-import Konva from "konva";
 import { View } from "../../types.ts";
-import { STAGE_WIDTH, STAGE_HEIGHT } from "../../constants.ts";
 
 export class AboutView extends View {
     constructor() {

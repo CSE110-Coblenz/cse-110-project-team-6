@@ -52,6 +52,7 @@ class Application implements ScreenSwitch {
         this.layer.add(this.mainGameController.getView().getGroup());
         this.layer.add(this.settingsController.getView().getGroup());
         this.layer.add(this.stoneMinigameController.getView().getGroup());
+        this.layer.add(this.titleController.getView().getGroup());
         this.layer.add(this.woodMinigameController.getView().getGroup());
     }
 
