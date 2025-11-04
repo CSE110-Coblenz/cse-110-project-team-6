@@ -72,6 +72,9 @@ class Container {
 
 class TitleContainer extends Container {
     private text: Konva.Text;
+    private iconInformation: Konva.Image | null = null;
+    private iconSettings: Konva.Image | null = null;
+    private iconExit: Konva.Image | null = null;
 
     constructor(x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
@@ -82,6 +85,40 @@ class TitleContainer extends Container {
         this.text.x(group.width() / 2 - this.text.width() / 2);
         this.text.y(group.height() / 2 - this.text.height() / 2);
         group.add(this.text);
+
+        Konva.Image.fromURL(
+            "../../assets/icons/information.png", (img) => {
+                img.x(group.width() * 0.94);
+                img.y(0);
+                img.width(0.02 * group.width());
+                img.height(0.02 * group.width());
+
+                this.iconInformation = img;
+                group.add(this.iconInformation);
+            }
+        );
+        Konva.Image.fromURL(
+            "../../assets/icons/setting.png", (img) => {
+                img.x(group.width() * 0.96);
+                img.y(0);
+                img.width(0.02 * group.width());
+                img.height(0.02 * group.width());
+
+                this.iconSettings = img;
+                group.add(this.iconSettings);
+            }
+        );
+        Konva.Image.fromURL(
+            "../../assets/icons/exit.png", (img) => {
+                img.x(group.width() * 0.98);
+                img.y(0);
+                img.width(0.02 * group.width());
+                img.height(0.02 * group.width());
+
+                this.iconExit = img;
+                group.add(this.iconExit);
+            }
+        );
     }
 }
 
