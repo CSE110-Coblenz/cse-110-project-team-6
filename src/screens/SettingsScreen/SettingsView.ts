@@ -1,20 +1,19 @@
 import Konva from "konva";
 import { View } from "../../types.ts";
 import { STAGE_HEIGHT, STAGE_WIDTH } from "../../constants.ts";
+import { Assets } from "../../assets.ts";
 
-export class SettingsView extends View {
-
+export class SettingsView extends View {  
   constructor() {
     super();
 
     // Dimension constants
-    const PANEL_HEIGHT = 810;
-    const PANEL_WIDTH = 960;
+    const PANEL_WIDTH = STAGE_WIDTH / 2;
+    const PANEL_HEIGHT = STAGE_HEIGHT / 2;
 
-    this.group = new Konva.Group({
-      x: (STAGE_WIDTH - PANEL_WIDTH) / 2,
-      y: (STAGE_HEIGHT - PANEL_HEIGHT) / 2
-    });
+    const group = this.getGroup();
+    group.x((STAGE_WIDTH - PANEL_WIDTH) / 2);
+    group.y((STAGE_HEIGHT - PANEL_HEIGHT) / 2)
 
     // Background panel
     const panel = new Konva.Rect({
@@ -29,22 +28,22 @@ export class SettingsView extends View {
     this.group.add(panel);
 
     // Title
-    const title = new Konva.Text({
-      x: PANEL_WIDTH / 2 - 50,
+    const settingsTitle = new Konva.Image({
+      image: Assets["/settings.png"],
+      x: PANEL_WIDTH / 2 - 100,
       y: PANEL_HEIGHT / 20,
-      text: "Settings",
-      fontSize: 40,
-      fontStyle: "bold",
-      fill: "#1A1C2C",
+      scale: { x: 0.3, y: 0.3 }
+
     });
-    this.group.add(title);
+
+this.group.add(settingsTitle);
 
     // Section labels
     const soundLabel = new Konva.Text({
       x: PANEL_WIDTH / 8,
       y: PANEL_HEIGHT / 8,
       text: "Sound",
-      fontSize: 32,
+      fontSize: 24,
       fontStyle: "bold",
       fill: "#1A1C2C",
     });
@@ -52,9 +51,9 @@ export class SettingsView extends View {
 
     const videoLabel = new Konva.Text({
       x: PANEL_WIDTH / 8,
-      y: PANEL_HEIGHT / 8 + 300,
+      y: PANEL_HEIGHT / 8 + 150,
       text: "Video",
-      fontSize: 32,
+      fontSize: 24,
       fontStyle: "bold",
       fill: "#1A1C2C",
     });
@@ -69,7 +68,7 @@ export class SettingsView extends View {
         x: PANEL_WIDTH / 8,
         y,
         text: `${label}:`,
-        fontSize: 24,
+        fontSize: 16,
         fill: "#1A1C2C",
       });
 
@@ -91,7 +90,7 @@ export class SettingsView extends View {
         x: maxX + 20,
         y,
         text: "50%",
-        fontSize: 24,
+        fontSize: 16,
         fill: "#1A1C2C",
       });
 
@@ -135,7 +134,7 @@ export class SettingsView extends View {
         x: PANEL_WIDTH / 8,
         y,
         text: `${label}:`,
-        fontSize: 24,
+        fontSize: 16,
         fill: "#1A1C2C",
       });
 
@@ -218,7 +217,7 @@ export class SettingsView extends View {
     };
 
     addDropdown("Resolution", PANEL_HEIGHT / 8 + 360, "1920x1080");
-    addDropdown("Window", PANEL_HEIGHT / 8 + 540, "Fullscreen");
+    addDropdown("Window", PANEL_HEIGHT / 8 + 400, "Fullscreen");
 
     // Exit button
     const exitSize = 40;

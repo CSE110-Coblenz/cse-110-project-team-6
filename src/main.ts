@@ -10,6 +10,7 @@ import { TitleController } from "./screens/TitleScreen/TitleController.ts";
 import { WoodMinigameController } from "./screens/WoodMinigameScreen/WoodMinigameController.ts";
 import type { Screen, ScreenSwitch } from "./types.ts";
 import { ScreenType } from "./types.ts";
+import { loadAssets } from "./assets.ts";
 
 class Application implements ScreenSwitch {
     private stage: Konva.Stage;
@@ -70,12 +71,18 @@ class Application implements ScreenSwitch {
         this.layer.draw();
 
         // Display initial screen
-        this.titleController.show();
+        this.settingsController.show();
     }
 
     switchScreen(screen: Screen): void {
         // Hide all screens
         this.aboutController.hide();
+        this.leaderboardController.hide();
+        this.mainGameController.hide();
+        this.settingsController.hide();
+        this.stoneMinigameController.hide();
+        this.titleController.hide();
+        this.woodMinigameController.hide();
 
         // Show requested screen
         switch (screen.type) {
@@ -106,7 +113,11 @@ class Application implements ScreenSwitch {
     }
 }
 
-function main(): void {
+async function main(): void {
+    await loadAssets([
+        "/settings.png",
+    ]);
+
     const application = new Application("container");
     application.run();
 }
