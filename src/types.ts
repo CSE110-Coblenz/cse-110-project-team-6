@@ -2,6 +2,11 @@ import Konva from "konva";
 
 import { STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
 
+export type Point = {
+    x: number;
+    y: number;
+};
+
 /* Color palette */
 export enum Color {
     DarkRed = "#B13E53",
