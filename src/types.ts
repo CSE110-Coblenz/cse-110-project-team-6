@@ -38,14 +38,14 @@ export enum ScreenType {
 }
 
 export enum Building {
-    Apartment = "apartment",
-    Bank = "bank",
-    Hospital = "hospital",
-    Hotel = "hotel",
-    Library = "library",
-    Restaurant = "restaurant",
-    School = "school",
-    Store = "store"
+    Apartment = "APARTMENT",
+    Bank = "BANK",
+    Hospital = "HOSPITAL",
+    Hotel = "HOTEL",
+    Library = "LIBRARY",
+    Restaurant = "RESTAURANT",
+    School = "SCHOOL",
+    Store = "STORE"
 }
 
 export type Screen = { type: ScreenType };

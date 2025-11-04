@@ -1,6 +1,6 @@
 import Konva from "konva";
 
-import { NAME, CELL_WIDTH, CELL_HEIGHT } from "../../constants.ts";
+import { NAME, CELL_WIDTH, CELL_HEIGHT, ICON_SIZE } from "../../constants.ts";
 import type { Point } from "../../types.ts";
 import { Building, Color, View } from "../../types.ts";
 
@@ -24,13 +24,13 @@ export class MainGameView extends View {
         this.inventoryContainer = new InventoryContainer(
             group.x(),
             group.y() + group.height() * 0.2,
-            group.width() * 0.2,
+            group.width() * 0.15,
             group.height() * 0.8
         );
         this.gridContainer = new GridContainer(
-            group.x() + group.width() * 0.2,
+            group.x() + group.width() * 0.15,
             group.y() + group.height() * 0.2,
-            group.width() * 0.6,
+            group.width() * 0.65,
             group.height() * 0.8
         );
         this.buildingsContainer = new BuildingsContainer(
@@ -124,8 +124,87 @@ class TitleContainer extends Container {
 }
 
 class InventoryContainer extends Container {
+    private text: Konva.Text;
+    private inventoryWood: InventoryItem;
+    private inventoryStone: InventoryItem;
+
     constructor(x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
+
+        const group = this.getGroup();
+
+        this.text = new Konva.Text({ fontSize: 36, text: "Inventory" });
+        this.text.x(group.width() / 2 - this.text.width() / 2);
+        group.add(this.text);
+
+        const itemHeight = (height - this.text.height()) / 2;
+
+        this.inventoryWood = new InventoryItem(
+            "WOOD", 0, this.text.height(), width, itemHeight
+        );
+        group.add(this.inventoryWood.getGroup());
+
+        this.inventoryStone = new InventoryItem(
+            "STONE", 0, height - itemHeight, width, itemHeight
+        );
+        group.add(this.inventoryStone.getGroup());
+    }
+}
+
+class InventoryItem extends Container {
+    private name: string;
+    private path: string;
+
+    private text: Konva.Text;
+    private iconItem?: Konva.Image;
+    private iconPlus?: Konva.Image;
+    private quantityLabel: Konva.Text;
+    private quantityValue: Konva.Text;
+
+    constructor(name: string, x: number, y: number, width: number, height: number) {
+        super(x, y, width, height);
+
+        const group = this.getGroup();
+
+        this.name = name;
+        this.path = `../../assets/inventory/${name}.png`;
+
+        const iconSize = width * 0.8;
+        Konva.Image.fromURL(
+            this.path, (img) => {
+                this.iconItem = img;
+                this.iconItem.width(iconSize);
+                this.iconItem.height(iconSize);
+                this.iconItem.x(width / 2 - this.iconItem.width() / 2);
+                this.iconItem.y(height / 2 - this.iconItem.height() / 2);
+                group.add(this.iconItem);
+            }
+        );
+
+        Konva.Image.fromURL(
+            "../../assets/icons/plus.png", (img) => {
+                this.iconPlus = img;
+                this.iconPlus.width(ICON_SIZE);
+                this.iconPlus.height(ICON_SIZE);
+                this.iconPlus.x(width - this.iconPlus.width());
+                this.iconPlus.y(height - this.iconPlus.height());
+                group.add(this.iconPlus);
+            }
+        )
+
+        this.text = new Konva.Text({ fontSize: 24, text: this.name });
+        this.text.x(width / 2 - this.text.width() / 2);
+        this.text.y((height / 2 - iconSize / 2 - this.text.height()) / 2);
+        group.add(this.text);
+
+        this.quantityLabel = new Konva.Text({ fontSize: 18, text: "Quantity:\t" });
+        this.quantityLabel.y(height - this.quantityLabel.height());
+        group.add(this.quantityLabel);
+
+        this.quantityValue = new Konva.Text({ fontSize: 18, text: "0" });
+        this.quantityValue.x(this.quantityLabel.x() + this.quantityLabel.width());
+        this.quantityValue.y(height - this.quantityValue.height());
+        group.add(this.quantityValue);
     }
 }
 
