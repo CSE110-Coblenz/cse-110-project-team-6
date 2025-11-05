@@ -10,7 +10,7 @@ import { TitleController } from "./screens/TitleScreen/TitleController.ts";
 import { WoodMinigameController } from "./screens/WoodMinigameScreen/WoodMinigameController.ts";
 import type { Screen, ScreenSwitch } from "./types.ts";
 import { ScreenType } from "./types.ts";
-import { RulesController } from "./screens/RulesScreen/RulesView.ts";
+import { RulesController } from "./screens/RulesScreen/RulesController.ts";
 
 class Application implements ScreenSwitch {
     private stage: Konva.Stage;
