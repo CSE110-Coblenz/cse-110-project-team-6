@@ -1,6 +1,18 @@
+import Konva from "konva";
 import { View } from "../../types.ts";
+import { STAGE_WIDTH, STAGE_HEIGHT, BASE_WIDTH, BASE_HEIGHT } from "../../constants.ts";
 
 export class AboutView extends View {
+    private title: Konva.Text;
+    private titleBar: Konva.Rect;
+    private versionLabel: Konva.Text;
+    private devsLabel: Konva.Text;
+    private contactLabel: Konva.Text;
+    private versionValue: Konva.Text;
+    private developersValue: Konva.Text;
+    private contactValue: Konva.Text;
+    private closeGroup: Konva.Group;
+
     constructor() {
         super();
 
@@ -19,8 +31,6 @@ export class AboutView extends View {
         // Decorative frame and panel lines (black)
         const panelMarginX = 160;
         const panelMarginY = 96;
-        const panelX = panelMarginX;
-        const panelY = panelMarginY;
         const panelWidth = STAGE_WIDTH - panelMarginX * 2;
         const panelHeight = STAGE_HEIGHT - panelMarginY * 2;
 
@@ -38,8 +48,8 @@ export class AboutView extends View {
 
         // Inner content panel border
         const panelFrame = new Konva.Rect({
-            x: panelX,
-            y: panelY,
+            x: panelMarginX,
+            y: panelMarginY,
             width: panelWidth,
             height: panelHeight,
             stroke: "black",
@@ -51,7 +61,7 @@ export class AboutView extends View {
         // Decorative diagonal lines from prototype were intentionally removed per product requirements
 
         // Title
-        const title = new Konva.Text({
+        this.title = new Konva.Text({
             x: 0,
             y: 40,
             width: STAGE_WIDTH,
@@ -61,13 +71,13 @@ export class AboutView extends View {
             fontStyle: "bold",
             fill: "black"
         });
-        group.add(title);
+        group.add(this.title);
 
         // Title bar: full width, bottom aligned with top edge of content panel
         const titleBarY = 0; // align with top of the screen
-        const titleBarHeight = panelY; // bottom edge aligns with panelFrame's top (panelY)
-        title.y(titleBarY + (titleBarHeight - title.height()) / 2);
-        const titleBar = new Konva.Rect({
+        const titleBarHeight = panelMarginY; // bottom edge aligns with panelFrame's top (panelMarginY)
+        this.title.y(titleBarY + (titleBarHeight - this.title.height()) / 2);
+        this.titleBar = new Konva.Rect({
             x: 0,
             y: titleBarY,
             width: STAGE_WIDTH,
@@ -76,11 +86,9 @@ export class AboutView extends View {
             strokeWidth: 2,
             listening: false
         });
-        group.add(titleBar);
+        group.add(this.titleBar);
 
         // Layout constants scaled from original 1920x1080 to current STAGE size
-        const BASE_WIDTH = 1920;
-        const BASE_HEIGHT = 1080;
         const scaleX = STAGE_WIDTH / BASE_WIDTH;
         const scaleY = STAGE_HEIGHT / BASE_HEIGHT;
         const uniformScale = Math.min(scaleX, scaleY);
@@ -98,28 +106,28 @@ export class AboutView extends View {
             fill: "black"
         };
 
-        const versionLabel = new Konva.Text({
+        this.versionLabel = new Konva.Text({
             x: leftColumnX,
             y: firstRowY,
             text: "Version",
             ...labelStyle
         });
         const developersRowY = firstRowY + rowGap;
-        const devsLabel = new Konva.Text({
+        this.devsLabel = new Konva.Text({
             x: leftColumnX,
             y: developersRowY,
             text: "Developers",
             ...labelStyle
         });
-        const contactLabel = new Konva.Text({
+        this.contactLabel = new Konva.Text({
             x: leftColumnX,
             y: firstRowY + rowGap * 3,
             text: "Contact Us",
             ...labelStyle
         });
-        group.add(versionLabel);
-        group.add(devsLabel);
-        group.add(contactLabel);
+        group.add(this.versionLabel);
+        group.add(this.devsLabel);
+        group.add(this.contactLabel);
 
         // Right values
         const valueStyle = {
@@ -127,13 +135,13 @@ export class AboutView extends View {
             fill: "black"
         };
 
-        const versionValue = new Konva.Text({
+        this.versionValue = new Konva.Text({
             x: rightColumnX,
             y: firstRowY,
             text: "1.0.0",
             ...valueStyle
         });
-        const developersValue = new Konva.Text({
+        this.developersValue = new Konva.Text({
             x: rightColumnX,
             y: developersRowY,
             text: [
@@ -147,22 +155,22 @@ export class AboutView extends View {
             lineHeight: 1.3,
             ...valueStyle
         });
-        const contactValue = new Konva.Text({
+        this.contactValue = new Konva.Text({
             x: rightColumnX,
             y: firstRowY + rowGap * 3,
             text: "support@geometropolis.com",
             ...valueStyle
         });
-        group.add(versionValue);
-        group.add(developersValue);
+        group.add(this.versionValue);
+        group.add(this.developersValue);
         // Vertically center the "Developers" label relative to the whole list block
-        const developersLabelCenteredY = developersValue.y() + (developersValue.height() - devsLabel.height()) / 2;
+        const developersLabelCenteredY = this.developersValue.y() + (this.developersValue.height() - this.devsLabel.height()) / 2;
         const devsLabelAdjustedY = developersLabelCenteredY - 24 * scaleY; // move up by one baseline
-        devsLabel.y(devsLabelAdjustedY);
-        group.add(contactValue);
+        this.devsLabel.y(devsLabelAdjustedY);
+        group.add(this.contactValue);
 
         // Close button (top-right of panel)
-        const closeGroup = new Konva.Group({
+        this.closeGroup = new Konva.Group({
             x: STAGE_WIDTH - 36,
             y: 36,
             listening: true
@@ -187,12 +195,16 @@ export class AboutView extends View {
             lineCap: "round",
             lineJoin: "round"
         });
-        closeGroup.add(closeBg);
-        closeGroup.add(closeX1);
-        closeGroup.add(closeX2);
-        group.add(closeGroup);
+        this.closeGroup.add(closeBg);
+        this.closeGroup.add(closeX1);
+        this.closeGroup.add(closeX2);
+        group.add(this.closeGroup);
+    }
 
-        // Interactions: only close when clicking the close button
-        closeGroup.on("click tap", () => this.hide());
+    /**
+     * Get the close button group for event binding in the controller
+     */
+    getCloseGroup(): Konva.Group {
+        return this.closeGroup;
     }
 }
