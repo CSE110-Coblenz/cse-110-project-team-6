@@ -10,6 +10,7 @@ import { TitleController } from "./screens/TitleScreen/TitleController.ts";
 import { WoodMinigameController } from "./screens/WoodMinigameScreen/WoodMinigameController.ts";
 import type { Screen, ScreenSwitch } from "./types.ts";
 import { ScreenType } from "./types.ts";
+import { RulesController } from "./screens/RulesScreen/RulesController.ts";
 
 class Application implements ScreenSwitch {
     private stage: Konva.Stage;
@@ -22,6 +23,7 @@ class Application implements ScreenSwitch {
     private stoneMinigameController: StoneMinigameController;
     private titleController: TitleController;
     private woodMinigameController: WoodMinigameController;
+    private rulesController: RulesController;
 
     constructor(container: string) {
         // Initialize stage
@@ -45,7 +47,8 @@ class Application implements ScreenSwitch {
         this.stoneMinigameController = new StoneMinigameController(this);
         this.titleController = new TitleController(this);
         this.woodMinigameController = new WoodMinigameController(this);
-
+        this.rulesController = new RulesController(this);
+    
         // Add screen groups to layer
         this.layer.add(this.aboutController.getView().getGroup());
         this.layer.add(this.leaderboardController.getView().getGroup());
@@ -54,6 +57,7 @@ class Application implements ScreenSwitch {
         this.layer.add(this.stoneMinigameController.getView().getGroup());
         this.layer.add(this.titleController.getView().getGroup());
         this.layer.add(this.woodMinigameController.getView().getGroup());
+        this.layer.add(this.rulesController.getView().getGroup());
     }
 
     run(): void {
@@ -90,6 +94,9 @@ class Application implements ScreenSwitch {
                 break;
             case ScreenType.WoodMinigame:
                 this.woodMinigameController.show();
+                break;
+            case ScreenType.Rules:
+                this.rulesController.show();
                 break;
             default:
                 throw new TypeError(screen.type);
