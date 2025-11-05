@@ -48,35 +48,7 @@ export class AboutView extends View {
         });
         group.add(panelFrame);
 
-        // Side decorative diagonal lines
-        const leftDiagTop = new Konva.Line({
-            points: [STAGE_WIDTH - panelX, panelY * 2, STAGE_WIDTH, panelY],
-            stroke: "black",
-            strokeWidth: 2,
-            listening: false
-        });
-        const leftDiagBottom = new Konva.Line({
-            points: [0, STAGE_HEIGHT, panelX, panelY + panelHeight],
-            stroke: "black",
-            strokeWidth: 2,
-            listening: false
-        });
-        const rightDiagTop = new Konva.Line({
-            points: [STAGE_WIDTH - (panelX + panelWidth), panelY * 2, 0, panelY],
-            stroke: "black",
-            strokeWidth: 2,
-            listening: false
-        });
-        const rightDiagBottom = new Konva.Line({
-            points: [STAGE_WIDTH, STAGE_HEIGHT, panelX + panelWidth, panelY + panelHeight],
-            stroke: "black",
-            strokeWidth: 2,
-            listening: false
-        });
-        group.add(leftDiagTop);
-        group.add(leftDiagBottom);
-        group.add(rightDiagTop);
-        group.add(rightDiagBottom);
+        // Decorative diagonal lines from prototype were intentionally removed per product requirements
 
         // Title
         const title = new Konva.Text({
