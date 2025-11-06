@@ -1,7 +1,12 @@
-// Stage dimensions (default 1280x720)
+export const NAME = "GEOMETROPOLIS";
+
+// Stage dimensions
 export const STAGE_WIDTH = 1280;
 export const STAGE_HEIGHT = 720;
 
-// Base design dimensions (original 1920x1080)
-export const BASE_WIDTH = 1920;
-export const BASE_HEIGHT = 1080;
+// Grid cell dimensions
+export const CELL_WIDTH = 32;
+export const CELL_HEIGHT = 16;
+
+// Menu icon size
+export const ICON_SIZE = 32;

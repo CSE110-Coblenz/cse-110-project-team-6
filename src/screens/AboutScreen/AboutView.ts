@@ -1,6 +1,6 @@
 import Konva from "konva";
 import { View } from "../../types.ts";
-import { STAGE_WIDTH, STAGE_HEIGHT, BASE_WIDTH, BASE_HEIGHT } from "../../constants.ts";
+import { STAGE_WIDTH, STAGE_HEIGHT } from "../../constants.ts";
 
 export class AboutView extends View {
     private title: Konva.Text;
@@ -89,6 +89,9 @@ export class AboutView extends View {
         group.add(this.titleBar);
 
         // Layout constants scaled from original 1920x1080 to current STAGE size
+        // Base dimensions for scaling calculations (original design size)
+        const BASE_WIDTH = 1920;
+        const BASE_HEIGHT = 1080;
         const scaleX = STAGE_WIDTH / BASE_WIDTH;
         const scaleY = STAGE_HEIGHT / BASE_HEIGHT;
         const uniformScale = Math.min(scaleX, scaleY);
