@@ -45,6 +45,8 @@ export class MainGameView extends View {
         group.add(this.gridContainer.getGroup());
         group.add(this.buildingsContainer.getGroup());
     }
+
+    getMenuItems(): MenuIcon[] { return this.titleContainer.getMenuItems(); }
 }
 
 class TitleContainer extends Container {
@@ -66,6 +68,8 @@ class TitleContainer extends Container {
         this.menuBar = new MenuBar(group.width() - Object.keys(MenuItem).length * ICON_SIZE, 0);
         group.add(this.menuBar.getGroup());
     }
+
+    getMenuItems(): MenuIcon[] { return this.menuBar.getIcons(); }
 }
 
 class MenuBar extends Container {
@@ -93,6 +97,8 @@ class MenuBar extends Container {
             }
         );
     }
+
+    getIcons(): MenuIcon[] { return this.icons; }
 }
 
 class MenuIcon {
@@ -121,6 +127,7 @@ class MenuIcon {
     }
 
     getGroup(): Konva.Group { return this.group; }
+    getItem(): MenuItem { return this.item; }
 }
 
 class InventoryContainer extends Container {
