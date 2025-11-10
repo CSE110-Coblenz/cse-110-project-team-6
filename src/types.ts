@@ -1,6 +1,6 @@
 import Konva from "konva";
 
-import { STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
+import { ICON_SIZE, STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
 
 export type Point = {
     x: number;
@@ -37,13 +37,18 @@ export enum ScreenType {
     WoodMinigame = "WOODMINIGAME"
 }
 
-export enum MenuItem {
-    Information = "information",
-    Settings = "settings",
-    Exit = "exit"
+export enum MenuItemType {
+    Information = "INFORMATION",
+    Settings = "SETTINGS",
+    Exit = "EXIT"
 }
 
-export enum Building {
+export enum InventoryItemType {
+    Stone = "STONE",
+    Wood = "WOOD"
+}
+
+export enum BuildingType {
     Apartment = "APARTMENT",
     Bank = "BANK",
     Hospital = "HOSPITAL",
@@ -118,4 +123,28 @@ export abstract class Controller {
     getScreenSwitch(): ScreenSwitch { return this.screenSwitch; }
     show(): void { this.getView().show(); }
     hide(): void { this.getView().hide(); }
+}
+
+export class Icon {
+    private path: string;
+
+    private group: Konva.Group;
+    private icon?: Konva.Image;
+
+    constructor(path: string) {
+        this.path = path;
+        this.group = new Konva.Group({ width: ICON_SIZE, height: ICON_SIZE });
+
+        Konva.Image.fromURL(
+            this.path, (img) => {
+                this.icon = img;
+                this.icon.width(ICON_SIZE);
+                this.icon.height(ICON_SIZE);
+
+                this.group.add(this.icon);
+            }
+        );
+    }
+
+    getGroup(): Konva.Group { return this.group; }
 }
