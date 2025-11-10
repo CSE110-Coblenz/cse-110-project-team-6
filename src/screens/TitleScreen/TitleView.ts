@@ -16,13 +16,18 @@ export class TitleView extends View {
 
 	private hoverSound: HTMLAudioElement;
 
+	onStartClick?: () => void;
+  	//onSettingsClick?: () => void;
+ 	onHighScoresClick?: () => void;
+ 	onAboutClick?: () => void;
+
 	constructor() {
         super();
         const group = this.getGroup();
-		this.hoverSound = new Audio('/hover.mp3');
+		this.hoverSound = new Audio('/assets/sounds/hover.mp3');
 
 		// Background 
-		Konva.Image.fromURL("/titleBackground.png", (image) => {
+		Konva.Image.fromURL("/assets/title/titleBackground.png", (image) => {
 			image.x(0);
 			image.y(0);
 			image.width(STAGE_WIDTH);
@@ -34,7 +39,7 @@ export class TitleView extends View {
    
 
 		// Title text
-		Konva.Image.fromURL("/titleText.png", (image) => {
+		Konva.Image.fromURL("/assets/title/titleText.png", (image) => {
 			image.x((STAGE_WIDTH * 0.05));
 			image.y(STAGE_HEIGHT * 0.05);
 			image.scale({ x: 0.8, y: 0.8 });
@@ -43,11 +48,10 @@ export class TitleView extends View {
 		});
 
 		//Buttons
-		Konva.Image.fromURL("/startGame.png", (image) => {
+		Konva.Image.fromURL("/assets/title/startGame.png", (image) => {
 			image.x((STAGE_WIDTH * 0.3) - (image.width()*0.4) - STAGE_WIDTH * 0.005);
 			image.y(STAGE_HEIGHT * 0.275);
 			image.scale({ x: 0.4, y: 0.4});
-
 
 			image.on('mouseover', () => {
 				document.body.style.cursor = 'pointer';
@@ -65,15 +69,15 @@ export class TitleView extends View {
 				image.y(STAGE_HEIGHT * 0.275);
 				image.scale({ x: 0.4, y: 0.4});
 			});
-
-
+			image.on("click", () => {
+        		this.onStartClick?.();
+      		});
 
 			this.startButton = image;
 			group.add(this.startButton);
 		});
 
-
-		Konva.Image.fromURL("/settings.png", (image) => {
+		Konva.Image.fromURL("/assets/title/settings.png", (image) => {
 			image.x((STAGE_WIDTH * 0.3 + STAGE_WIDTH * 0.005));
 			image.y(STAGE_HEIGHT * 0.275);
 			image.scale({ x: 0.4, y: 0.4});
@@ -93,14 +97,17 @@ export class TitleView extends View {
 				image.y(STAGE_HEIGHT * 0.275);
 				image.scale({ x: 0.4, y: 0.4});
 			});
-
+			/*
+			image.on("click", () => {
+        		this.onSettingsClick?.();
+      		});
+			*/
 
 			this.settingsButton = image;
 			group.add(this.settingsButton);
 		});
 
-
-		Konva.Image.fromURL("/highScores.png", (image) => {
+		Konva.Image.fromURL("/assets/title/highScores.png", (image) => {
 			image.x((STAGE_WIDTH * 0.3) - (image.width()*0.4) - STAGE_WIDTH * 0.005);
 			image.y(STAGE_HEIGHT * 0.385);
 			image.scale({ x: 0.4, y: 0.4});
@@ -120,13 +127,15 @@ export class TitleView extends View {
 				image.y(STAGE_HEIGHT * 0.385);
 				image.scale({ x: 0.4, y: 0.4});
 			});
+			image.on("click", () => {
+        		this.onHighScoresClick?.();
+      		});
 
 			this.highScoresButton = image;
 			group.add(this.highScoresButton);
 		});
 
-
-		Konva.Image.fromURL("/about.png", (image) => {
+		Konva.Image.fromURL("/assets/title/about.png", (image) => {
 			image.x((STAGE_WIDTH * 0.3 + STAGE_WIDTH * 0.005));
 			image.y(STAGE_HEIGHT * 0.385);
 			image.scale({ x: 0.4, y: 0.4});
@@ -146,6 +155,10 @@ export class TitleView extends View {
 				image.y(STAGE_HEIGHT * 0.385);
 				image.scale({ x: 0.4, y: 0.4});
 			});
+			image.on("click", () => {
+        		this.onAboutClick?.();
+     		});
+			
 
 			this.aboutButton = image;
 			group.add(this.aboutButton);
