@@ -1,5 +1,5 @@
 import { MainGameView } from "./MainGameView.ts";
-import { Controller, MenuItem, ScreenType } from "../../types.ts";
+import { Controller, InventoryItemType, MenuItemType, ScreenType } from "../../types.ts";
 import type { ScreenSwitch } from "../../types.ts";
 
 export class MainGameController extends Controller {
@@ -15,17 +15,17 @@ export class MainGameController extends Controller {
             (value, index, array) => {
                 const group = value.getGroup();
                 switch (value.getItem()) {
-                    case MenuItem.Information:
+                    case MenuItemType.Information:
                         group.addEventListener(
                             "click", (e: Event) => { this.handleInformationClick(); }
                         )
                         break;
-                    case MenuItem.Settings:
+                    case MenuItemType.Settings:
                         group.addEventListener(
                             "click", (e: Event) => { this.handleSettingsClick(); }
                         )
                         break;
-                    case MenuItem.Exit:
+                    case MenuItemType.Exit:
                         group.addEventListener(
                             "click", (e: Event) => { this.handleExitClick(); }
                         );
@@ -35,6 +35,28 @@ export class MainGameController extends Controller {
                 }
             }
         );
+
+        const inventoryItems = this.view.getInventoryItems();
+        inventoryItems.forEach(
+            (value, index, array) => {
+                const iconPlus = value.getIconPlus();
+                const group = iconPlus.getGroup();
+                switch (value.getType()) {
+                    case InventoryItemType.Stone:
+                        group.addEventListener(
+                            "click", (e: Event) => { this.handleAddStoneClick(); }
+                        );
+                        break;
+                    case InventoryItemType.Wood:
+                        group.addEventListener(
+                            "click", (e: Event) => { this.handleAddWoodClick(); }
+                        );
+                        break;
+                    default:
+                        throw new TypeError(value.getType());
+                }
+            }
+        )
     }
 
     getView(): MainGameView { return this.view; }
@@ -52,5 +74,15 @@ export class MainGameController extends Controller {
     handleExitClick(): void {
         const screenSwitch = this.getScreenSwitch();
         screenSwitch.switchScreen({ type: ScreenType.Title });
+    }
+
+    handleAddWoodClick(): void {
+        const screenSwitch = this.getScreenSwitch();
+        screenSwitch.switchScreen({ type: ScreenType.WoodMinigame });
+    }
+
+    handleAddStoneClick(): void {
+        const screenSwitch = this.getScreenSwitch();
+        screenSwitch.switchScreen({ type: ScreenType.StoneMinigame });
     }
 }
