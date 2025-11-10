@@ -2,7 +2,9 @@ import Konva from "konva";
 
 import { NAME, CELL_WIDTH, CELL_HEIGHT, ICON_SIZE } from "../../constants.ts";
 import type { Point } from "../../types.ts";
-import { Building, Color, Container, MenuItem, View } from "../../types.ts";
+import {
+    BuildingType, Color, Container, Icon, InventoryItemType, MenuItemType, View
+} from "../../types.ts";
 
 export class MainGameView extends View {
     private titleContainer: TitleContainer;
@@ -47,6 +49,7 @@ export class MainGameView extends View {
     }
 
     getMenuItems(): MenuIcon[] { return this.titleContainer.getMenuItems(); }
+    getInventoryItems(): InventoryItem[] { return this.inventoryContainer.getInventoryItems(); }
 }
 
 class TitleContainer extends Container {
@@ -65,7 +68,7 @@ class TitleContainer extends Container {
         this.text.y(group.height() / 2 - this.text.height() / 2);
         group.add(this.text);
 
-        this.menuBar = new MenuBar(group.width() - Object.keys(MenuItem).length * ICON_SIZE, 0);
+        this.menuBar = new MenuBar(group.width() - Object.keys(MenuItemType).length * ICON_SIZE, 0);
         group.add(this.menuBar.getGroup());
     }
 
@@ -76,16 +79,16 @@ class MenuBar extends Container {
     private icons: MenuIcon[];
 
     constructor(x: number, y: number) {
-        super(x, y, Object.keys(MenuItem).length * ICON_SIZE, ICON_SIZE);
+        super(x, y, Object.keys(MenuItemType).length * ICON_SIZE, ICON_SIZE);
 
         const group = this.getGroup();
         const container = this.getContainer();
         container.stroke(Color.Black);
 
         this.icons = [
-            new MenuIcon(MenuItem.Information),
-            new MenuIcon(MenuItem.Settings),
-            new MenuIcon(MenuItem.Exit)
+            new MenuIcon(MenuItemType.Information),
+            new MenuIcon(MenuItemType.Settings),
+            new MenuIcon(MenuItemType.Exit)
         ];
         this.icons.forEach(
             (value, index, array) => {
@@ -101,33 +104,16 @@ class MenuBar extends Container {
     getIcons(): MenuIcon[] { return this.icons; }
 }
 
-class MenuIcon {
-    private item: MenuItem;
-    private path: string;
+class MenuIcon extends Icon {
+    private item: MenuItemType;
 
-    private group: Konva.Group;
+    constructor(item: MenuItemType) {
+        super(`../../assets/icons/${item}.png`);
 
-    private icon?: Konva.Image;
-
-    constructor(item: MenuItem) {
         this.item = item;
-        this.path = `../../assets/icons/${this.item}.png`;
-
-        this.group = new Konva.Group({ width: ICON_SIZE, height: ICON_SIZE });
-
-        Konva.Image.fromURL(
-            this.path, (img) => {
-                this.icon = img;
-                this.icon.width(ICON_SIZE);
-                this.icon.height(ICON_SIZE);
-
-                this.group.add(this.icon);
-            }
-        );
     }
 
-    getGroup(): Konva.Group { return this.group; }
-    getItem(): MenuItem { return this.item; }
+    getItem(): MenuItemType { return this.item; }
 }
 
 class InventoryContainer extends Container {
@@ -149,36 +135,38 @@ class InventoryContainer extends Container {
         const itemHeight = (height - this.text.height()) / 2;
 
         this.inventoryWood = new InventoryItem(
-            "WOOD", 0, this.text.height(), width, itemHeight
+            InventoryItemType.Wood, 0, this.text.height(), width, itemHeight
         );
         group.add(this.inventoryWood.getGroup());
 
         this.inventoryStone = new InventoryItem(
-            "STONE", 0, height - itemHeight, width, itemHeight
+            InventoryItemType.Stone, 0, height - itemHeight, width, itemHeight
         );
         group.add(this.inventoryStone.getGroup());
     }
+
+    getInventoryItems(): InventoryItem[] { return [this.inventoryWood, this.inventoryStone]; }
 }
 
 class InventoryItem extends Container {
-    private name: string;
+    private type: InventoryItemType;
     private path: string;
 
     private text: Konva.Text;
     private iconItem?: Konva.Image;
-    private iconPlus?: Konva.Image;
+    private iconPlus: Icon;
     private quantityLabel: Konva.Text;
     private quantityValue: Konva.Text;
 
-    constructor(name: string, x: number, y: number, width: number, height: number) {
+    constructor(type: InventoryItemType, x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
 
         const group = this.getGroup();
         const container = this.getContainer();
         container.stroke(Color.Black);
 
-        this.name = name;
-        this.path = `../../assets/inventory/${name}.png`;
+        this.type = type
+        this.path = `../../assets/inventory/${type}.png`;
 
         const iconSize = width * 0.8;
         Konva.Image.fromURL(
@@ -192,18 +180,13 @@ class InventoryItem extends Container {
             }
         );
 
-        Konva.Image.fromURL(
-            "../../assets/icons/plus.png", (img) => {
-                this.iconPlus = img;
-                this.iconPlus.width(ICON_SIZE);
-                this.iconPlus.height(ICON_SIZE);
-                this.iconPlus.x(width - this.iconPlus.width());
-                this.iconPlus.y(height - this.iconPlus.height());
-                group.add(this.iconPlus);
-            }
-        )
+        this.iconPlus = new Icon("../../assets/icons/plus.png");
+        const iconGroupPlus = this.iconPlus.getGroup();
+        iconGroupPlus.x(width - iconGroupPlus.width());
+        iconGroupPlus.y(height - iconGroupPlus.height());
+        group.add(iconGroupPlus);
 
-        this.text = new Konva.Text({ fontSize: 24, text: this.name });
+        this.text = new Konva.Text({ fontSize: 24, text: this.type });
         this.text.x(width / 2 - this.text.width() / 2);
         this.text.y((height / 2 - iconSize / 2 - this.text.height()) / 2);
         group.add(this.text);
@@ -217,6 +200,9 @@ class InventoryItem extends Container {
         this.quantityValue.y(height - this.quantityValue.height());
         group.add(this.quantityValue);
     }
+
+    getType(): InventoryItemType { return this.type; }
+    getIconPlus(): Icon { return this.iconPlus; }
 }
 
 class GridContainer extends Container {
@@ -285,7 +271,7 @@ class GridCell {
 class BuildingsContainer extends Container {
     private text: Konva.Text;
 
-    private buildings: BuildingIcon[];
+    private buildings: BuildingItem[];
 
     constructor(x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
@@ -303,12 +289,12 @@ class BuildingsContainer extends Container {
         const iconWidth = width / 2;
         const iconHeight = (height - this.text.height()) / 4;
         let index = 0;
-        for (const building in Building) {
+        for (const building in BuildingType) {
             let row = Math.floor(index / 2);
             let col = index % 2;
 
-            let name = Building[building as keyof typeof Building];
-            let buildingIcon = new BuildingIcon(
+            let name = BuildingType[building as keyof typeof BuildingType];
+            let buildingIcon = new BuildingItem(
                 name, `../../assets/buildings/${name}.png`,
                 col * iconWidth, row * iconHeight + (this.text.y() + this.text.height()),
                 iconWidth, iconHeight
@@ -320,7 +306,7 @@ class BuildingsContainer extends Container {
     }
 }
 
-class BuildingIcon extends Container{
+class BuildingItem extends Container{
     private name: string;
     private path: string;
 
