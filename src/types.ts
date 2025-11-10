@@ -115,6 +115,7 @@ export abstract class Controller {
     }
 
     abstract getView(): View;
+    getScreenSwitch(): ScreenSwitch { return this.screenSwitch; }
     show(): void { this.getView().show(); }
     hide(): void { this.getView().hide(); }
 }
