@@ -206,6 +206,4 @@ class Checkbox {
   getText(): Konva.Text {return this.text;}
   getBox(): Konva.Rect {return this.box;}
   isChecked(): boolean {return this.check;}
-
-
 }
