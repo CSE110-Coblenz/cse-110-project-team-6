@@ -62,7 +62,7 @@ class Application implements ScreenSwitch {
         this.layer.draw();
 
         // Display initial screen
-        this.settingsController.show();
+        this.titleController.show();
     }
 
     switchScreen(screen: Screen): void {
