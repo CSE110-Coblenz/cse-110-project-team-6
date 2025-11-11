@@ -1,6 +1,8 @@
 import Konva from "konva";
 
 import { STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
+import type { Screen, ScreenSwitch } from "./types.ts";
+import { ScreenType } from "./types.ts";
 import { AboutController } from "./screens/AboutScreen/AboutController.ts";
 import { LeaderboardController } from "./screens/LeaderboardScreen/LeaderboardController.ts";
 import { MainGameController } from "./screens/MainGameScreen/MainGameController.ts";
@@ -8,8 +10,6 @@ import { SettingsController } from "./screens/SettingsScreen/SettingsController.
 import { StoneMinigameController } from "./screens/StoneMinigameScreen/StoneMinigameController.ts";
 import { TitleController } from "./screens/TitleScreen/TitleController.ts";
 import { WoodMinigameController } from "./screens/WoodMinigameScreen/WoodMinigameController.ts";
-import type { Screen, ScreenSwitch } from "./types.ts";
-import { ScreenType } from "./types.ts";
 import { loadAssets } from "./assets.ts";
 
 class Application implements ScreenSwitch {

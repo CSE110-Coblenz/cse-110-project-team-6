@@ -1,5 +1,12 @@
 import Konva from "konva";
 
+import { STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
+
+export type Point = {
+    x: number;
+    y: number;
+};
+
 /* Color palette */
 export enum Color {
     DarkRed = "#B13E53",
@@ -30,6 +37,23 @@ export enum ScreenType {
     WoodMinigame = "WOODMINIGAME"
 }
 
+export enum MenuItem {
+    Information = "information",
+    Settings = "settings",
+    Exit = "exit"
+}
+
+export enum Building {
+    Apartment = "APARTMENT",
+    Bank = "BANK",
+    Hospital = "HOSPITAL",
+    Hotel = "HOTEL",
+    Library = "LIBRARY",
+    Restaurant = "RESTAURANT",
+    School = "SCHOOL",
+    Store = "STORE"
+}
+
 export type Screen = { type: ScreenType };
 
 export interface ScreenSwitch {
@@ -40,7 +64,15 @@ export abstract class View {
     private group: Konva.Group;
 
     constructor() {
-        this.group = new Konva.Group({ visible: false });
+        this.group = new Konva.Group(
+            {
+                visible: false,
+                x: 0,
+                y: 0,
+                width: STAGE_WIDTH,
+                height: STAGE_HEIGHT
+            }
+        );
     }
 
     getGroup(): Konva.Group { return this.group; }
@@ -54,6 +86,25 @@ export abstract class View {
         this.group.visible(false);
         this.group.getLayer()?.draw();
     }
+}
+
+export class Container {
+    private group: Konva.Group;
+    private container: Konva.Rect;
+
+    constructor(x: number, y: number, width: number, height: number) {
+        this.group = new Konva.Group(
+            { x: x, y: y, width: width, height: height }
+        );
+
+        this.container = new Konva.Rect(
+            { x: 0, y: 0, width: this.group.width(), height: this.group.height() }
+        );
+        this.group.add(this.container);
+    }
+
+    getGroup(): Konva.Group { return this.group; }
+    getContainer(): Konva.Rect { return this.container; }
 }
 
 export abstract class Controller {
