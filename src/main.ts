@@ -105,7 +105,7 @@ class Application implements ScreenSwitch {
     }
 }
 
-async function main(): void {
+async function main(): Promise<void> {
     await loadAssets([
         "/settings.png",
     ]);
