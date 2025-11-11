@@ -3,259 +3,207 @@ import { STAGE_HEIGHT, STAGE_WIDTH } from "../../constants.ts";
 import { View } from "../../types.ts";
 
 export class SettingsView extends View {  
+  private static readonly PANEL_WIDTH = STAGE_WIDTH / 2;
+  private static readonly PANEL_HEIGHT = STAGE_HEIGHT / 2;
+
+  private panel: Konva.Rect;
+  private settingsTitle: Konva.Image;
+  private soundLabel: Konva.Text;
+  private exitButton: Konva.Group;
+  private mainVolSlider: Slider;
+  private effectsSlider: Slider;
+  private musicSlider: Slider;
+  private muteButton: Checkbox;
+
   constructor() {
     super();
 
-    // Dimension constants
-    const PANEL_WIDTH = STAGE_WIDTH / 2;
-    const PANEL_HEIGHT = STAGE_HEIGHT / 2;
-
     const group = this.getGroup();
-    group.x((STAGE_WIDTH - PANEL_WIDTH) / 2);
-    group.y((STAGE_HEIGHT - PANEL_HEIGHT) / 2)
+    group.x((STAGE_WIDTH - SettingsView.PANEL_WIDTH) / 2);
+    group.y((STAGE_HEIGHT - SettingsView.PANEL_HEIGHT) / 2)
 
     // Background panel
-    const panel = new Konva.Rect({
+    this.panel = new Konva.Rect({
       x: 0,
       y: 0,
-      width: PANEL_WIDTH,
-      height: PANEL_HEIGHT,
+      width: SettingsView.PANEL_WIDTH,
+      height: SettingsView.PANEL_HEIGHT,
       fill: "#F4F4F4",
       stroke: "#1A1C2C",
       cornerRadius: 20,
     });
-    this.group.add(panel);
+    group.add(this.panel);
 
     // Title
-    const settingsTitle = new Konva.Image({
-      image: Assets["/settings.png"],
-      x: PANEL_WIDTH / 2 - 75,
-      y: PANEL_HEIGHT / 20,
-      offsetX: Image.length / 2,
+    const settingsImage = Assets["/settings.png"];
+    this.settingsTitle = new Konva.Image({
+      image: settingsImage,
+      x: SettingsView.PANEL_WIDTH / 2 - 75,
+      y: SettingsView.PANEL_HEIGHT / 20,
       scale: { x: 0.25, y: 0.25 }
     });
-
-this.group.add(settingsTitle);
+    group.add(this.settingsTitle);
 
     // Section labels
-    const soundLabel = new Konva.Text({
-      x: PANEL_WIDTH / 8,
-      y: PANEL_HEIGHT / 8,
+    this.soundLabel = new Konva.Text({
+      x: SettingsView.PANEL_WIDTH / 8,
+      y: SettingsView.PANEL_HEIGHT / 4,
       text: "Sound",
       fontSize: 24,
       fontStyle: "bold",
       fill: "#1A1C2C",
     });
-    this.group.add(soundLabel);
-
-    const videoLabel = new Konva.Text({
-      x: PANEL_WIDTH / 8,
-      y: PANEL_HEIGHT / 8 + 200,
-      text: "Video",
-      fontSize: 24,
-      fontStyle: "bold",
-      fill: "#1A1C2C",
-    });
-    this.group.add(videoLabel);
-
-    // Sliders
-    const addSlider = (label: string, y: number) => {
-      const minX = 200;
-      const maxX = 500;
-
-      const text = new Konva.Text({
-        x: PANEL_WIDTH / 8,
-        y,
-        text: `${label}:`,
-        fontSize: 16,
-        fill: "#1A1C2C",
-      });
-
-      const line = new Konva.Line({
-        points: [minX, y + 10, maxX, y + 10],
-        stroke: "#1A1C2C",
-        strokeWidth: 2,
-      });
-
-      const knob = new Konva.Circle({
-        x: (minX + maxX) / 2,
-        y: y + 10,
-        radius: 8,
-        fill: "#1A1C2C",
-        draggable: true,
-      });
-
-      const percent = new Konva.Text({
-        x: maxX + 20,
-        y,
-        text: "50%",
-        fontSize: 16,
-        fill: "#1A1C2C",
-      });
-
-
-      knob.on('mouseover', function (e) {
-        e.target.getStage()!.container().style.cursor = 'pointer';
-      });
-
-
-      knob.on('mouseout', function (e) {
-        e.target.getStage()!.container().style.cursor = 'default';
-      });
-
-      // Drag logic
-      knob.on("dragmove", () => {
-        // Clamp knob on slider
-        knob.y(y + 10);
-        const newX = Math.max(minX, Math.min(knob.x(), maxX));
-        knob.x(newX);
-
-        // Update percentage
-        const ratio = (newX - minX) / (maxX - minX);
-        const percentValue = Math.round(ratio * 100);
-        percent.text(percentValue + "%");
-      });
-
-
-        knob.on("dragend", () => {
-          // Maybe add a sound to show sound level?
-        });
-        this.group.add(text, line, knob, percent);
-    };
-
-    addSlider("Main Volume", PANEL_HEIGHT / 8 + 40);
-    addSlider("Sound Effects", PANEL_HEIGHT / 8 + 80);
-    addSlider("Music", PANEL_HEIGHT / 8 + 120);
-
-    // Checkbox
-    const addCheckbox = (label: string, y: number) => {
-      const text = new Konva.Text({
-        x: PANEL_WIDTH / 8,
-        y,
-        text: `${label}:`,
-        fontSize: 16,
-        fill: "#1A1C2C",
-      });
-
-      const box = new Konva.Rect({
-        x: PANEL_WIDTH / 8 + 60,
-        y: y - 5,
-        width: 25, 
-        height: 25,
-        cornerRadius: 10,
-        fill: "#B13E53",
-        stroke: "#1A1C2C",
-      });
-
-      let isChecked = false;
-
-      box.on('mouseover', function (e) {
-        e.target.getStage()!.container().style.cursor = 'pointer';
-      });
-
-      box.on('mousedown', function () {
-        isChecked = !isChecked; 
-        box.fill(isChecked ? "#38B764" : "#B13E53");
-        box.getLayer()?.batchDraw();
-      });
-
-      box.on('mouseout', function (e) {
-        e.target.getStage()!.container().style.cursor = 'default';
-      });
-      this.group.add(text, box);
-    };
-
-    addCheckbox("Mute", PANEL_HEIGHT / 8 + 160);
-
-    // Dropdown options
-    const addDropdown = (label: string, y: number, value: string) => {
-      const text = new Konva.Text({
-        x: PANEL_WIDTH / 8,
-        y,
-        text: `${label}:`,
-        fontSize: 16,
-        fill: "#1A1C2C",
-      });
-
-      const box = new Konva.Rect({
-        x: PANEL_WIDTH / 3,
-        y: y,
-        width: 250,
-        height: 20,
-        stroke: "#1A1C2C",
-        cornerRadius: 20,
-      });
-
-      const val = new Konva.Text({
-        x: PANEL_WIDTH / 2 - 20,
-        y: y,
-        text: value,
-        fontSize: 16,
-        fill: "#1A1C2C",
-      });
-
-      const arrow = new Konva.Text({
-        x: PANEL_WIDTH / 2 + 120,
-        y,
-        text: "▼",
-        fontSize: 20,
-        fill: "#38B764",
-      });
-
-      arrow.on('mouseover', function (e) {
-        e.target.getStage()!.container().style.cursor = 'pointer';
-      });
-
-      box.on('mousedown', function () {
-        // Not sure if this counts as view?
-      });
-
-      arrow.on('mouseout', function (e) {
-        e.target.getStage()!.container().style.cursor = 'default';
-      });
-      this.group.add(text, box, val, arrow);
-    };
-
-    addDropdown("Resolution", PANEL_HEIGHT / 8 + 240, "1920x1080");
-    addDropdown("Window", PANEL_HEIGHT / 8 + 280, "Fullscreen");
+    group.add(this.soundLabel);
 
     // Exit button
-    const exitSize = 40;
-    const exitButton = new Konva.Rect({
-      x: PANEL_WIDTH - exitSize - 20,
+    this.exitButton = new Konva.Group();
+
+    const buttonSize = 40;
+    const exitBackground = new Konva.Rect({
+      x: SettingsView.PANEL_WIDTH - buttonSize - 20,
       y: 20,
-      width: exitSize,
-      height: exitSize,
+      width: buttonSize,
+      height: buttonSize,
       fill: "#B13E53",
       cornerRadius: 20,
       stroke: "#1A1C2C",
       strokeWidth: 3,
     });
+    this.exitButton.add(exitBackground);
 
     const exitText = new Konva.Text({
-      x: exitButton.x() + exitSize / 2,
-      y: exitButton.y() + exitSize / 2,
+      x: exitBackground.x() + exitBackground.width() / 2,
+      y: exitBackground.y() + exitBackground.height() / 2,
       text: "X",
       fontSize: 24,
-      fill:"#F4F4F4",
       fontStyle: "bold",
+      fill: "#F4F4F4",
     });
-
     exitText.offsetX(exitText.width() / 2);
     exitText.offsetY(exitText.height() / 2);
+    this.exitButton.add(exitText);
+    
+    group.add(this.exitButton);
 
-    exitButton.on("mouseover", (e) => {
-      e.target.getStage()!.container().style.cursor = "pointer";
-    });
+    // Sliders
+    this.mainVolSlider = new Slider("Main Volume", SettingsView.PANEL_WIDTH / 8, SettingsView.PANEL_HEIGHT / 4 + 40);
+    this.effectsSlider = new Slider("Sound Effects", SettingsView.PANEL_WIDTH / 8, SettingsView.PANEL_HEIGHT / 4 + 80);
+    this.musicSlider = new Slider("Music", SettingsView.PANEL_WIDTH / 8, SettingsView.PANEL_HEIGHT / 4 + 120);
+    
+    group.add(this.mainVolSlider.getGroup());
+    group.add(this.effectsSlider.getGroup());
+    group.add(this.musicSlider.getGroup());
 
-    exitButton.on("mouseout", (e) => {
-      e.target.getStage()!.container().style.cursor = "default";
-    });
+    // Mute Button
+    this.muteButton = new Checkbox("Mute All", SettingsView.PANEL_WIDTH / 8, SettingsView.PANEL_HEIGHT / 4 + 160);
+    group.add(this.muteButton.getGroup());
 
-    exitButton.on("mousedown", () => {
-      this.group.visible(false);
-      this.group.getLayer()?.batchDraw();
-    });
-    this.group.add(exitButton, exitText);
   }
+
+  getPanel(): Konva.Rect {return this.panel;}
+  getSettingsTitle(): Konva.Image {return this.settingsTitle;}
+  getSoundLabel(): Konva.Text {return this.soundLabel;}
+  getExitButton(): Konva.Group {return this.exitButton;}
+  getMainVolSlider(): Slider {return this.mainVolSlider;}
+  getEffectsSlider(): Slider {return this.effectsSlider;}
+  getMusicSlider(): Slider {return this.musicSlider;}
+  getMuteButton(): Checkbox {return this.muteButton;}
+}
+
+class Slider {
+  private group: Konva.Group;
+  private text: Konva.Text;
+  private line: Konva.Line;
+  private knob: Konva.Circle;
+  private percent: Konva.Text;
+  private minX: number;
+  private maxX: number;
+
+  constructor(label: string, x: number, y: number, minX = 200, maxX = 500) {
+    this.group = new Konva.Group();
+    this.minX = minX;
+    this.maxX = maxX;
+
+    this.text = new Konva.Text({
+        x,
+        y,
+        text: `${label}:`,
+        fontSize: 16,
+        fill: "#1A1C2C",
+    });
+
+    this.line = new Konva.Line({
+        points: [minX, y + 10, maxX, y + 10],
+        stroke: "#1A1C2C",
+        strokeWidth: 2,
+    });
+
+    this.knob = new Konva.Circle({
+        x: (minX + maxX) / 2,
+        y: y + 10,
+        radius: 8,
+        fill: "#1A1C2C",
+        draggable: true,
+    });
+
+    this.percent = new Konva.Text({
+        x: maxX + 20,
+        y,
+        text: "50%",
+        fontSize: 16,
+        fill: "#1A1C2C",
+    });
+
+    this.group.add(this.text, this.line, this.knob, this.percent);
+  }
+
+  getGroup(): Konva.Group {return this.group;}
+  getText(): Konva.Text {return this.text;}
+  getLine(): Konva.Line {return this.line;}
+  getKnob(): Konva.Circle {return this.knob;}
+  getPercent(): Konva.Text {return this.percent;}
+  getMinX(): number {return this.minX;}
+  getMaxX(): number {return this.maxX;}
+}
+
+class Checkbox {
+  private group: Konva.Group;
+  private text: Konva.Text;
+  private box: Konva.Rect;
+  private check: boolean;
+  
+  constructor(label: string, x: number, y: number){
+    this.group = new Konva.Group();
+
+    this.text = new Konva.Text({
+      x,
+      y,
+      text: `${label}:`,
+      fontSize: 16,
+      fill: "#1A1C2C",
+    });
+
+    this.box = new Konva.Rect({
+      x: x + 80,
+      y: y - 5,
+      width: 25, 
+      height: 25,
+      cornerRadius: 10,
+      fill: "#B13E53",
+      stroke: "#1A1C2C",
+    });
+
+    this.check = false;
+
+    this.group.add(this.text, this.box);
+  }
+
+  toggle() {
+    this.check = !this.check;
+  }
+
+  getGroup(): Konva.Group {return this.group;}
+  getText(): Konva.Text {return this.text;}
+  getBox(): Konva.Rect {return this.box;}
+  isChecked(): boolean {return this.check;}
 }

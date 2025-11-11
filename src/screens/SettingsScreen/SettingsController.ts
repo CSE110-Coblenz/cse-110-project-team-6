@@ -4,185 +4,134 @@ import type { ScreenSwitch } from "../../types.ts";
 
 export class SettingsController extends Controller {
     private view: SettingsView;
+    private volumeVals: number[] = [0.5, 0.5, 0.5]; 
+    // 0 = Main, 1 = Effects, 2 = Music
 
     constructor(screenSwitch: ScreenSwitch) {
         super(screenSwitch);
 
         this.view = new SettingsView();
-        
-        // 0 - Main Volume
-        // 1 - Sound Effects
-        // 2 - Music
-        let volumeVals = [0.5, 0.5, 0.5]; 
 
-        // Exit button Logic
-        this.view.getExitButton().on("mouseover", (e) => {
-            e.target.getStage()!.container().style.cursor = "pointer";
-        });
+        this.setupExitButton();
+        this.setupMuteButton();
 
-        this.view.getExitButton().on("mouseout", (e) => {
-            e.target.getStage()!.container().style.cursor = "default";
-        });
+        this.setupSlider(this.view.getMainVolSlider(), 0);
+        this.setupSlider(this.view.getEffectsSlider(), 1);
+        this.setupSlider(this.view.getMusicSlider(), 2);
+    }
 
-        this.view.getExitButton().on("mousedown", () => {
+    // Exit Button Logic
+    private setupExitButton() {
+        const exit = this.view.getExitButton();
+
+        exit.on("mouseover", e =>
+            (e.target.getStage()!.container().style.cursor = "pointer")
+        );
+
+        exit.on("mouseout", e =>
+            (e.target.getStage()!.container().style.cursor = "default")
+        );
+
+        exit.on("mousedown", () => {
             this.view.getGroup().visible(false);
             this.view.getGroup().getLayer()?.batchDraw();
         });
+    }
 
-        // Mute button logic
-        this.view.getMuteButton().getGroup().on('mouseover', function (e) {
-            e.target.getStage()!.container().style.cursor = 'pointer';
-        });
+    // Mute Button
+    private setupMuteButton() {
+        const mute = this.view.getMuteButton();
+        const box = mute.getBox();
 
-        this.view.getMuteButton().getGroup().on('mouseout', function (e) {
-            e.target.getStage()!.container().style.cursor = 'default';
-        });
+        mute.getGroup().on("mouseover", e =>
+            (e.target.getStage()!.container().style.cursor = "pointer")
+        );
 
-        this.view.getMuteButton().getGroup().on('mousedown', () => {
-            const muteButton = this.view.getMuteButton();
+        mute.getGroup().on("mouseout", e =>
+            (e.target.getStage()!.container().style.cursor = "default")
+        );
 
-            volumeVals[0] = 0;
-            volumeVals[1] = 0;
-            volumeVals[2] = 0;
+        mute.getGroup().on("mousedown", () => {
+            mute.toggle();
+            const checked = mute.isChecked();
 
-            const isChecked = !muteButton.isChecked();
-            muteButton.toggle();
-            this.view.getMuteButton().getBox().fill(isChecked ? "#38B764" : "#B13E53");
-            this.view.getMuteButton().getBox().getLayer()?.batchDraw();
-        });
+            // Update color
+            box.fill(checked ? "#38B764" : "#B13E53");
+            box.getLayer()?.batchDraw();
 
-        // Main Volume Slider logic
-        this.view.getMainVolSlider().getKnob().on('mouseover', function (e) {
-            e.target.getStage()!.container().style.cursor = 'pointer';
-        }) 
-
-        this.view.getMainVolSlider().getKnob().on('mouseout', function (e) {
-            e.target.getStage()!.container().style.cursor = 'default';
-        }) 
-
-
-        this.view.getMainVolSlider().getKnob().on('dragmove', () => {
-            const slider = this.view.getMainVolSlider();
-            const knob = slider.getKnob();
-
-            // Clamp knob on slider
-            const newX = Math.max(slider.getMinX(), Math.min(knob.x(), slider.getMaxX()));
-            knob.x(newX);
-            knob.y(slider.getLine().points()[1]);
-
-            // Update percentage
-            const ratio = (newX - slider.getMinX()) / (slider.getMaxX() - slider.getMinX());
-            const percentValue = Math.round(ratio * 100);
-            this.view.getMainVolSlider().getPercent().text(percentValue + "%");
-        });
-
-        this.view.getMainVolSlider().getKnob().on("dragend", () => {
-            const muteButton = this.view.getMuteButton();
-            
-            // If mute all is on, toggle off
-            if (muteButton.isChecked()) {
-                muteButton.toggle();
-
-                const newChecked = muteButton.isChecked();
-
-                this.view.getMuteButton().getBox().fill(newChecked ? "#38B764" : "#B13E53");
-                this.view.getMuteButton().getBox().getLayer()?.batchDraw();
+            // If muting zero all volumes
+            if (checked) {
+                this.volumeVals = [0, 0, 0];
             }
-
-            const hoverSound = new Audio('/hover.mp3');
-            const slider = this.view.getMainVolSlider();
-            const knob = slider.getKnob();
-            
-            const newX = Math.max(slider.getMinX(), Math.min(knob.x(), slider.getMaxX()));
-
-            const ratio = (newX - slider.getMinX()) / (slider.getMaxX() - slider.getMinX());
-            volumeVals[0] = ratio;
-            hoverSound.volume = volumeVals[0];
-            
-            hoverSound.play();
-        });
-
-        // Sound Effects Slider logic
-        this.view.getEffectsSlider().getKnob().on('mouseover', function (e) {
-            e.target.getStage()!.container().style.cursor = 'pointer';
-        }) 
-
-        this.view.getEffectsSlider().getKnob().on('mouseout', function (e) {
-            e.target.getStage()!.container().style.cursor = 'default';
-        }) 
-
-
-        this.view.getEffectsSlider().getKnob().on('dragmove', () => {
-            const slider = this.view.getEffectsSlider();
-            const knob = slider.getKnob();
-
-            // Clamp knob on slider
-            const newX = Math.max(slider.getMinX(), Math.min(knob.x(), slider.getMaxX()));
-            knob.x(newX);
-            knob.y(slider.getLine().points()[1]);
-
-            // Update percentage
-            const ratio = (newX - slider.getMinX()) / (slider.getMaxX() - slider.getMinX());
-            const percentValue = Math.round(ratio * 100);
-            this.view.getEffectsSlider().getPercent().text(percentValue + "%");
-        });
-
-        this.view.getEffectsSlider().getKnob().on("dragend", () => {
-            const hoverSound = new Audio('/hover.mp3');
-            const slider = this.view.getEffectsSlider();
-            const knob = slider.getKnob();
-            
-            const newX = Math.max(slider.getMinX(), Math.min(knob.x(), slider.getMaxX()));
-
-            const ratio = (newX - slider.getMinX()) / (slider.getMaxX() - slider.getMinX());
-            volumeVals[1] = ratio;
-            hoverSound.volume = volumeVals[1];
-            
-            hoverSound.play();
-        });
-
-        // Music Slider logic
-        this.view.getMusicSlider().getKnob().on('mouseover', function (e) {
-            e.target.getStage()!.container().style.cursor = 'pointer';
-        }) 
-
-        this.view.getMusicSlider().getKnob().on('mouseout', function (e) {
-            e.target.getStage()!.container().style.cursor = 'default';
-        }) 
-
-
-        this.view.getMusicSlider().getKnob().on('dragmove', () => {
-            const slider = this.view.getMusicSlider();
-            const knob = slider.getKnob();
-
-            // Clamp knob on slider
-            const newX = Math.max(slider.getMinX(), Math.min(knob.x(), slider.getMaxX()));
-            knob.x(newX);
-            knob.y(slider.getLine().points()[1]);
-
-            // Update percentage
-            const ratio = (newX - slider.getMinX()) / (slider.getMaxX() - slider.getMinX());
-            const percentValue = Math.round(ratio * 100);
-            this.view.getMusicSlider().getPercent().text(percentValue + "%");
-        });
-
-        this.view.getMusicSlider().getKnob().on("dragend", () => {
-            const hoverSound = new Audio('/hover.mp3');
-            const slider = this.view.getMusicSlider();
-            const knob = slider.getKnob();
-            
-            const newX = Math.max(slider.getMinX(), Math.min(knob.x(), slider.getMaxX()));
-
-            const ratio = (newX - slider.getMinX()) / (slider.getMaxX() - slider.getMinX());
-            volumeVals[2] = ratio;
-            hoverSound.volume = volumeVals[2];
-            
-            hoverSound.play();
         });
     }
 
+    // Slider logic
+    private setupSlider(slider: any, index: number) {
+        const knob = slider.getKnob();
 
+        knob.on("mouseover", e =>
+            (e.target.getStage()!.container().style.cursor = "pointer")
+        );
 
+        knob.on("mouseout", e =>
+            (e.target.getStage()!.container().style.cursor = "default")
+        );
 
-    getView(): SettingsView { return this.view; }
+        // Drag move
+        knob.on("dragmove", () => {
+            const min = slider.getMinX();
+            const max = slider.getMaxX();
+            const knobX = knob.x();
+
+            // Clamp X
+            const newX = Math.max(min, Math.min(knobX, max));
+            knob.x(newX);
+
+            // Lock Y on the slider line
+            knob.y(slider.getLine().points()[1]);
+
+            // Update %
+            const ratio = (newX - min) / (max - min);
+            slider.getPercent().text(Math.round(ratio * 100) + "%");
+        });
+
+        // Drag end (apply volume + unmute if needed)
+        knob.on("dragend", () => {
+            this.unmuteIfNeeded();
+            this.applySliderVolume(slider, index);
+        });
+    }
+
+    // Unmute if slider is moved
+    private unmuteIfNeeded() {
+        const muteButton = this.view.getMuteButton();
+        if (!muteButton.isChecked()) return;
+
+        muteButton.toggle();
+
+        const box = muteButton.getBox();
+        box.fill("#B13E53");
+        box.getLayer()?.batchDraw();
+    }
+
+    // Slider Volume logic
+
+    private applySliderVolume(slider: any, index: number) {
+        const knob = slider.getKnob();
+
+        const min = slider.getMinX();
+        const max = slider.getMaxX();
+        const x = knob.x();
+
+        const ratio = (x - min) / (max - min);
+        this.volumeVals[index] = this.volumeVals[0] * ratio;
+
+        // Play test sound
+        const hoverSound = new Audio('/hover.mp3');
+        hoverSound.volume = ratio;
+        hoverSound.play();
+    }
+
+    getView(): SettingsView {return this.view;}
 }
