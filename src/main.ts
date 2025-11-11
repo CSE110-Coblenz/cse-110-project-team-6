@@ -34,15 +34,6 @@ class Application implements ScreenSwitch {
             }
         );
 
-        // Scaling
-        const scaleX = window.innerWidth / STAGE_WIDTH;
-        const scaleY = window.innerHeight / STAGE_HEIGHT;
-        const scale = Math.min(scaleX, scaleY);
-
-        this.stage.width(STAGE_WIDTH * scale);
-        this.stage.height(STAGE_HEIGHT * scale);
-        this.stage.scale({ x: scale, y: scale });
-
         // Create layer to which to add screens
         this.layer = new Konva.Layer();
         this.stage.add(this.layer);
@@ -113,7 +104,7 @@ class Application implements ScreenSwitch {
     }
 }
 
-async function main(): void {
+async function main(): Promise<void> {
     await loadAssets([
         "/settings.png",
     ]);
