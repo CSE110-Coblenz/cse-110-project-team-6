@@ -10,6 +10,7 @@ import { SettingsController } from "./screens/SettingsScreen/SettingsController.
 import { StoneMinigameController } from "./screens/StoneMinigameScreen/StoneMinigameController.ts";
 import { TitleController } from "./screens/TitleScreen/TitleController.ts";
 import { WoodMinigameController } from "./screens/WoodMinigameScreen/WoodMinigameController.ts";
+import { loadAssets } from "./assets.ts";
 
 class Application implements ScreenSwitch {
     private stage: Konva.Stage;
@@ -103,7 +104,11 @@ class Application implements ScreenSwitch {
     }
 }
 
-function main(): void {
+async function main(): Promise<void> {
+    await loadAssets([
+        "/settings.png",
+    ]);
+
     const application = new Application("container");
     application.run();
 }
