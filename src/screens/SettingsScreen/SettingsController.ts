@@ -1,5 +1,5 @@
 import { SettingsView } from "./SettingsView.ts";
-import { Controller } from "../../types.ts";
+import { Controller, ScreenType } from "../../types.ts";
 import type { ScreenSwitch } from "../../types.ts";
 
 export class SettingsController extends Controller {
@@ -33,8 +33,12 @@ export class SettingsController extends Controller {
         );
 
         exit.on("mousedown", () => {
-            this.view.getGroup().visible(false);
-            this.view.getGroup().getLayer()?.batchDraw();
+            const previous = (this.screenSwitch as any).getPreviousScreen();
+
+            // If anything goes wrong, go back to Title
+            const target = previous ?? ScreenType.Title;
+
+            this.screenSwitch.switchScreen({ type: target });
         });
     }
 
@@ -116,7 +120,6 @@ export class SettingsController extends Controller {
     }
 
     // Slider Volume logic
-
     private applySliderVolume(slider: any, index: number) {
         const knob = slider.getKnob();
 
