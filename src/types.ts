@@ -57,7 +57,8 @@ export abstract class View {
 }
 
 export abstract class Controller {
-    private screenSwitch: ScreenSwitch;
+    // this was originally private, changed to protected to allow access in LeaderboardController
+    protected screenSwitch: ScreenSwitch;
 
     constructor(screenSwitch: ScreenSwitch) {
         this.screenSwitch = screenSwitch;

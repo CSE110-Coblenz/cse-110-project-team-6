@@ -1,6 +1,5 @@
 import Konva from "konva"
-import { View, Color, ScreenType } from "../../types.ts";
-import type { ScreenSwitch } from "../../types.ts"
+import { View, Color } from "../../types.ts";
 import { STAGE_WIDTH, STAGE_HEIGHT } from "../../constants.ts";
 import type { LeaderboardEntry } from "../../types.ts"; 
 
@@ -8,15 +7,15 @@ export class LeaderboardView extends View {
 
     private titleText: Konva.Text;
     private entriesGroup: Konva.Group;
-    private backButton: Konva.Group;
-    private screenSwitch: ScreenSwitch;
+    public backButton: Konva.Group;
+    public backButtonRect: Konva.Rect;
 
-    constructor(screenSwitch: ScreenSwitch) {
+    constructor() {
         super();
-        this.screenSwitch = screenSwitch;
+
         const group = this.getGroup();
 
-        // adding background for testing
+        // Background (stage dimensions)
         const background = new Konva.Rect({
           x: 0,
           y: 0,
@@ -50,7 +49,8 @@ export class LeaderboardView extends View {
             y: padding,
         });
 
-        const buttonRect = new Konva.Rect({
+
+        this.backButtonRect = new Konva.Rect({
             width: buttonWidth,
             height: buttonHeight,
             fill: Color.GreyBlue,
@@ -69,23 +69,7 @@ export class LeaderboardView extends View {
             verticalAlign: "middle",
         });
 
-        // Mouse Hover Effect for BACK button
-        this.backButton.on("mouseenter", () => {
-            buttonRect.fill(Color.LightBlue);
-            this.backButton.getLayer()?.draw();
-        });
-        this.backButton.on("mouseleave", () => {
-            buttonRect.fill(Color.GreyBlue);
-            this.backButton.getLayer()?.draw();
-        });
-
-        // Click behavior for BACK button - go to Title Screen
-        this.backButton.on("click", () => {
-          this.screenSwitch?.switchScreen({ type: ScreenType.Title});
-        });
-
-
-        this.backButton.add(buttonRect);
+        this.backButton.add(this.backButtonRect);
         this.backButton.add(buttonText);
         group.add(this.backButton);
   }
@@ -167,7 +151,8 @@ export class LeaderboardView extends View {
           this.entriesGroup.add(scoreText);
         });
 
-    // ---- Centering logic ----
+    
+        // ---- Centering logic ----
 
     // Title centered horizontally near top
     this.titleText.x(centerX - this.titleText.width() / 2);
