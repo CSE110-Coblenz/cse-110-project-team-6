@@ -283,15 +283,15 @@ class BuildingsContainer extends Container {
 }
 
 class BuildingItem extends Container{
-    private name: string;
+    private type: BuildingType;
     private path: string;
 
     private icon?: Konva.Image;
 
-    constructor(name: string, path: string, x: number, y: number, width: number, height: number) {
+    constructor(type: BuildingType, path: string, x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
 
-        this.name = name;
+        this.type = type;
         this.path = path;
 
         Konva.Image.fromURL(
@@ -305,10 +305,16 @@ class BuildingItem extends Container{
             }
         );
     }
+
+    getType(): BuildingType { return this.type; }
 }
 
 class ConstructionDialog extends Container {
     private iconCancel: Icon;
+
+    private title: Konva.Text;
+    private details: Konva.Group;
+    private proposal: Konva.Group;
 
     constructor(x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
@@ -321,10 +327,74 @@ class ConstructionDialog extends Container {
         const groupCancel = this.iconCancel.getGroup();
         groupCancel.x(this.group.width() - groupCancel.width());
         this.group.add(groupCancel);
+
+        this.title = new Konva.Text({ fontSize: 24, padding: 12 });
+        this.group.add(this.title);
+
+        this.details = new Konva.Group(
+            {
+                x: 0,
+                y: this.title.y() + this.title.height(),
+                width: this.group.width() / 2,
+                height: this.group.height() - this.title.height()
+            }
+        );
+        this.details.add(
+            new Konva.Rect(
+                {
+                    stroke: Color.Black,
+                    width: this.details.width(),
+                    height: this.details.height()
+                }
+            )
+        );
+        this.details.add(
+            new Konva.Text(
+                {
+                    fontSize: 18,
+                    padding: 6,
+                    text: "Project Details"
+                }
+            )
+        );
+        this.group.add(this.details);
+
+        this.proposal = new Konva.Group(
+            {
+                x: this.group.width() / 2,
+                y: this.title.y() + this.title.height(),
+                width: this.group.width() / 2,
+                height: this.group.height() - this.title.height(),
+            }
+        );
+        this.proposal.add(
+            new Konva.Rect(
+                {
+                    stroke: Color.Black,
+                    width: this.proposal.width(),
+                    height: this.proposal.height()
+                }
+            )
+        );
+        this.proposal.add(
+            new Konva.Text(
+                {
+                    fontSize: 18,
+                    padding: 6,
+                    text: "Project Proposal"
+                }
+            )
+        );
+        this.group.add(this.proposal);
     }
 
     show(): void { this.group.visible(true); }
     hide(): void { this.group.visible(false); }
 
     getIconCancel(): Icon { return this.iconCancel; }
+
+    setBuildingType(type: BuildingType) {
+        this.title.text(`Current Project: ${type}`);
+        this.title.x((this.group.width() - this.title.width()) / 2);
+    }
 }

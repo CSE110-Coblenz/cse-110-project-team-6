@@ -1,7 +1,7 @@
-import Konva from "konva";
-
 import { MainGameView } from "./MainGameView.ts";
-import { Controller, InventoryItemType, MenuItemType, ScreenType } from "../../types.ts";
+import {
+    BuildingType, Controller, InventoryItemType, MenuItemType, ScreenType
+} from "../../types.ts";
 import type { ScreenSwitch } from "../../types.ts";
 
 export class MainGameController extends Controller {
@@ -65,7 +65,9 @@ export class MainGameController extends Controller {
             (value, index, array) => {
                 const group = value.getGroup();
                 group.addEventListener(
-                    "click", (e: Event) => { this.enterConstructionDialog(); }
+                    "click", (e: Event) => {
+                        this.enterConstructionDialog(value.getType());
+                    }
                 );
             }
         );
@@ -98,8 +100,9 @@ export class MainGameController extends Controller {
         this.screenSwitch.switchScreen({ type: ScreenType.StoneMinigame });
     }
 
-    enterConstructionDialog(): void {
+    enterConstructionDialog(building: BuildingType): void {
         const constructionDialog = this.view.getConstructionDialog();
+        constructionDialog.setBuildingType(building);
         constructionDialog.show();
     }
 
