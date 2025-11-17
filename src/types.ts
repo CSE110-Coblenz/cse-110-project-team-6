@@ -1,6 +1,7 @@
 import Konva from "konva";
 
-import { ICON_SIZE, STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
+import { Tooltip } from "./components.ts";
+import { STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
 
 export type Point = {
     x: number;
@@ -93,57 +94,16 @@ export abstract class View {
     }
 }
 
-export class Container {
-    protected group: Konva.Group;
-    protected container: Konva.Rect;
-
-    constructor(x: number, y: number, width: number, height: number) {
-        this.group = new Konva.Group(
-            { x: x, y: y, width: width, height: height }
-        );
-
-        this.container = new Konva.Rect(
-            { x: 0, y: 0, width: this.group.width(), height: this.group.height() }
-        );
-        this.group.add(this.container);
-    }
-
-    getGroup(): Konva.Group { return this.group; }
-    getContainer(): Konva.Rect { return this.container; }
-}
-
 export abstract class Controller {
     protected screenSwitch: ScreenSwitch;
+    protected tooltip: Tooltip;
 
-    constructor(screenSwitch: ScreenSwitch) {
+    constructor(screenSwitch: ScreenSwitch, tooltip: Tooltip) {
         this.screenSwitch = screenSwitch;
+        this.tooltip = tooltip;
     }
 
     abstract getView(): View;
     show(): void { this.getView().show(); }
     hide(): void { this.getView().hide(); }
-}
-
-export class Icon {
-    protected path: string;
-
-    protected group: Konva.Group;
-    protected icon?: Konva.Image;
-
-    constructor(path: string) {
-        this.path = path;
-        this.group = new Konva.Group({ width: ICON_SIZE, height: ICON_SIZE });
-
-        Konva.Image.fromURL(
-            this.path, (img) => {
-                this.icon = img;
-                this.icon.width(ICON_SIZE);
-                this.icon.height(ICON_SIZE);
-
-                this.group.add(this.icon);
-            }
-        );
-    }
-
-    getGroup(): Konva.Group { return this.group; }
 }

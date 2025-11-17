@@ -1,9 +1,10 @@
 import Konva from "konva";
 
+import { Container, Icon } from "../../components.ts";
 import { NAME, CELL_WIDTH, CELL_HEIGHT, ICON_SIZE } from "../../constants.ts";
 import type { Point } from "../../types.ts";
 import {
-    BuildingType, Color, Container, Icon, InventoryItemType, MenuItemType, View
+    BuildingType, Color, InventoryItemType, MenuItemType, View
 } from "../../types.ts";
 
 export class MainGameView extends View {
@@ -147,8 +148,7 @@ class InventoryItem extends Container {
 
     private iconItem?: Konva.Image;
     private iconPlus: Icon;
-    private quantityLabel: Konva.Text;
-    private quantityValue: Konva.Text;
+    private quantity: Konva.Text;
 
     constructor(type: InventoryItemType, x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
@@ -176,14 +176,11 @@ class InventoryItem extends Container {
         iconGroupPlus.y(height - iconGroupPlus.height());
         this.group.add(iconGroupPlus);
 
-        this.quantityLabel = new Konva.Text({ fontSize: 18, text: "Quantity:\t" });
-        this.quantityLabel.y(height - this.quantityLabel.height());
-        this.group.add(this.quantityLabel);
-
-        this.quantityValue = new Konva.Text({ fontSize: 18, text: "0" });
-        this.quantityValue.x(this.quantityLabel.x() + this.quantityLabel.width());
-        this.quantityValue.y(height - this.quantityValue.height());
-        this.group.add(this.quantityValue);
+        this.quantity = new Konva.Text(
+            { fontSize: 18, padding: 10, text: "Quantity:\t" }
+        );
+        this.quantity.y(height - this.quantity.height());
+        this.group.add(this.quantity);
     }
 
     getType(): InventoryItemType { return this.type; }

@@ -1,5 +1,6 @@
 import Konva from "konva";
 
+import { Tooltip } from "./components.ts";
 import { STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
 import type { Screen, ScreenSwitch } from "./types.ts";
 import { ScreenType } from "./types.ts";
@@ -15,6 +16,8 @@ import { loadAssets } from "./assets.ts";
 class Application implements ScreenSwitch {
     private stage: Konva.Stage;
     private layer: Konva.Layer;
+
+    protected tooltip: Tooltip;
 
     private aboutController: AboutController;
     private leaderboardController: LeaderboardController;
@@ -38,14 +41,17 @@ class Application implements ScreenSwitch {
         this.layer = new Konva.Layer();
         this.stage.add(this.layer);
 
+        this.tooltip = new Tooltip(this.stage);
+        this.layer.add(this.tooltip.getLabel());
+
         // Initialize screen controllers
-        this.aboutController = new AboutController(this);
-        this.leaderboardController = new LeaderboardController(this);
-        this.mainGameController = new MainGameController(this);
-        this.settingsController = new SettingsController(this);
-        this.stoneMinigameController = new StoneMinigameController(this);
-        this.titleController = new TitleController(this);
-        this.woodMinigameController = new WoodMinigameController(this);
+        this.aboutController = new AboutController(this, this.tooltip);
+        this.leaderboardController = new LeaderboardController(this, this.tooltip);
+        this.mainGameController = new MainGameController(this, this.tooltip);
+        this.settingsController = new SettingsController(this, this.tooltip);
+        this.stoneMinigameController = new StoneMinigameController(this, this.tooltip);
+        this.titleController = new TitleController(this, this.tooltip);
+        this.woodMinigameController = new WoodMinigameController(this, this.tooltip);
 
         // Add screen groups to layer
         this.layer.add(this.aboutController.getView().getGroup());
