@@ -11,6 +11,7 @@ export class MainGameView extends View {
     private inventoryContainer: InventoryContainer;
     private gridContainer: GridContainer;
     private buildingsContainer: BuildingsContainer;
+    private constructionDialog: ConstructionDialog;
 
     constructor() {
         super();
@@ -39,15 +40,24 @@ export class MainGameView extends View {
             this.group.width() * 0.2,
             this.group.height() * 0.8
         );
+        this.constructionDialog = new ConstructionDialog(
+            this.group.x() + this.group.width() * 0.15,
+            this.group.y() + this.group.height() * 0.2,
+            this.group.width() * 0.65,
+            this.group.height() * 0.8
+        );
 
         this.group.add(this.titleContainer.getGroup());
         this.group.add(this.inventoryContainer.getGroup());
         this.group.add(this.gridContainer.getGroup());
         this.group.add(this.buildingsContainer.getGroup());
+        this.group.add(this.constructionDialog.getGroup());
     }
 
     getMenuItems(): MenuIcon[] { return this.titleContainer.getMenuItems(); }
     getInventoryItems(): InventoryItem[] { return this.inventoryContainer.getInventoryItems(); }
+    getBuildingItems(): BuildingItem[] { return this.buildingsContainer.getBuildingItems(); }
+    getConstructionDialog(): ConstructionDialog { return this.constructionDialog; }
 }
 
 class TitleContainer extends Container {
@@ -290,6 +300,8 @@ class BuildingsContainer extends Container {
             ++index;
         }
     }
+
+    getBuildingItems(): BuildingItem[] { return this.buildings; }
 }
 
 class BuildingItem extends Container{
@@ -323,4 +335,26 @@ class BuildingItem extends Container{
         this.text.y(this.group.height() - this.text.height());
         this.group.add(this.text);
     }
+}
+
+class ConstructionDialog extends Container {
+    private iconCancel: Icon;
+
+    constructor(x: number, y: number, width: number, height: number) {
+        super(x, y, width, height);
+
+        this.group.visible(false);
+        this.container.cornerRadius(12);
+        this.container.fill(Color.White);
+
+        this.iconCancel = new Icon("../../assets/icons/cancel.png");
+        const groupCancel = this.iconCancel.getGroup();
+        groupCancel.x(this.group.width() - groupCancel.width());
+        this.group.add(groupCancel);
+    }
+
+    show(): void { this.group.visible(true); }
+    hide(): void { this.group.visible(false); }
+
+    getIconCancel(): Icon { return this.iconCancel; }
 }
