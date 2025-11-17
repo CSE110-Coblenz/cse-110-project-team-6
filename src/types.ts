@@ -66,7 +66,7 @@ export interface ScreenSwitch {
 }
 
 export abstract class View {
-    private group: Konva.Group;
+    protected group: Konva.Group;
 
     constructor() {
         this.group = new Konva.Group(
@@ -94,8 +94,8 @@ export abstract class View {
 }
 
 export class Container {
-    private group: Konva.Group;
-    private container: Konva.Rect;
+    protected group: Konva.Group;
+    protected container: Konva.Rect;
 
     constructor(x: number, y: number, width: number, height: number) {
         this.group = new Konva.Group(
@@ -121,7 +121,6 @@ export abstract class Controller {
     }
 
     abstract getView(): View;
-    getScreenSwitch(): ScreenSwitch { return this.screenSwitch; }
     show(): void { this.getView().show(); }
     hide(): void { this.getView().hide(); }
 }
@@ -132,10 +131,10 @@ export interface LeaderboardEntry {
 }
 
 export class Icon {
-    private path: string;
+    protected path: string;
 
-    private group: Konva.Group;
-    private icon?: Konva.Image;
+    protected group: Konva.Group;
+    protected icon?: Konva.Image;
 
     constructor(path: string) {
         this.path = path;

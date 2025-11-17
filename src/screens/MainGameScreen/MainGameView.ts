@@ -15,37 +15,35 @@ export class MainGameView extends View {
     constructor() {
         super();
 
-        const group = this.getGroup();
-
         this.titleContainer = new TitleContainer(
-            group.x(),
-            group.y(),
-            group.width(),
-            group.height() * 0.2
+            this.group.x(),
+            this.group.y(),
+            this.group.width(),
+            this.group.height() * 0.2
         );
         this.inventoryContainer = new InventoryContainer(
-            group.x(),
-            group.y() + group.height() * 0.2,
-            group.width() * 0.15,
-            group.height() * 0.8
+            this.group.x(),
+            this.group.y() + this.group.height() * 0.2,
+            this.group.width() * 0.15,
+            this.group.height() * 0.8
         );
         this.gridContainer = new GridContainer(
-            group.x() + group.width() * 0.15,
-            group.y() + group.height() * 0.2,
-            group.width() * 0.65,
-            group.height() * 0.8
+            this.group.x() + this.group.width() * 0.15,
+            this.group.y() + this.group.height() * 0.2,
+            this.group.width() * 0.65,
+            this.group.height() * 0.8
         );
         this.buildingsContainer = new BuildingsContainer(
-            group.x() + group.width() * 0.8,
-            group.y() + group.height() * 0.2,
-            group.width() * 0.2,
-            group.height() * 0.8
+            this.group.x() + this.group.width() * 0.8,
+            this.group.y() + this.group.height() * 0.2,
+            this.group.width() * 0.2,
+            this.group.height() * 0.8
         );
 
-        group.add(this.titleContainer.getGroup());
-        group.add(this.inventoryContainer.getGroup());
-        group.add(this.gridContainer.getGroup());
-        group.add(this.buildingsContainer.getGroup());
+        this.group.add(this.titleContainer.getGroup());
+        this.group.add(this.inventoryContainer.getGroup());
+        this.group.add(this.gridContainer.getGroup());
+        this.group.add(this.buildingsContainer.getGroup());
     }
 
     getMenuItems(): MenuIcon[] { return this.titleContainer.getMenuItems(); }
@@ -59,17 +57,15 @@ class TitleContainer extends Container {
     constructor(x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
 
-        const group = this.getGroup();
-        const container = this.getContainer();
-        container.stroke(Color.Black);
+        this.container.stroke(Color.Black);
 
         this.text = new Konva.Text({ fontSize: 48, text: NAME });
-        this.text.x(group.width() / 2 - this.text.width() / 2);
-        this.text.y(group.height() / 2 - this.text.height() / 2);
-        group.add(this.text);
+        this.text.x(this.group.width() / 2 - this.text.width() / 2);
+        this.text.y(this.group.height() / 2 - this.text.height() / 2);
+        this.group.add(this.text);
 
-        this.menuBar = new MenuBar(group.width() - Object.keys(MenuItemType).length * ICON_SIZE, 0);
-        group.add(this.menuBar.getGroup());
+        this.menuBar = new MenuBar(this.group.width() - Object.keys(MenuItemType).length * ICON_SIZE, 0);
+        this.group.add(this.menuBar.getGroup());
     }
 
     getMenuItems(): MenuIcon[] { return this.menuBar.getIcons(); }
@@ -81,9 +77,7 @@ class MenuBar extends Container {
     constructor(x: number, y: number) {
         super(x, y, Object.keys(MenuItemType).length * ICON_SIZE, ICON_SIZE);
 
-        const group = this.getGroup();
-        const container = this.getContainer();
-        container.stroke(Color.Black);
+        this.container.stroke(Color.Black);
 
         this.icons = [
             new MenuIcon(MenuItemType.Information),
@@ -96,7 +90,7 @@ class MenuBar extends Container {
                 iconGroup.x(index * ICON_SIZE);
                 iconGroup.y(0);
 
-                group.add(iconGroup);
+                this.group.add(iconGroup);
             }
         );
     }
@@ -124,25 +118,23 @@ class InventoryContainer extends Container {
     constructor(x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
 
-        const group = this.getGroup();
-        const container = this.getContainer();
-        container.stroke(Color.Black);
+        this.container.stroke(Color.Black);
 
         this.text = new Konva.Text({ fontSize: 36, text: "Inventory" });
-        this.text.x(group.width() / 2 - this.text.width() / 2);
-        group.add(this.text);
+        this.text.x(this.group.width() / 2 - this.text.width() / 2);
+        this.group.add(this.text);
 
         const itemHeight = (height - this.text.height()) / 2;
 
         this.inventoryWood = new InventoryItem(
             InventoryItemType.Wood, 0, this.text.height(), width, itemHeight
         );
-        group.add(this.inventoryWood.getGroup());
+        this.group.add(this.inventoryWood.getGroup());
 
         this.inventoryStone = new InventoryItem(
             InventoryItemType.Stone, 0, height - itemHeight, width, itemHeight
         );
-        group.add(this.inventoryStone.getGroup());
+        this.group.add(this.inventoryStone.getGroup());
     }
 
     getInventoryItems(): InventoryItem[] { return [this.inventoryWood, this.inventoryStone]; }
@@ -161,9 +153,7 @@ class InventoryItem extends Container {
     constructor(type: InventoryItemType, x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
 
-        const group = this.getGroup();
-        const container = this.getContainer();
-        container.stroke(Color.Black);
+        this.container.stroke(Color.Black);
 
         this.type = type
         this.path = `../../assets/inventory/${type}.png`;
@@ -176,7 +166,7 @@ class InventoryItem extends Container {
                 this.iconItem.height(iconSize);
                 this.iconItem.x(width / 2 - this.iconItem.width() / 2);
                 this.iconItem.y(height / 2 - this.iconItem.height() / 2);
-                group.add(this.iconItem);
+                this.group.add(this.iconItem);
             }
         );
 
@@ -184,21 +174,21 @@ class InventoryItem extends Container {
         const iconGroupPlus = this.iconPlus.getGroup();
         iconGroupPlus.x(width - iconGroupPlus.width());
         iconGroupPlus.y(height - iconGroupPlus.height());
-        group.add(iconGroupPlus);
+        this.group.add(iconGroupPlus);
 
         this.text = new Konva.Text({ fontSize: 24, text: this.type });
         this.text.x(width / 2 - this.text.width() / 2);
         this.text.y((height / 2 - iconSize / 2 - this.text.height()) / 2);
-        group.add(this.text);
+        this.group.add(this.text);
 
         this.quantityLabel = new Konva.Text({ fontSize: 18, text: "Quantity:\t" });
         this.quantityLabel.y(height - this.quantityLabel.height());
-        group.add(this.quantityLabel);
+        this.group.add(this.quantityLabel);
 
         this.quantityValue = new Konva.Text({ fontSize: 18, text: "0" });
         this.quantityValue.x(this.quantityLabel.x() + this.quantityLabel.width());
         this.quantityValue.y(height - this.quantityValue.height());
-        group.add(this.quantityValue);
+        this.group.add(this.quantityValue);
     }
 
     getType(): InventoryItemType { return this.type; }
@@ -211,9 +201,7 @@ class GridContainer extends Container {
     constructor(x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
 
-        const group = this.getGroup();
-        const container = this.getContainer();
-        container.stroke(Color.Black);
+        this.container.stroke(Color.Black);
 
         this.grid = [];
         for (let i = 0; i < 2 * height / CELL_HEIGHT; ++i) {
@@ -225,7 +213,7 @@ class GridContainer extends Container {
                     CELL_WIDTH,
                     CELL_HEIGHT
                 );
-                group.add(cell.getGroup());
+                this.group.add(cell.getGroup());
                 row.push(cell);
             }
             this.grid.push(row);
@@ -276,14 +264,12 @@ class BuildingsContainer extends Container {
     constructor(x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
 
-        const group = this.getGroup();
-        const container = this.getContainer();
-        container.stroke(Color.Black);
+        this.container.stroke(Color.Black);
 
         this.text = new Konva.Text({ fontSize: 36, text: "Buildings" });
-        this.text.x(group.width() / 2 - this.text.width() / 2);
+        this.text.x(this.group.width() / 2 - this.text.width() / 2);
         this.text.y(0);
-        group.add(this.text);
+        this.group.add(this.text);
 
         this.buildings = [];
         const iconWidth = width / 2;
@@ -300,7 +286,7 @@ class BuildingsContainer extends Container {
                 iconWidth, iconHeight
             );
             this.buildings.push(buildingIcon);
-            group.add(buildingIcon.getGroup());
+            this.group.add(buildingIcon.getGroup());
             ++index;
         }
     }
@@ -316,9 +302,7 @@ class BuildingItem extends Container{
     constructor(name: string, path: string, x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
 
-        const group = this.getGroup();
-        const container = this.getContainer();
-        container.stroke(Color.Black);
+        this.container.stroke(Color.Black);
 
         this.name = name;
         this.path = path;
@@ -326,17 +310,17 @@ class BuildingItem extends Container{
         Konva.Image.fromURL(
             this.path, (img) => {
                 this.icon = img;
-                this.icon.width(group.width() * 0.80);
-                this.icon.height(group.width() * 0.80);
-                this.icon.x(group.width() / 2 - this.icon.width() / 2);
+                this.icon.width(this.group.width() * 0.80);
+                this.icon.height(this.group.width() * 0.80);
+                this.icon.x(this.group.width() / 2 - this.icon.width() / 2);
                 this.icon.y(0);
-                group.add(this.icon);
+                this.group.add(this.icon);
             }
         );
 
         this.text = new Konva.Text({ fontSize: 18, text: this.name });
-        this.text.x(group.width() / 2 - this.text.width() / 2);
-        this.text.y(group.height() - this.text.height());
-        group.add(this.text);
+        this.text.x(this.group.width() / 2 - this.text.width() / 2);
+        this.text.y(this.group.height() - this.text.height());
+        this.group.add(this.text);
     }
 }
