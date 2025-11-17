@@ -22,12 +22,12 @@ export class MainGameController extends Controller {
                         break;
                     case MenuItemType.Settings:
                         group.addEventListener(
-                            "click", (e: Event) => { this.handleSettingsClick(); }
+                            "click", (e: Event) => { this.openSettings(); }
                         )
                         break;
                     case MenuItemType.Exit:
                         group.addEventListener(
-                            "click", (e: Event) => { this.handleExitClick(); }
+                            "click", (e: Event) => { this.exitMainGame(); }
                         );
                         break;
                     default:
@@ -44,12 +44,12 @@ export class MainGameController extends Controller {
                 switch (value.getType()) {
                     case InventoryItemType.Stone:
                         group.addEventListener(
-                            "click", (e: Event) => { this.handleAddStoneClick(); }
+                            "click", (e: Event) => { this.enterStoneMiniGame(); }
                         );
                         break;
                     case InventoryItemType.Wood:
                         group.addEventListener(
-                            "click", (e: Event) => { this.handleAddWoodClick(); }
+                            "click", (e: Event) => { this.enterWoodMiniGame(); }
                         );
                         break;
                     default:
@@ -57,6 +57,21 @@ export class MainGameController extends Controller {
                 }
             }
         );
+
+        const buildingItems = this.view.getBuildingItems();
+        buildingItems.forEach(
+            (value, index, array) => {
+                const group = value.getGroup();
+                group.addEventListener(
+                    "click", (e: Event) => { this.enterConstructionDialog(); }
+                );
+            }
+        );
+
+        const constructionDialog = this.view.getConstructionDialog();
+        constructionDialog.getIconCancel().getGroup().addEventListener(
+            "click", (e: Event) => { this.exitConstructionDialog(); }
+        )
     }
 
     getView(): MainGameView { return this.view; }
@@ -65,19 +80,29 @@ export class MainGameController extends Controller {
         // TODO: Switch to information screen
     }
 
-    handleSettingsClick(): void {
+    openSettings(): void {
         this.screenSwitch.switchScreen({ type: ScreenType.Settings });
     }
 
-    handleExitClick(): void {
+    exitMainGame(): void {
         this.screenSwitch.switchScreen({ type: ScreenType.Title });
     }
 
-    handleAddWoodClick(): void {
+    enterWoodMiniGame(): void {
         this.screenSwitch.switchScreen({ type: ScreenType.WoodMinigame });
     }
 
-    handleAddStoneClick(): void {
+    enterStoneMiniGame(): void {
         this.screenSwitch.switchScreen({ type: ScreenType.StoneMinigame });
+    }
+
+    enterConstructionDialog(): void {
+        const constructionDialog = this.view.getConstructionDialog();
+        constructionDialog.show();
+    }
+
+    exitConstructionDialog(): void {
+        const constructionDialog = this.view.getConstructionDialog();
+        constructionDialog.hide();
     }
 }
