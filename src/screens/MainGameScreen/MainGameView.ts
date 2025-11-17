@@ -119,7 +119,6 @@ class MenuIcon extends Icon {
 }
 
 class InventoryContainer extends Container {
-    private text: Konva.Text;
     private inventoryWood: InventoryItem;
     private inventoryStone: InventoryItem;
 
@@ -128,19 +127,13 @@ class InventoryContainer extends Container {
 
         this.container.stroke(Color.Black);
 
-        this.text = new Konva.Text({ fontSize: 36, text: "Inventory" });
-        this.text.x(this.group.width() / 2 - this.text.width() / 2);
-        this.group.add(this.text);
-
-        const itemHeight = (height - this.text.height()) / 2;
-
         this.inventoryWood = new InventoryItem(
-            InventoryItemType.Wood, 0, this.text.height(), width, itemHeight
+            InventoryItemType.Wood, 0, 0, width, this.group.height() / 2
         );
         this.group.add(this.inventoryWood.getGroup());
 
         this.inventoryStone = new InventoryItem(
-            InventoryItemType.Stone, 0, height - itemHeight, width, itemHeight
+            InventoryItemType.Stone, 0, this.group.height() / 2, width, this.group.height() / 2
         );
         this.group.add(this.inventoryStone.getGroup());
     }
@@ -259,8 +252,6 @@ class GridCell {
 }
 
 class BuildingsContainer extends Container {
-    private text: Konva.Text;
-
     private buildings: BuildingItem[];
 
     constructor(x: number, y: number, width: number, height: number) {
@@ -268,14 +259,9 @@ class BuildingsContainer extends Container {
 
         this.container.stroke(Color.Black);
 
-        this.text = new Konva.Text({ fontSize: 36, text: "Buildings" });
-        this.text.x(this.group.width() / 2 - this.text.width() / 2);
-        this.text.y(0);
-        this.group.add(this.text);
-
         this.buildings = [];
-        const iconWidth = width / 2;
-        const iconHeight = (height - this.text.height()) / 4;
+        const iconWidth = this.group.width() / 2;
+        const iconHeight = this.group.height() / 4;
         let index = 0;
         for (const building in BuildingType) {
             let row = Math.floor(index / 2);
@@ -284,7 +270,7 @@ class BuildingsContainer extends Container {
             let name = BuildingType[building as keyof typeof BuildingType];
             let buildingIcon = new BuildingItem(
                 name, `../../assets/buildings/${name}.png`,
-                col * iconWidth, row * iconHeight + (this.text.y() + this.text.height()),
+                col * iconWidth, row * iconHeight,
                 iconWidth, iconHeight
             );
             this.buildings.push(buildingIcon);
@@ -314,7 +300,7 @@ class BuildingItem extends Container{
                 this.icon.width(this.group.width() * 0.80);
                 this.icon.height(this.group.width() * 0.80);
                 this.icon.x(this.group.width() / 2 - this.icon.width() / 2);
-                this.icon.y(0);
+                this.icon.y(this.group.height() / 2 - this.icon.height() / 2);
                 this.group.add(this.icon);
             }
         );
