@@ -56,33 +56,28 @@ export class MainGameController extends Controller {
                         throw new TypeError(value.getType());
                 }
             }
-        )
+        );
     }
 
     getView(): MainGameView { return this.view; }
 
     handleInformationClick(): void {
-        const screenSwitch = this.getScreenSwitch();
         // TODO: Switch to information screen
     }
 
     handleSettingsClick(): void {
-        const screenSwitch = this.getScreenSwitch();
-        screenSwitch.switchScreen({ type: ScreenType.Settings });
+        this.screenSwitch.switchScreen({ type: ScreenType.Settings });
     }
 
     handleExitClick(): void {
-        const screenSwitch = this.getScreenSwitch();
-        screenSwitch.switchScreen({ type: ScreenType.Title });
+        this.screenSwitch.switchScreen({ type: ScreenType.Title });
     }
 
     handleAddWoodClick(): void {
-        const screenSwitch = this.getScreenSwitch();
-        screenSwitch.switchScreen({ type: ScreenType.WoodMinigame });
+        this.screenSwitch.switchScreen({ type: ScreenType.WoodMinigame });
     }
 
     handleAddStoneClick(): void {
-        const screenSwitch = this.getScreenSwitch();
-        screenSwitch.switchScreen({ type: ScreenType.StoneMinigame });
+        this.screenSwitch.switchScreen({ type: ScreenType.StoneMinigame });
     }
 }
