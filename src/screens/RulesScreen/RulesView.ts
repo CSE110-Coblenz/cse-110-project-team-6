@@ -61,6 +61,22 @@ export class RulesView extends View {
     return this.items;
   }
 
+  private makeItem(i: number, rowHeight: number, iconSize: number, gapX: number, rowWidth: number, color: string, copy: string, viewport: Konva.Group): void {
+    const item = new RulesItem(
+      {
+        top: i * rowHeight,
+        iconSize,
+        color,
+        gapX,
+        rowWidth,
+        rowHeight,
+      },
+      copy
+    );
+    this.items.push(item);
+    item.addTo(viewport);
+  }
+
   private build(): void {
     // Layout constants
     const M = 24;                   // outer margin
@@ -109,25 +125,9 @@ export class RulesView extends View {
     });
 
     // Build items
-    const makeItem = (i: number, color: string, copy: string) => {
-      const item = new RulesItem(
-        {
-          top: i * ROW_H,
-          iconSize: ICON,
-          color,
-          gapX: GAP_X,
-          rowWidth: clipW,
-          rowHeight: ROW_H,
-        },
-        copy
-      );
-      this.items.push(item);
-      item.addTo(viewport);
-    };
-
-    makeItem(0, "#d0b48f", "Play the Wood mini-game to collect WOOD. Wood is required to construct many buildings.");
-    makeItem(1, "#bcc2c9", "Play the Rock mini-game to collect STONE. Stone is used for sturdier structures and upgrades.");
-    makeItem(2, "#c9d6f0", "Construct buildings when you have enough resources. Solve area/perimeter word problems correctly to confirm your build.");
+    this.makeItem(0, ROW_H, ICON, GAP_X, clipW, "#d0b48f", "Play the Wood mini-game to collect WOOD. Wood is required to construct many buildings.", viewport);
+    this.makeItem(1, ROW_H, ICON, GAP_X, clipW, "#bcc2c9", "Play the Rock mini-game to collect STONE. Stone is used for sturdier structures and upgrades.", viewport);
+    this.makeItem(2, ROW_H, ICON, GAP_X, clipW, "#c9d6f0", "Construct buildings when you have enough resources. Solve area/perimeter word problems correctly to confirm your build.", viewport);
 
     // Scroll (only if needed)
     const totalContentH = this.items.length * ROW_H;
@@ -166,8 +166,6 @@ export class RulesView extends View {
       fill: "white",
     });
     g.add(r, t);
-    g.on("mouseenter", () => (document.body.style.cursor = "pointer"));
-    g.on("mouseleave", () => (document.body.style.cursor = "default"));
     return g;
   }
 }

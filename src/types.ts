@@ -64,6 +64,7 @@ export type Screen = { type: ScreenType };
 
 export interface ScreenSwitch {
     switchScreen(screen: Screen): void;
+    getPreviousScreen(): Screen | null;
 }
 
 export abstract class View {
