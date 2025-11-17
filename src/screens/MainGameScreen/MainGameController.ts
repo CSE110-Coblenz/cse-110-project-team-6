@@ -1,4 +1,5 @@
 import { MainGameView } from "./MainGameView.ts";
+import { Tooltip } from "../../components.ts";
 import {
     BuildingType, Controller, InventoryItemType, MenuItemType, ScreenType
 } from "../../types.ts";
@@ -7,8 +8,8 @@ import type { ScreenSwitch } from "../../types.ts";
 export class MainGameController extends Controller {
     private view: MainGameView;
 
-    constructor(screenSwitch: ScreenSwitch) {
-        super(screenSwitch);
+    constructor(screenSwitch: ScreenSwitch, tooltip: Tooltip) {
+        super(screenSwitch, tooltip);
 
         this.view = new MainGameView();
 
@@ -19,7 +20,7 @@ export class MainGameController extends Controller {
                 switch (value.getItem()) {
                     case MenuItemType.Information:
                         group.addEventListener(
-                            "click", (e: Event) => { this.handleInformationClick(); }
+                            "click", (e: Event) => { this.openInformation(); }
                         )
                         break;
                     case MenuItemType.Settings:
@@ -41,6 +42,17 @@ export class MainGameController extends Controller {
         const inventoryItems = this.view.getInventoryItems();
         inventoryItems.forEach(
             (value, index, array) => {
+                const group = value.getGroup();
+                group.addEventListener(
+                    "mouseover", (e: Event) => { this.tooltip.show(value.getType()); }
+                );
+                group.addEventListener(
+                    "mouseout", (e: Event) => { this.tooltip.hide(); }
+                );
+                group.addEventListener(
+                    "mousemove", (e: Event) => { this.tooltip.move(); }
+                );
+
                 const iconPlus = value.getIconPlus();
                 const groupPlus = iconPlus.getGroup();
                 switch (value.getType()) {
@@ -65,6 +77,15 @@ export class MainGameController extends Controller {
             (value, index, array) => {
                 const group = value.getGroup();
                 group.addEventListener(
+                    "mouseover", (e: Event) => { this.tooltip.show(value.getType()); }
+                );
+                group.addEventListener(
+                    "mouseout", (e: Event) => { this.tooltip.hide(); }
+                );
+                group.addEventListener(
+                    "mousemove", (e: Event) => { this.tooltip.move(); }
+                );
+                group.addEventListener(
                     "click", (e: Event) => {
                         this.enterConstructionDialog(value.getType());
                     }
@@ -80,7 +101,7 @@ export class MainGameController extends Controller {
 
     getView(): MainGameView { return this.view; }
 
-    handleInformationClick(): void {
+    openInformation(): void {
         // TODO: Switch to information screen
     }
 
