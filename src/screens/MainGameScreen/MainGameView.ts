@@ -87,8 +87,6 @@ class MenuBar extends Container {
     constructor(x: number, y: number) {
         super(x, y, Object.keys(MenuItemType).length * ICON_SIZE, ICON_SIZE);
 
-        this.container.stroke(Color.Black);
-
         this.icons = [
             new MenuIcon(MenuItemType.Information),
             new MenuIcon(MenuItemType.Settings),
@@ -154,7 +152,6 @@ class InventoryItem extends Container {
     private type: InventoryItemType;
     private path: string;
 
-    private text: Konva.Text;
     private iconItem?: Konva.Image;
     private iconPlus: Icon;
     private quantityLabel: Konva.Text;
@@ -185,11 +182,6 @@ class InventoryItem extends Container {
         iconGroupPlus.x(width - iconGroupPlus.width());
         iconGroupPlus.y(height - iconGroupPlus.height());
         this.group.add(iconGroupPlus);
-
-        this.text = new Konva.Text({ fontSize: 24, text: this.type });
-        this.text.x(width / 2 - this.text.width() / 2);
-        this.text.y((height / 2 - iconSize / 2 - this.text.height()) / 2);
-        this.group.add(this.text);
 
         this.quantityLabel = new Konva.Text({ fontSize: 18, text: "Quantity:\t" });
         this.quantityLabel.y(height - this.quantityLabel.height());
@@ -309,12 +301,9 @@ class BuildingItem extends Container{
     private path: string;
 
     private icon?: Konva.Image;
-    private text: Konva.Text;
 
     constructor(name: string, path: string, x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
-
-        this.container.stroke(Color.Black);
 
         this.name = name;
         this.path = path;
@@ -329,11 +318,6 @@ class BuildingItem extends Container{
                 this.group.add(this.icon);
             }
         );
-
-        this.text = new Konva.Text({ fontSize: 18, text: this.name });
-        this.text.x(this.group.width() / 2 - this.text.width() / 2);
-        this.text.y(this.group.height() - this.text.height());
-        this.group.add(this.text);
     }
 }
 
