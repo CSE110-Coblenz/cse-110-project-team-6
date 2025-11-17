@@ -67,3 +67,8 @@ export abstract class Controller {
     show(): void { this.getView().show(); }
     hide(): void { this.getView().hide(); }
 }
+
+export interface LeaderboardEntry {
+    username: string;
+    score: number;
+}

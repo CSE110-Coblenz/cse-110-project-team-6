@@ -1,17 +1,30 @@
 import Konva from "konva"
-import { View, Color } from "../../types.ts";
+import { View, Color, ScreenType } from "../../types.ts";
+import type { ScreenSwitch } from "../../types.ts"
 import { STAGE_WIDTH, STAGE_HEIGHT } from "../../constants.ts";
+import type { LeaderboardEntry } from "../../types.ts"; 
 
 export class LeaderboardView extends View {
 
     private titleText: Konva.Text;
     private entriesGroup: Konva.Group;
     private backButton: Konva.Group;
+    private screenSwitch: ScreenSwitch;
 
-    constructor() {
+    constructor(screenSwitch: ScreenSwitch) {
         super();
-
+        this.screenSwitch = screenSwitch;
         const group = this.getGroup();
+
+        // adding background for testing
+        const background = new Konva.Rect({
+          x: 0,
+          y: 0,
+          width: STAGE_WIDTH,
+          height: STAGE_HEIGHT,
+          fill: Color.DarkGreyBlue
+        });
+        group.add(background);
 
         // Title text
         this.titleText = new Konva.Text({
@@ -66,9 +79,14 @@ export class LeaderboardView extends View {
             this.backButton.getLayer()?.draw();
         });
 
+        // Click behavior for BACK button - go to Title Screen
+        this.backButton.on("click", () => {
+          this.screenSwitch?.switchScreen({ type: ScreenType.Title});
+        });
+
+
         this.backButton.add(buttonRect);
         this.backButton.add(buttonText);
-
         group.add(this.backButton);
   }
 
@@ -76,102 +94,97 @@ export class LeaderboardView extends View {
     /**
      * Updates leaderboard data and redraws the list.
      */
-    public setEntries(entries: { username: string; score: number }[]): void {
+    public setEntries(entries: LeaderboardEntry[]): void {
         this.entriesGroup.destroyChildren();
 
-    const rowHeight = 60;
-    const fontSize = 30;
-    const usernameColX = 20;  // Added padding from left
-    const scoreColX = 380;    // Adjusted for better spacing
-    const paddingY = 10;
+        const topEntries = Array.from({ length: 8}, (_, i) => entries[i] ?? { username: "", score: ""});
 
-    // Header row
-    const headerUser = new Konva.Text({
-      x: usernameColX,
-      y: 0,
-      text: "Username",
-      fontSize,
-      fontFamily: "Calibri",
-      fill: Color.Cyan,
+        const rowHeight = 60;
+        const fontSize = 30;
+        const paddingY = 10;
+        const tableWidth = 500;
+
+        const centerX = STAGE_WIDTH / 2;
+        const centerY = STAGE_HEIGHT / 2;
+
+        // Header row
+        const headerUser = new Konva.Text({
+          x: -tableWidth / 2 + 40,
+          y: 0,
+          text: "Username",
+          fontSize,
+          fontFamily: "Calibri",
+          fill: Color.Cyan,
+        });
+
+        const headerScore = new Konva.Text({
+          x: tableWidth / 2 - 140,
+          y: 0,
+          text: "Score",
+          fontSize,
+          fontFamily: "Calibri",
+          fill: Color.Cyan,
+        });
+
+        this.entriesGroup.add(headerUser);
+        this.entriesGroup.add(headerScore);
+
+        // Draw each player entry
+        topEntries.forEach((entry, i) => {
+          const y = (i + 1) * rowHeight + paddingY;
+
+          // Alternating row color
+          const bg = new Konva.Rect({
+            x: -tableWidth / 2,
+            y: y - 8,
+            width: tableWidth,
+            height: rowHeight - 10,
+            fill: i % 2 === 0 ? Color.LightGreyBlue : Color.GreyBlue,
+            opacity: 0.35,
+            cornerRadius: 8,
+          });
+          this.entriesGroup.add(bg);
+
+          const usernameText = new Konva.Text({
+            x: -tableWidth / 2 + 40,
+            y,
+            text: entry.username === "" ? "----" : entry.username,
+            fontSize,
+            fontFamily: "Calibri",
+            fill: Color.White,
+          });
+
+          const scoreText = new Konva.Text({
+            x: tableWidth / 2 - 140,
+            y,
+            text: entry.score === "" ? "----" : entry.score.toString(),
+            fontSize,
+            fontFamily: "Calibri",
+            fill: Color.White,
+          });
+
+          this.entriesGroup.add(usernameText);
+          this.entriesGroup.add(scoreText);
+        });
+
+    // ---- Centering logic ----
+
+    // Title centered horizontally near top
+    this.titleText.x(centerX - this.titleText.width() / 2);
+    this.titleText.y(centerY - 300);
+
+    // Entries group centered on screen
+    this.entriesGroup.position({
+      x: centerX,
+      y: centerY - 200,
     });
 
-    const headerScore = new Konva.Text({
-      x: scoreColX,
-      y: 0,
-      text: "Score",
-      fontSize,
-      fontFamily: "Calibri",
-      fill: Color.Cyan,
-    });
+    // Back button top right
+    const buttonMargin = 20;
+    this.backButton.x(STAGE_WIDTH - this.backButton.width() - 150);
+    this.backButton.y(buttonMargin);
 
-    this.entriesGroup.add(headerUser);
-    this.entriesGroup.add(headerScore);
 
-    const tableWidth = 500;
-
-    // Draw each player entry
-    entries.forEach((entry, i) => {
-      const y = (i + 1) * rowHeight + paddingY;
-
-      // Optional alternating row color
-      const bg = new Konva.Rect({
-        x: -10,
-        y: y - 8,
-        width: tableWidth,
-        height: rowHeight - 10,
-        fill: i % 2 === 0 ? Color.DarkGreyBlue : Color.GreyBlue,
-        opacity: 0.35,
-        cornerRadius: 8,
-      });
-      this.entriesGroup.add(bg);
-
-      const usernameText = new Konva.Text({
-        x: usernameColX,
-        y,
-        text: entry.username,
-        fontSize,
-        fontFamily: "Calibri",
-        fill: Color.White,
-      });
-
-      const scoreText = new Konva.Text({
-        x: scoreColX,
-        y,
-        text: entry.score.toString(),
-        fontSize,
-        fontFamily: "Calibri",
-        fill: Color.White,
-      });
-
-      this.entriesGroup.add(usernameText);
-      this.entriesGroup.add(scoreText);
-    });
-
-    // ---- Centering logic (unfinished) ----
-    const stageWidth = STAGE_WIDTH;
-    const stageHeight = STAGE_HEIGHT;
-
-    // Center the title horizontally
-    this.titleText.x(600);
-    this.titleText.y(50); // Top margin
-
-    // Calculate total height of the leaderboard content
-    const totalTableHeight = (entries.length + 1) * rowHeight + paddingY;
-
-    // Center the leaderboard horizontally
-    this.entriesGroup.x(515);
-    
-    // Position vertically with spacing from title, ensuring it doesn't go off-screen
-    const entriesStartY = this.titleText.y() + this.titleText.height() + 40;
-    const availableHeight = stageHeight - entriesStartY - 40; // 40px bottom padding
-    
-    // If content is too tall, start higher up
-    if (totalTableHeight > availableHeight) {
-        this.entriesGroup.y(entriesStartY - (totalTableHeight - availableHeight));
-    } else {
-        this.entriesGroup.y(entriesStartY);
-    }
-
-    this.entriesGroup.getLayer()?.draw();
+    this.entriesGroup.getLayer()?.batchDraw();
   }
 }
