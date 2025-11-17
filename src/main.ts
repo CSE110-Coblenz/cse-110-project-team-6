@@ -1,6 +1,8 @@
 import Konva from "konva";
 
 import { STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
+import type { Screen, ScreenSwitch } from "./types.ts";
+import { ScreenType } from "./types.ts";
 import { AboutController } from "./screens/AboutScreen/AboutController.ts";
 import { LeaderboardController } from "./screens/LeaderboardScreen/LeaderboardController.ts";
 import { MainGameController } from "./screens/MainGameScreen/MainGameController.ts";
@@ -8,8 +10,7 @@ import { SettingsController } from "./screens/SettingsScreen/SettingsController.
 import { StoneMinigameController } from "./screens/StoneMinigameScreen/StoneMinigameController.ts";
 import { TitleController } from "./screens/TitleScreen/TitleController.ts";
 import { WoodMinigameController } from "./screens/WoodMinigameScreen/WoodMinigameController.ts";
-import type { Screen, ScreenSwitch } from "./types.ts";
-import { ScreenType } from "./types.ts";
+import { loadAssets } from "./assets.ts";
 
 class Application implements ScreenSwitch {
     private stage: Konva.Stage;
@@ -52,6 +53,7 @@ class Application implements ScreenSwitch {
         this.layer.add(this.mainGameController.getView().getGroup());
         this.layer.add(this.settingsController.getView().getGroup());
         this.layer.add(this.stoneMinigameController.getView().getGroup());
+        this.layer.add(this.titleController.getView().getGroup());
         this.layer.add(this.woodMinigameController.getView().getGroup());
     }
 
@@ -66,6 +68,12 @@ class Application implements ScreenSwitch {
     switchScreen(screen: Screen): void {
         // Hide all screens
         this.aboutController.hide();
+        this.leaderboardController.hide();
+        this.mainGameController.hide();
+        this.settingsController.hide();
+        this.stoneMinigameController.hide();
+        this.titleController.hide();
+        this.woodMinigameController.hide();
 
         // Show requested screen
         switch (screen.type) {
@@ -96,7 +104,11 @@ class Application implements ScreenSwitch {
     }
 }
 
-function main(): void {
+async function main(): Promise<void> {
+    await loadAssets([
+        "/settings.png",
+    ]);
+
     const application = new Application("container");
     application.run();
 }
