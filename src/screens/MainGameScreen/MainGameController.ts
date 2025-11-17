@@ -1,3 +1,5 @@
+import Konva from "konva";
+
 import { MainGameView } from "./MainGameView.ts";
 import { Controller, InventoryItemType, MenuItemType, ScreenType } from "../../types.ts";
 import type { ScreenSwitch } from "../../types.ts";
@@ -40,15 +42,15 @@ export class MainGameController extends Controller {
         inventoryItems.forEach(
             (value, index, array) => {
                 const iconPlus = value.getIconPlus();
-                const group = iconPlus.getGroup();
+                const groupPlus = iconPlus.getGroup();
                 switch (value.getType()) {
                     case InventoryItemType.Stone:
-                        group.addEventListener(
+                        groupPlus.addEventListener(
                             "click", (e: Event) => { this.enterStoneMiniGame(); }
                         );
                         break;
                     case InventoryItemType.Wood:
-                        group.addEventListener(
+                        groupPlus.addEventListener(
                             "click", (e: Event) => { this.enterWoodMiniGame(); }
                         );
                         break;
