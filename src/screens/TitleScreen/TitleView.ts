@@ -18,7 +18,7 @@ export class TitleView extends View {
 	
 
 	onStartClick?: () => void;
-  	//onSettingsClick?: () => void;
+  	onSettingsClick?: () => void;
  	onHighScoresClick?: () => void;
  	onAboutClick?: () => void;
 
@@ -71,9 +71,9 @@ export class TitleView extends View {
 		scale: { x: 0.4, y: 0.4 }
 		});
 
-		// this.settingsButton.on("click", () => {
-		//   this.onSettingsClick?.();
-		// });
+		this.settingsButton.on("click", () => {
+		  this.onSettingsClick?.();
+		});
 
 		group.add(this.settingsButton);
 

@@ -27,13 +27,13 @@ export class TitleController extends Controller {
             screenSwitch.switchScreen({type: ScreenType.MainGame});
         };
 
-        /* Need to do more testing with this one
+        
         this.view.onSettingsClick = () => {
             this.confirmSound.currentTime = 0; 
 			this.confirmSound.play();
             screenSwitch.switchScreen({ type: ScreenType.Settings });
         };
-        */
+        
 
         this.view.onHighScoresClick = () => {
             this.confirmSound.currentTime = 0; 
