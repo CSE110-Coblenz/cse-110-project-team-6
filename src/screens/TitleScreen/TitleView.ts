@@ -18,11 +18,7 @@ export class TitleView extends View {
 	
 
 	onStartClick?: () => void;
-<<<<<<< HEAD
   	onSettingsClick?: () => void;
-=======
-  	//onSettingsClick?: () => void;
->>>>>>> 26a02cb8456a23faa00db5e605c061b16531a1f8
  	onHighScoresClick?: () => void;
  	onAboutClick?: () => void;
 
@@ -75,7 +71,6 @@ export class TitleView extends View {
 		scale: { x: 0.4, y: 0.4 }
 		});
 
-<<<<<<< HEAD
 		this.settingsButton.on("click", () => {
 		  this.onSettingsClick?.();
 		});
@@ -106,38 +101,6 @@ export class TitleView extends View {
 		scale: { x: 0.4, y: 0.4 }
 		});
 
-=======
-		// this.settingsButton.on("click", () => {
-		//   this.onSettingsClick?.();
-		// });
-
-		group.add(this.settingsButton);
-
-		// HIGH SCORES BUTTON
-		const scoresImg = Assets["assets/title/highScores.png"];
-		this.highScoresButton = new Konva.Image({
-		image: scoresImg,
-		x: STAGE_WIDTH * 0.3 - scoresImg.width * 0.4 - STAGE_WIDTH * 0.005,
-		y: STAGE_HEIGHT * 0.385,
-		scale: { x: 0.4, y: 0.4 }
-		});
-
-		this.highScoresButton.on("click", () => {
-		this.onHighScoresClick?.();
-		});
-
-		group.add(this.highScoresButton);
-
-		// ABOUT BUTTON
-		const aboutImg = Assets["assets/title/about.png"];
-		this.aboutButton = new Konva.Image({
-		image: aboutImg,
-		x: STAGE_WIDTH * 0.3 + STAGE_WIDTH * 0.005,
-		y: STAGE_HEIGHT * 0.385,
-		scale: { x: 0.4, y: 0.4 }
-		});
-
->>>>>>> 26a02cb8456a23faa00db5e605c061b16531a1f8
 		this.aboutButton.on("click", () => {
 		this.onAboutClick?.();
 		});
