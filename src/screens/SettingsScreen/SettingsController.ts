@@ -35,7 +35,7 @@ export class SettingsController extends Controller {
         exit.on("mousedown", () => {
             const previous = (this.screenSwitch as any).getPreviousScreen();
 
-            // If anything goes wrong, go back to Title
+            // If no previous screen (null), settings accessed from TitleScreen
             const target = previous ?? ScreenType.Title;
 
             this.screenSwitch.switchScreen({ type: target });
