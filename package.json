@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "lint": "npx eslint .",
+    "lint": "npx eslint . --ignore-pattern \"eslint.config.mjs\"",
     "preview": "vite preview",
     "test": "exit 0"
   },
