@@ -1,0 +1,10 @@
+Topic: Standup meeting
+Author: Varun Prajapati
+Attendees: Gwendal Cardenas Ortiz, Jacob Lee, Nathan Mitchell, Varun Prajapati, Kavya Shah, Qi Wu
+
+- Delegate tasks for completing views and implementations
+	- Main Game: Jacob Lee, Qi Wu
+	- Stone Minigame: Gwendal Cardenas Ortiz, Nathan Mitchell, Kavya Shah
+	- Title Screen: Varun Prajapati
+	- Assets: Varun Prajapati
+- Incorporate unit tests
