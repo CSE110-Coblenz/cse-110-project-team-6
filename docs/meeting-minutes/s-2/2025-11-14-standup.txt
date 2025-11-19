@@ -1,0 +1,17 @@
+Topic: Standup meeting
+Attendees: Gwendal Cardenas Ortiz, Jacob Lee, Nathan Mitchell, Varun Prajapati, Kavya Shah, Qi Wu
+
+- Gwendal Cardenas Ortiz
+	- Merge PR 47 to update settings screen
+- Jacob Lee
+	- Implement construction dialog of maingame screen
+	- Start implementing building placement view of maingame screen
+	- Update maingame view with updated assets
+- Nathan Mitchell
+	- Continue implementing stone minigame functionality
+- Varun Prajapati
+	- Create assets for construction menu of maingame view
+- Kavya Shah
+	- Address review comments for PR 44
+- Qi Wu
+	- Update about screen

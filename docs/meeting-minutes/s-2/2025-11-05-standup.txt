@@ -1,0 +1,16 @@
+Topic: Standup meeting
+Author: Jacob Lee
+Attendees: Jacob Lee, Varun Prajapati, Qi Wu
+
+- Jacob Lee
+	- Review PR 42 to implement settings view
+	- Review PR 43 to implement leaderboard view
+	- Review PR 47 to update settings view
+	- Review PR 48 to update about screen view
+	- Merge PR 54 to implement maingame view
+- Varun Prajapati
+	- Create assets for stone minigame
+- Qi Wu
+	- Adjust resolution of about page screen
+	- Adjust layout of about page screen
+	- Address review comments for PR 48
