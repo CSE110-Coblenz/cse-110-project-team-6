@@ -113,6 +113,7 @@ export class Container {
 }
 
 export abstract class Controller {
+    // this was originally private, changed to protected to allow access in LeaderboardController
     protected screenSwitch: ScreenSwitch;
 
     constructor(screenSwitch: ScreenSwitch) {
@@ -122,6 +123,11 @@ export abstract class Controller {
     abstract getView(): View;
     show(): void { this.getView().show(); }
     hide(): void { this.getView().hide(); }
+}
+
+export interface LeaderboardEntry {
+    username: string;
+    score: number;
 }
 
 export class Icon {
