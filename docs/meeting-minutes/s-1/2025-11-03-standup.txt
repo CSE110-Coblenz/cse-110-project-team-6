@@ -1,0 +1,19 @@
+Topic: Standup Meeting
+Author: Jacob Lee
+Attendees: Jacob Lee, Nathan Mitchell, Varun Prajapati, Kavya Shah
+
+- Update screen resolution
+- Jacob Lee
+	- Implement and populate title container for main game screen
+	- Implement inventory container for main game screen
+	- Implement available buildings container for main game screen
+	- Implement and populate grid container for main game screen
+- Nathan Mitchell
+	- Implement view for leaderboard screen
+	- Test leaderboard view with sample dummy inputs
+- Varun Prajapati
+	- Implement view for title screen
+	- Create assets for title screen
+	- Add sound effects for interactions with title screen components
+- Kavya Shah
+	- Implement view for rules screen

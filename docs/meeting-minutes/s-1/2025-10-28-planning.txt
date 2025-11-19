@@ -1,0 +1,11 @@
+Topic: Sprint Planning Meeting
+Author: Varun Prajapati
+Attendees: Gwendal Cardenas Ortiz, Jacob Lee, Nathan Mitchell, Varun Prajapati, Kavya Shaha, Qi Wu
+
+- Discuss best practices for GitHub repository:
+	- Branch naming conventions: brief (maximum 3-5 words) but descriptive, hyphen-delimited
+	- Commit message conventions: brief (maximum one sentencne) but descriptive
+	- Pull Request message conventions: brief summary of commits, proof of changes, summary of tests
+- Schedule future sprint planning meetings (Mondays, 08:30 pm)
+- Focus sprint 1 on implementing the view for each screen
+- Delegate tasks
