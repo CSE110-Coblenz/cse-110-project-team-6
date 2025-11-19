@@ -9,6 +9,11 @@ export class AboutController extends Controller {
         super(screenSwitch);
 
         this.view = new AboutView();
+        
+        // Bind click event to close button
+        this.view.getCloseGroup().on("click tap", () => {
+            this.hide();
+        });
     }
 
     getView(): AboutView { return this.view; }
