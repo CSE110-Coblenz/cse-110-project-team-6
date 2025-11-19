@@ -1,0 +1,14 @@
+Topic: Standup Meeting
+Author: Jacob Lee
+Attendees: Jacob Lee, Varun Prajapati, Qi Wu
+
+- Jacob Lee:
+	- Merged PR 37 to initialize the project structure
+	- Created abstract types and parent controller class
+	- Added boilerplate code for view and controller classes
+	- Started work on implementing game screen view
+- Varun Prajapati:
+	- Started designing artwork for frontend components
+- Qi Wu:
+	- Started and completed implementation of about screen view
+		- Opened PR 40

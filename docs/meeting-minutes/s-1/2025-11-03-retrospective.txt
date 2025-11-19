@@ -1,0 +1,15 @@
+Topic: Sprint Retrospective
+Author: Jacob Lee
+Attendees: Gwendal Cardenas Ortiz, Jacob Lee, Nathan Mitchell, Varun Prajapati, Kavya Shaha, Qi Wu
+
+What went well?
+- Project structure is well-designed and bodes well for future sprints
+- Each team member was aware of their assigned tasks
+- No major blockers
+- Each team member seemed to acclimate well to the project structure
+
+What could be improved?
+- More consistency between individual implementations
+
+What will you commit to improving in the next sprint?
+- Check in with team members more frequently
