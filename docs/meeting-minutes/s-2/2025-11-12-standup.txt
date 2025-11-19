@@ -1,0 +1,7 @@
+Topic: Standup meeting
+Author: Varun Prajapati
+Attendees: Varun Prajapati
+
+- Varun Prajapati
+	- Create assets for inventory container of maingame view
+	- Update assets for stone minigame view
