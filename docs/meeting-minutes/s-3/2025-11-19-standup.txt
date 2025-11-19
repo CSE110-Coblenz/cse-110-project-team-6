@@ -1,0 +1,9 @@
+Topic: Standup meeting
+Author: Jacob Lee
+Attendees: Jacob Lee
+
+Jacob Lee
+- Merge PR 67 and 68 to create CI/CD pipelines for building, linting, and testing project
+- Debug CI/CD pipeline for linting project
+- Review PR 65
+- Review PR 66
