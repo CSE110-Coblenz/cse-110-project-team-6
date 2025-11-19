@@ -1,0 +1,8 @@
+11/19/2025 Sprint 3 Meeting 1: 
+Time Started: 8:30am 
+Time Ended: 9:17am 
+Attendance: 6/6
+Jacob, Steven, & Gwendal - Finish Main Game Implementation
+Kavya & Nate - Working on Mini Game 1- finish view and implementation, finish by the end of this week and push, so we can replicate for mini game 2
+Varun - Finishing up the final few assets, working on finalizing UI for all views, and assisting anywhere else that needs extra hands. 
+Main Sprint 3 Goal: Have testing incorporated. Get AS MUCH done as possible in terms of functionality! (Preferably functionality of all the games)
