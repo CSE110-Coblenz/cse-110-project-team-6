@@ -24,13 +24,13 @@ export class MainGameView extends View {
         this.inventoryContainer = new InventoryContainer(
             this.group.x(),
             this.group.y() + this.group.height() * 0.2,
-            this.group.width() * 0.15,
+            this.group.width() * 0.2,
             this.group.height() * 0.8
         );
         this.gridContainer = new GridContainer(
-            this.group.x() + this.group.width() * 0.15,
+            this.group.x() + this.group.width() * 0.2,
             this.group.y() + this.group.height() * 0.2,
-            this.group.width() * 0.65,
+            this.group.width() * 0.6,
             this.group.height() * 0.8
         );
         this.buildingsContainer = new BuildingsContainer(
