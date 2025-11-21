@@ -1,0 +1,13 @@
+Topic: Standup meeting
+Author: Jacob Lee
+Attendees: Jacob Lee, Varun Prajapati
+
+Jacob Lee
+- Merge PR 70
+- Conduct usability study interview
+- Continue implementation of main game screen dialogs
+
+Varun Prajapati
+- Create assets for wood minigame
+- Continue development of game assets
+- Continue implementation of title screen controller
