@@ -106,7 +106,12 @@ class Application implements ScreenSwitch {
 
 async function main(): Promise<void> {
     await loadAssets([
-        "/settings.png",
+        "assets/title/about.png",
+        "assets/title/highScores.png",
+        "assets/title/settings.png",
+        "assets/title/startGame.png",
+        "assets/title/titleBackground.png",
+        "assets/title/titleText.png"
     ]);
 
     const application = new Application("container");
