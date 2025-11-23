@@ -38,13 +38,13 @@ export enum ScreenType {
     WoodMinigame = "WOODMINIGAME"
 }
 
-export enum MenuItemType {
+export enum MenuItem {
     Information = "INFORMATION",
     Settings = "SETTINGS",
     Exit = "EXIT"
 }
 
-export enum InventoryItemType {
+export enum InventoryType {
     Stone = "STONE",
     Wood = "WOOD"
 }

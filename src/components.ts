@@ -1,7 +1,7 @@
 import Konva from "konva";
 
 import { ICON_SIZE } from "./constants.ts";
-import { Color } from "./types.ts";
+import { Color, MenuItem } from "./types.ts";
 
 export class Container {
     protected group: Konva.Group;
@@ -26,6 +26,67 @@ export class Container {
 
     getGroup(): Konva.Group { return this.group; }
     getContainer(): Konva.Rect { return this.container; }
+}
+
+export class Icon {
+    protected path: string;
+
+    protected group: Konva.Group;
+    protected icon?: Konva.Image;
+
+    constructor(path: string) {
+        this.path = path;
+        this.group = new Konva.Group({ width: ICON_SIZE, height: ICON_SIZE });
+
+        Konva.Image.fromURL(
+            this.path, (img) => {
+                this.icon = img;
+                this.icon.width(ICON_SIZE);
+                this.icon.height(ICON_SIZE);
+
+                this.group.add(this.icon);
+            }
+        );
+    }
+
+    getGroup(): Konva.Group { return this.group; }
+}
+
+export class MenuBar extends Container {
+    private icons: MenuIcon[];
+
+    constructor(x: number, y: number) {
+        super(x, y, Object.keys(MenuItem).length * ICON_SIZE, ICON_SIZE);
+
+        this.icons = [
+            new MenuIcon(MenuItem.Information),
+            new MenuIcon(MenuItem.Settings),
+            new MenuIcon(MenuItem.Exit)
+        ];
+        this.icons.forEach(
+            (value, index) => {
+                const iconGroup = value.getGroup();
+                iconGroup.x(index * ICON_SIZE);
+                iconGroup.y(0);
+
+                this.group.add(iconGroup);
+            }
+        );
+    }
+
+    getIcons(): MenuIcon[] { return this.icons; }
+}
+
+class MenuIcon extends Icon {
+    private item: MenuItem;
+
+    constructor(item: MenuItem) {
+        super(`../../assets/icons/${item}.png`);
+
+        this.item = item;
+    }
+
+    getItem(): MenuItem { return this.item; }
 }
 
 export class Tooltip {
@@ -84,28 +145,4 @@ export class Tooltip {
         }
         this.label.moveToTop();
     }
-}
-
-export class Icon {
-    protected path: string;
-
-    protected group: Konva.Group;
-    protected icon?: Konva.Image;
-
-    constructor(path: string) {
-        this.path = path;
-        this.group = new Konva.Group({ width: ICON_SIZE, height: ICON_SIZE });
-
-        Konva.Image.fromURL(
-            this.path, (img) => {
-                this.icon = img;
-                this.icon.width(ICON_SIZE);
-                this.icon.height(ICON_SIZE);
-
-                this.group.add(this.icon);
-            }
-        );
-    }
-
-    getGroup(): Konva.Group { return this.group; }
 }

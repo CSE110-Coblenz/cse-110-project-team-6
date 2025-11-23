@@ -1,7 +1,7 @@
 import { MainGameView } from "./MainGameView.ts";
 import { Tooltip } from "../../components.ts";
 import {
-    BuildingType, Controller, InventoryItemType, MenuItemType, ScreenType
+    BuildingType, Controller, InventoryType, MenuItem, ScreenType
 } from "../../types.ts";
 import type { ScreenSwitch } from "../../types.ts";
 
@@ -13,22 +13,22 @@ export class MainGameController extends Controller {
 
         this.view = new MainGameView();
 
-        const menuItems = this.view.getMenuItems();
+        const menuItems = this.view.getMenuBar().getIcons();
         menuItems.forEach(
             (value, index, array) => {
                 const group = value.getGroup();
                 switch (value.getItem()) {
-                    case MenuItemType.Information:
+                    case MenuItem.Information:
                         group.addEventListener(
                             "click", (e: Event) => { this.openInformation(); }
                         )
                         break;
-                    case MenuItemType.Settings:
+                    case MenuItem.Settings:
                         group.addEventListener(
                             "click", (e: Event) => { this.openSettings(); }
                         )
                         break;
-                    case MenuItemType.Exit:
+                    case MenuItem.Exit:
                         group.addEventListener(
                             "click", (e: Event) => { this.exitMainGame(); }
                         );
@@ -56,12 +56,12 @@ export class MainGameController extends Controller {
                 const iconPlus = value.getIconPlus();
                 const groupPlus = iconPlus.getGroup();
                 switch (value.getType()) {
-                    case InventoryItemType.Stone:
+                    case InventoryType.Stone:
                         groupPlus.addEventListener(
                             "click", (e: Event) => { this.enterStoneMiniGame(); }
                         );
                         break;
-                    case InventoryItemType.Wood:
+                    case InventoryType.Wood:
                         groupPlus.addEventListener(
                             "click", (e: Event) => { this.enterWoodMiniGame(); }
                         );
@@ -72,7 +72,7 @@ export class MainGameController extends Controller {
             }
         );
 
-        const buildingItems = this.view.getBuildingItems();
+        const buildingItems = this.view.getBuildings();
         buildingItems.forEach(
             (value, index, array) => {
                 const group = value.getGroup();
