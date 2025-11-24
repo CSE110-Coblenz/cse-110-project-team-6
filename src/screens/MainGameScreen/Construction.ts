@@ -75,6 +75,8 @@ class DetailsForm extends Container {
 
 class ProposalForm extends Container {
     private title: Konva.Text;
+    private cancel: ButtonCancel;
+    private confirm: ButtonConfirm;
 
     constructor(x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
@@ -89,5 +91,63 @@ class ProposalForm extends Container {
             }
         );
         this.group.add(this.title);
+
+        this.cancel = new ButtonCancel(
+            0.025 * this.group.width(), 0.9 * this.group.height(),
+            0.45 * this.group.width(), 0.075 * this.group.height()
+        );
+        this.group.add(this.cancel.getGroup());
+
+        this.confirm = new ButtonConfirm(
+            0.525 * this.group.width(), 0.9 * this.group.height(),
+            0.45 * this.group.width(), 0.075 * this.group.height()
+        );
+        this.group.add(this.confirm.getGroup());
+    }
+}
+
+class ButtonCancel extends Container {
+    private text: Konva.Text;
+
+    constructor(x: number, y: number, width: number, height: number) {
+        super(x, y, width, height);
+
+        this.container.stroke(Color.Black);
+        this.container.fill(Color.DarkRed);
+
+        this.text = new Konva.Text(
+            {
+                fill: Color.Black,
+                fontSize: 18,
+                padding: 10,
+                text: "Cancel"
+            }
+        );
+        this.text.x((this.group.width() - this.text.width()) / 2);
+        this.text.y((this.group.height() - this.text.height()) / 2);
+        this.group.add(this.text);
+    }
+}
+
+class ButtonConfirm extends Container {
+    private text: Konva.Text;
+
+    constructor(x: number, y: number, width: number, height: number) {
+        super(x, y, width, height);
+
+        this.container.stroke(Color.Black);
+        this.container.fill(Color.Green);
+
+        this.text = new Konva.Text(
+            {
+                fill: Color.Black,
+                fontSize: 18,
+                padding: 10,
+                text: "Confirm"
+            }
+        );
+        this.text.x((this.group.width() - this.text.width()) / 2);
+        this.text.y((this.group.height() - this.text.height()) / 2);
+        this.group.add(this.text);
     }
 }
