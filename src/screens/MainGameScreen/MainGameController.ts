@@ -94,8 +94,14 @@ export class MainGameController extends Controller {
         );
 
         const constructionDialog = this.view.getConstructionDialog();
-        constructionDialog.getIconCancel().getGroup().addEventListener(
-            "click", (e: Event) => { this.exitConstructionDialog(); }
+        const projectProposal = constructionDialog.getProposal();
+        const buttonCancel = projectProposal.getCancel();
+        buttonCancel.getGroup().addEventListener(
+            "click", () => { this.exitConstructionDialog(); }
+        );
+        const buttonConfirm = projectProposal.getConfirm();
+        buttonConfirm.getGroup().addEventListener(
+            "click", () => { this.openConstructionOverlay(); }
         )
     }
 
@@ -130,5 +136,20 @@ export class MainGameController extends Controller {
     exitConstructionDialog(): void {
         const constructionDialog = this.view.getConstructionDialog();
         constructionDialog.hide();
+    }
+
+    openConstructionOverlay(): void {
+        const constructionDialog = this.view.getConstructionDialog();
+        constructionDialog.hide();
+
+        // TODO: Hide inventory
+        // TODO: Hide buildings
+        // TODO: Show overlay
+    }
+
+    closeConstructionOverlay(): void {
+        // TODO: Hide overlay
+        // TODO: Show inventory
+        // TODO: Show buildings
     }
 }

@@ -89,6 +89,14 @@ class MenuIcon extends Icon {
     getItem(): MenuItem { return this.item; }
 }
 
+export class NumericInput extends Container {
+    constructor(x: number, y: number, width: number, height: number) {
+        super(x, y, width, height);
+
+        this.container.stroke(Color.Black);
+    }
+}
+
 export class Tooltip {
     private stage: Konva.Stage;
 

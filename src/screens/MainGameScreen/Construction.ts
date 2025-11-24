@@ -1,11 +1,9 @@
 import Konva from "konva";
 
-import { Container, Icon } from "../../components.ts";
+import { Container, NumericInput } from "../../components.ts";
 import { BuildingType, Color } from "../../types.ts";
 
 export class ConstructionDialog extends Container {
-    private iconCancel: Icon;
-
     private title: Konva.Text;
     private details: DetailsForm;
     private proposal: ProposalForm;
@@ -18,12 +16,7 @@ export class ConstructionDialog extends Container {
         this.container.fill(Color.White);
         this.container.stroke(Color.Black);
 
-        this.iconCancel = new Icon("../../assets/icons/cancel.png");
-        const groupCancel = this.iconCancel.getGroup();
-        groupCancel.x(this.group.width() - groupCancel.width());
-        this.group.add(groupCancel);
-
-        this.title = new Konva.Text({ fontSize: 24, padding: 12 });
+        this.title = new Konva.Text({ fontSize: 36, padding: 12 });
         this.group.add(this.title);
 
         this.details = new DetailsForm(
@@ -46,12 +39,13 @@ export class ConstructionDialog extends Container {
     show(): void { this.group.visible(true); }
     hide(): void { this.group.visible(false); }
 
-    getIconCancel(): Icon { return this.iconCancel; }
-
     setBuildingType(type: BuildingType) {
         this.title.text(`Current Project: ${type}`);
         this.title.x((this.group.width() - this.title.width()) / 2);
     }
+
+    getDetails(): DetailsForm { return this.details; }
+    getProposal(): ProposalForm { return this.proposal; }
 }
 
 class DetailsForm extends Container {
@@ -75,6 +69,10 @@ class DetailsForm extends Container {
 
 class ProposalForm extends Container {
     private title: Konva.Text;
+    private length: NumericInput;
+    private width: NumericInput;
+    private area: NumericInput;
+    private perimeter: NumericInput;
     private cancel: ButtonCancel;
     private confirm: ButtonConfirm;
 
@@ -85,12 +83,85 @@ class ProposalForm extends Container {
 
         this.title = new Konva.Text(
             {
-                fontSize: 18,
+                fontSize: 32,
                 padding: 6,
                 text: "Project Proposal"
             }
         );
+        this.title.x((this.group.width() - this.title.width()) / 2);
         this.group.add(this.title);
+
+        this.group.add(
+            new Konva.Text(
+                {
+                    fill: Color.Black,
+                    fontSize: 18,
+                    padding: 10,
+                    text: "Length",
+                    x: 0.025 * this.group.width(),
+                    y: 0.175 * this.group.height(),
+                }
+            )
+        );
+        this.length = new NumericInput(
+            0.025 * this.group.width(), 0.25 * this.group.height(),
+            0.95 * this.group.width(), 0.075 * this.group.height()
+        );
+        this.group.add(this.length.getGroup());
+
+        this.group.add(
+            new Konva.Text(
+                {
+                    fill: Color.Black,
+                    fontSize: 18,
+                    padding: 10,
+                    text: "Width",
+                    x: 0.025 * this.group.width(),
+                    y: 0.325 * this.group.height(),
+                }
+            )
+        );
+        this.width = new NumericInput(
+            0.025 * this.group.width(), 0.4 * this.group.height(),
+            0.95 * this.group.width(), 0.075 * this.group.height()
+        );
+        this.group.add(this.width.getGroup());
+
+        this.group.add(
+            new Konva.Text(
+                {
+                    fill: Color.Black,
+                    fontSize: 18,
+                    padding: 10,
+                    text: "Area",
+                    x: 0.025 * this.group.width(),
+                    y: 0.475 * this.group.height(),
+                }
+            )
+        );
+        this.area = new NumericInput(
+            0.025 * this.group.width(), 0.55 * this.group.height(),
+            0.95 * this.group.width(), 0.075 * this.group.height()
+        );
+        this.group.add(this.area.getGroup());
+
+        this.group.add(
+            new Konva.Text(
+                {
+                    fill: Color.Black,
+                    fontSize: 18,
+                    padding: 10,
+                    text: "Perimeter",
+                    x: 0.025 * this.group.width(),
+                    y: 0.625 * this.group.height(),
+                }
+            )
+        );
+        this.perimeter = new NumericInput(
+            0.025 * this.group.width(), 0.7 * this.group.height(),
+            0.95 * this.group.width(), 0.075 * this.group.height()
+        );
+        this.group.add(this.perimeter.getGroup());
 
         this.cancel = new ButtonCancel(
             0.025 * this.group.width(), 0.9 * this.group.height(),
@@ -104,6 +175,13 @@ class ProposalForm extends Container {
         );
         this.group.add(this.confirm.getGroup());
     }
+
+    getLength(): NumericInput { return this.length; }
+    getWidth(): NumericInput { return this.width; }
+    getArea(): NumericInput { return this.area; }
+    getPerimeter(): NumericInput { return this.perimeter; }
+    getCancel(): ButtonCancel { return this.cancel; }
+    getConfirm(): ButtonConfirm { return this.confirm; }
 }
 
 class ButtonCancel extends Container {
@@ -118,7 +196,7 @@ class ButtonCancel extends Container {
         this.text = new Konva.Text(
             {
                 fill: Color.Black,
-                fontSize: 18,
+                fontSize: 24,
                 padding: 10,
                 text: "Cancel"
             }
@@ -141,7 +219,7 @@ class ButtonConfirm extends Container {
         this.text = new Konva.Text(
             {
                 fill: Color.Black,
-                fontSize: 18,
+                fontSize: 24,
                 padding: 10,
                 text: "Confirm"
             }
