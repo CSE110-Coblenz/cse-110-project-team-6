@@ -21,7 +21,7 @@ export class BuildingMenu extends Container {
 
             let name = BuildingType[building as keyof typeof BuildingType];
             let buildingIcon = new Building(
-                name, `../../assets/buildings/${name}.png`,
+                name, `../../assets/buildings/orthographic/${name}.png`,
                 col * iconWidth, row * iconHeight,
                 iconWidth, iconHeight
             );
