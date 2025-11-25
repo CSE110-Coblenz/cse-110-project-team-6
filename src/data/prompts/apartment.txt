@@ -1,0 +1,3 @@
+A developer is planning to construct a new rectangular apartment building.
+To meet expected demand, the building must provide at least %{AREA} square units of footprint: enough space for the lobby, mailroom, elevators, and utility rooms on the ground floor.
+City regulations also require a perimeter of at least %{PERIMETER} units to allow for access paths, fire exits, and emergency equipment around the exterior.

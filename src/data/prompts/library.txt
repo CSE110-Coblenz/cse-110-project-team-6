@@ -1,0 +1,3 @@
+The local library district is constructing a rectangular public library building.
+To fit the entrance area, checkout stations, and reading spaces, the building must cover at least ${AREA} square units.
+In addition, planning guidelines require a perimeter of at least ${PERIMETER} feet to provide room for windows, public access points, and outdoor lighting.

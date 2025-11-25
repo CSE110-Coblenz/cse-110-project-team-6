@@ -1,0 +1,3 @@
+The local school district is planning a rectangular school building for an expanding neighborhood.
+To fit the administrative office, lobby, and a set of core classrooms, the building must provide at least ${AREA} square units of footprint area.
+Regulations also require a perimeter of at least ${PERIMETER} to accommodate safe outdoor circulation, multiple entrances, and emergency access.
