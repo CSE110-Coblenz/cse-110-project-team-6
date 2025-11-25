@@ -1,6 +1,6 @@
 import Konva from "konva";
 
-import { STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
+import { ICON_SIZE, STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
 
 export type Point = {
     x: number;
@@ -37,13 +37,18 @@ export enum ScreenType {
     WoodMinigame = "WOODMINIGAME"
 }
 
-export enum MenuItem {
-    Information = "information",
-    Settings = "settings",
-    Exit = "exit"
+export enum MenuItemType {
+    Information = "INFORMATION",
+    Settings = "SETTINGS",
+    Exit = "EXIT"
 }
 
-export enum Building {
+export enum InventoryItemType {
+    Stone = "STONE",
+    Wood = "WOOD"
+}
+
+export enum BuildingType {
     Apartment = "APARTMENT",
     Bank = "BANK",
     Hospital = "HOSPITAL",
@@ -61,7 +66,7 @@ export interface ScreenSwitch {
 }
 
 export abstract class View {
-    private group: Konva.Group;
+    protected group: Konva.Group;
 
     constructor() {
         this.group = new Konva.Group(
@@ -89,8 +94,8 @@ export abstract class View {
 }
 
 export class Container {
-    private group: Konva.Group;
-    private container: Konva.Rect;
+    protected group: Konva.Group;
+    protected container: Konva.Rect;
 
     constructor(x: number, y: number, width: number, height: number) {
         this.group = new Konva.Group(
@@ -108,7 +113,7 @@ export class Container {
 }
 
 export abstract class Controller {
-    private screenSwitch: ScreenSwitch;
+    protected screenSwitch: ScreenSwitch;
 
     constructor(screenSwitch: ScreenSwitch) {
         this.screenSwitch = screenSwitch;
@@ -117,4 +122,28 @@ export abstract class Controller {
     abstract getView(): View;
     show(): void { this.getView().show(); }
     hide(): void { this.getView().hide(); }
+}
+
+export class Icon {
+    protected path: string;
+
+    protected group: Konva.Group;
+    protected icon?: Konva.Image;
+
+    constructor(path: string) {
+        this.path = path;
+        this.group = new Konva.Group({ width: ICON_SIZE, height: ICON_SIZE });
+
+        Konva.Image.fromURL(
+            this.path, (img) => {
+                this.icon = img;
+                this.icon.width(ICON_SIZE);
+                this.icon.height(ICON_SIZE);
+
+                this.group.add(this.icon);
+            }
+        );
+    }
+
+    getGroup(): Konva.Group { return this.group; }
 }
