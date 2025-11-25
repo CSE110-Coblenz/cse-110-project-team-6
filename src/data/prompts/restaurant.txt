@@ -1,0 +1,3 @@
+A business owner is designing a rectangular restaurant building.
+To support a full kitchen, seating area, restrooms, and service zones, the building must include at least ${AREA} square units of area.
+Health and safety rules also require a minimum perimeter of ${PERIMETER} units to allow for entryways, ventilation equipment, and exterior service access.
