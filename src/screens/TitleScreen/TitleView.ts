@@ -15,13 +15,6 @@ export class TitleView extends View {
 	private highScoresButton: Konva.Image | Konva.Rect;
 	private aboutButton: Konva.Image | Konva.Rect;
 
-	
-
-	onStartClick?: () => void;
-  	onSettingsClick?: () => void;
- 	onHighScoresClick?: () => void;
- 	onAboutClick?: () => void;
-
 	constructor() {
         super();
         const group = this.getGroup();
@@ -55,11 +48,6 @@ export class TitleView extends View {
 		y: STAGE_HEIGHT * 0.275,
 		scale: { x: 0.4, y: 0.4 }
 		});
-		
-		this.startButton.on("click", () => {
-		this.onStartClick?.();
-		});
-
 		group.add(this.startButton);
 
 		// SETTINGS BUTTON
@@ -70,11 +58,6 @@ export class TitleView extends View {
 		y: STAGE_HEIGHT * 0.275,
 		scale: { x: 0.4, y: 0.4 }
 		});
-
-		this.settingsButton.on("click", () => {
-		  this.onSettingsClick?.();
-		});
-
 		group.add(this.settingsButton);
 
 		// HIGH SCORES BUTTON
@@ -85,11 +68,6 @@ export class TitleView extends View {
 		y: STAGE_HEIGHT * 0.385,
 		scale: { x: 0.4, y: 0.4 }
 		});
-
-		this.highScoresButton.on("click", () => {
-		this.onHighScoresClick?.();
-		});
-
 		group.add(this.highScoresButton);
 
 		// ABOUT BUTTON
@@ -100,11 +78,6 @@ export class TitleView extends View {
 		y: STAGE_HEIGHT * 0.385,
 		scale: { x: 0.4, y: 0.4 }
 		});
-
-		this.aboutButton.on("click", () => {
-		this.onAboutClick?.();
-		});
-
 		group.add(this.aboutButton);
 	}
 
