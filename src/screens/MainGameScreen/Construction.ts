@@ -1,5 +1,6 @@
 import Konva from "konva";
 
+import { Building } from "./Buildings.ts";
 import { Container, NumericInput } from "../../components.ts";
 import { BuildingType, Color } from "../../types.ts";
 
@@ -39,9 +40,11 @@ export class ConstructionDialog extends Container {
     show(): void { this.group.visible(true); }
     hide(): void { this.group.visible(false); }
 
-    setBuildingType(type: BuildingType) {
+    setBuildingType(type: BuildingType): void {
         this.title.text(`Current Project: ${type}`);
         this.title.x((this.group.width() - this.title.width()) / 2);
+
+        this.details.setBuildingType(type);
     }
 
     getDetails(): DetailsForm { return this.details; }
@@ -50,6 +53,8 @@ export class ConstructionDialog extends Container {
 
 class DetailsForm extends Container {
     private title: Konva.Text;
+    private building?: Building;
+    private prompt: Konva.Text;
 
     constructor(x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
@@ -58,12 +63,36 @@ class DetailsForm extends Container {
 
         this.title = new Konva.Text(
             {
-                fontSize: 18,
+                fontSize: 32,
                 padding: 6,
                 text: "Project Details"
             }
         );
+        this.title.x((this.group.width() - this.title.width()) / 2);
         this.group.add(this.title);
+
+        this.prompt = new Konva.Text(
+            {
+                fontSize: 18,
+                text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                wrap: "word",
+                x: 0.025 * this.group.width(),
+                y: 0.5 * this.group.height(),
+                width: 0.95 * this.group.width(),
+                height: 0.975 * (this.group.height() - (this.title.y() + this.title.height()))
+            }
+        );
+        this.group.add(this.prompt);
+    }
+
+    setBuildingType(type: BuildingType): void {
+        this.building?.getGroup().remove();
+        this.building = new Building(
+            type, `../../assets/buildings/orthographic/${type}.png`,
+            0.25 * this.group.width(), this.title.y() + this.title.height(),
+            0.5 * this.group.width(), 0.5 * this.group.width()
+        );
+        this.group.add(this.building.getGroup());
     }
 }
 
