@@ -161,17 +161,97 @@ export class MainGameController extends Controller {
     }
 
     openConstructionOverlay(): void {
+        // Hide construction dialog
         const constructionDialog = this.view.getConstructionDialog();
         constructionDialog.hide();
 
-        // TODO: Hide inventory
-        // TODO: Hide buildings
-        // TODO: Show overlay
+        // Hide inventory
+        this.view.getInventoryItems().forEach(
+            (value) => { value.getGroup().hide(); }
+        );
+
+        // Hide buildings
+        this.view.getBuildings().forEach(
+            (value) => { value.getGroup().hide(); }
+        )
+
+        // Show overlay
+        const grid = this.view.getGrid();
+        Array(...grid.getCells()).forEach(
+            (row, i) => {
+                Array(...row).forEach(
+                    (cell, j) => {
+                        cell.getGroup().addEventListener(
+                            "mouseover", () => { this.gridHover(i, j); }
+                        );
+                        cell.getGroup().addEventListener(
+                            "mouseout", () => { this.gridUnhover(i, j); }
+                        );
+                        cell.getGroup().addEventListener(
+                            "click", () => { this.gridClick(i, j); }
+                        );
+                    }
+                );
+            }
+        );
+    }
+
+    gridHover(i: number, j: number): void {
+        const grid = this.view.getGrid();
+        const cells = grid.getNeighbors(i, j);
+        if (cells.includes(undefined)) {
+            cells.forEach(
+                (cell) => { cell?.flag(); }
+            );
+        } else {
+            cells.forEach(
+                (cell) => { cell?.highlight(); }
+            );
+        }
+    }
+
+    gridUnhover(i: number, j: number): void {
+        const grid = this.view.getGrid();
+        grid.getNeighbors(i, j).forEach(
+            (cell) => { cell?.unhighlight(); }
+        );
+    }
+
+    gridClick(i: number, j: number): void {
+        const grid = this.view.getGrid();
+        const cells = grid.getNeighbors(i, j);
+        if (!cells.includes(undefined)) {
+            grid.getNeighbors(i, j).forEach(
+                (cell) => { cell?.unhighlight(); }
+            );
+
+            this.closeConstructionOverlay();
+        }
     }
 
     closeConstructionOverlay(): void {
-        // TODO: Hide overlay
-        // TODO: Show inventory
-        // TODO: Show buildings
+        // Hide overlay
+        const grid = this.view.getGrid();
+        Array(...grid.getCells()).forEach(
+            (row) => {
+                Array(...row).forEach(
+                    (cell) => {
+                        cell.getGroup().removeEventListener("mouseover");
+                        cell.getGroup().removeEventListener("mouseout");
+                        cell.getGroup().removeEventListener("click");
+                    }
+                );
+            }
+        );
+
+        // Show inventory
+        this.view.getInventoryItems().forEach(
+            (value) => { value.getGroup().show(); }
+        );
+
+        // Show buildings
+        this.view.getBuildings().forEach(
+            (value) => { value.getGroup().show(); }
+        )
     }
 }

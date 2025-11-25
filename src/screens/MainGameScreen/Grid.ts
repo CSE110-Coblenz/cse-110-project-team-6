@@ -14,7 +14,7 @@ export class Grid extends Container {
         this.container.stroke(Color.Black);
 
         this.grid = [];
-        for (let i = 0; i < 2 * height / CELL_HEIGHT; ++i) {
+        for (let i = 0; i < 2 * height / CELL_HEIGHT - 1; ++i) {
             let row: GridCell[] = [];
             for (let j = 0; j < width / CELL_WIDTH - (i % 2); ++j) {
                 let cell = new GridCell(
@@ -30,7 +30,28 @@ export class Grid extends Container {
         }
     }
 
-    getGrid(): GridCell[][] { return this.grid; }
+    getCells(): GridCell[][] { return this.grid; }
+
+    getNeighbors(i: number, j: number): (GridCell | undefined)[] {
+        let cells: (GridCell | undefined)[];
+        if (i % 2 == 1) {
+            cells = [
+                this.grid[i]?.[j],
+                this.grid[i + 1]?.[j],
+                this.grid[i + 1]?.[j + 1],
+                this.grid[i + 2]?.[j]
+            ];
+        } else {
+            cells = [
+                this.grid[i]?.[j],
+                this.grid[i + 1]?.[j - 1],
+                this.grid[i + 1]?.[j],
+                this.grid[i + 2]?.[j]
+            ];
+        }
+
+        return cells;
+    }
 }
 
 class GridCell {
@@ -62,6 +83,22 @@ class GridCell {
     }
 
     getGroup(): Konva.Group { return this.group; }
-    getPoints(): Point[] { return this.points; }
-    getCell(): Konva.Line { return this.cell; }
+
+    flag(): void {
+        this.cell.fill(Color.DarkRed);
+        this.cell.stroke(Color.DarkRed);
+        this.cell.strokeWidth(4);
+    }
+
+    highlight(): void {
+        this.cell.fill(Color.Green);
+        this.cell.stroke(Color.Green);
+        this.cell.strokeWidth(4);
+    }
+
+    unhighlight(): void {
+        this.cell.fill(null);
+        this.cell.stroke(Color.LightBlue);
+        this.cell.strokeWidth(2);
+    }
 }
