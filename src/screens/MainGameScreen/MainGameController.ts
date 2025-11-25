@@ -95,6 +95,28 @@ export class MainGameController extends Controller {
 
         const constructionDialog = this.view.getConstructionDialog();
         const projectProposal = constructionDialog.getProposal();
+        const inputLength = projectProposal.getLength();
+        const inputWidth = projectProposal.getWidth();
+        inputLength.getGroup().addEventListener(
+            "click", () => {
+                if (inputLength.isFocused()) {
+                    inputLength.unfocus();
+                } else {
+                    inputLength.focus();
+                }
+                inputWidth.unfocus();
+            }
+        );
+        inputWidth.getGroup().addEventListener(
+            "click", () => {
+                inputLength.unfocus();
+                if (inputWidth.isFocused()) {
+                    inputWidth.unfocus();
+                } else {
+                    inputWidth.focus();
+                }
+            }
+        );
         const buttonCancel = projectProposal.getCancel();
         buttonCancel.getGroup().addEventListener(
             "click", () => { this.exitConstructionDialog(); }

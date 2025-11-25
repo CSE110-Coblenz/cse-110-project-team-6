@@ -90,10 +90,26 @@ class MenuIcon extends Icon {
 }
 
 export class NumericInput extends Container {
+    private focused: boolean;
+
     constructor(x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
 
         this.container.stroke(Color.Black);
+
+        this.focused = false;
+    }
+
+    isFocused(): boolean { return this.focused; }
+
+    focus(): void {
+        this.container.stroke(Color.LightBlue);
+        this.focused = true;
+    }
+
+    unfocus(): void {
+        this.container.stroke(Color.Black);
+        this.focused = false;
     }
 }
 
