@@ -6,12 +6,17 @@ import {
 import type { ScreenSwitch } from "../../types.ts";
 
 export class MainGameController extends Controller {
+    private tooltip: Tooltip;
+
     private view: MainGameView;
 
-    constructor(screenSwitch: ScreenSwitch, tooltip: Tooltip) {
-        super(screenSwitch, tooltip);
+    constructor(screenSwitch: ScreenSwitch) {
+        super(screenSwitch);
 
-        this.view = new MainGameView();
+        const stage = this.screenSwitch.getStage();
+
+        this.tooltip = new Tooltip(stage);
+        this.view = new MainGameView(this.tooltip);
 
         const menuItems = this.view.getMenuBar().getIcons();
         menuItems.forEach(
