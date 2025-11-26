@@ -126,7 +126,7 @@ class ProposalForm extends Container {
                     fill: Color.Black,
                     fontSize: 18,
                     padding: 10,
-                    text: "Length",
+                    text: "Length (Units)",
                     x: 0.025 * this.group.width(),
                     y: 0.175 * this.group.height(),
                 }
@@ -144,7 +144,7 @@ class ProposalForm extends Container {
                     fill: Color.Black,
                     fontSize: 18,
                     padding: 10,
-                    text: "Width",
+                    text: "Width (Units)",
                     x: 0.025 * this.group.width(),
                     y: 0.325 * this.group.height(),
                 }
@@ -162,7 +162,7 @@ class ProposalForm extends Container {
                     fill: Color.Black,
                     fontSize: 18,
                     padding: 10,
-                    text: "Area",
+                    text: "Area (Square Units)",
                     x: 0.025 * this.group.width(),
                     y: 0.475 * this.group.height(),
                 }
@@ -180,7 +180,7 @@ class ProposalForm extends Container {
                     fill: Color.Black,
                     fontSize: 18,
                     padding: 10,
-                    text: "Perimeter",
+                    text: "Perimeter (Units)",
                     x: 0.025 * this.group.width(),
                     y: 0.625 * this.group.height(),
                 }
@@ -211,6 +211,18 @@ class ProposalForm extends Container {
     getPerimeter(): NumericInput { return this.perimeter; }
     getCancel(): ButtonCancel { return this.cancel; }
     getConfirm(): ButtonConfirm { return this.confirm; }
+
+    updateArea(): void {
+        this.area.setValue(
+            this.length.getValue() * this.width.getValue()
+        );
+    }
+
+    updatePerimeter(): void {
+        this.perimeter.setValue(
+            2 * (this.length.getValue() + this.width.getValue())
+        );
+    }
 }
 
 class ButtonCancel extends Container {
