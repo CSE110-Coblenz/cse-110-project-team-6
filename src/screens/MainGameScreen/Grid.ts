@@ -15,9 +15,9 @@ export class Grid extends Container {
 
         this.grid = [];
         for (let i = 0; i < 2 * height / CELL_HEIGHT - 1; ++i) {
-            let row: GridCell[] = [];
+            const row: GridCell[] = [];
             for (let j = 0; j < width / CELL_WIDTH - (i % 2); ++j) {
-                let cell = new GridCell(
+                const cell = new GridCell(
                     j * CELL_WIDTH + (i % 2) * CELL_WIDTH / 2,
                     i * CELL_HEIGHT / 2,
                     CELL_WIDTH,

@@ -20,22 +20,22 @@ export class MainGameController extends Controller {
 
         const menuItems = this.view.getMenuBar().getIcons();
         menuItems.forEach(
-            (value, index, array) => {
+            (value) => {
                 const group = value.getGroup();
                 switch (value.getItem()) {
                     case MenuItem.Information:
-                        group.addEventListener(
-                            "click", (e: Event) => { this.openInformation(); }
+                        group.on(
+                            "click", () => { this.openInformation(); }
                         )
                         break;
                     case MenuItem.Settings:
-                        group.addEventListener(
-                            "click", (e: Event) => { this.openSettings(); }
+                        group.on(
+                            "click", () => { this.openSettings(); }
                         )
                         break;
                     case MenuItem.Exit:
-                        group.addEventListener(
-                            "click", (e: Event) => { this.exitMainGame(); }
+                        group.on(
+                            "click", () => { this.exitMainGame(); }
                         );
                         break;
                     default:
@@ -46,29 +46,29 @@ export class MainGameController extends Controller {
 
         const inventoryItems = this.view.getInventoryItems();
         inventoryItems.forEach(
-            (value, index, array) => {
+            (value) => {
                 const group = value.getGroup();
-                group.addEventListener(
-                    "mouseover", (e: Event) => { this.tooltip.show(value.getType()); }
+                group.on(
+                    "mouseover", () => { this.tooltip.show(value.getType()); }
                 );
-                group.addEventListener(
-                    "mouseout", (e: Event) => { this.tooltip.hide(); }
+                group.on(
+                    "mouseout", () => { this.tooltip.hide(); }
                 );
-                group.addEventListener(
-                    "mousemove", (e: Event) => { this.tooltip.move(); }
+                group.on(
+                    "mousemove", () => { this.tooltip.move(); }
                 );
 
                 const iconPlus = value.getIconPlus();
                 const groupPlus = iconPlus.getGroup();
                 switch (value.getType()) {
                     case InventoryType.Stone:
-                        groupPlus.addEventListener(
-                            "click", (e: Event) => { this.enterStoneMiniGame(); }
+                        groupPlus.on(
+                            "click", () => { this.enterStoneMiniGame(); }
                         );
                         break;
                     case InventoryType.Wood:
-                        groupPlus.addEventListener(
-                            "click", (e: Event) => { this.enterWoodMiniGame(); }
+                        groupPlus.on(
+                            "click", () => { this.enterWoodMiniGame(); }
                         );
                         break;
                     default:
@@ -79,19 +79,19 @@ export class MainGameController extends Controller {
 
         const buildingItems = this.view.getBuildings();
         buildingItems.forEach(
-            (value, index, array) => {
+            (value) => {
                 const group = value.getGroup();
-                group.addEventListener(
-                    "mouseover", (e: Event) => { this.tooltip.show(value.getType()); }
+                group.on(
+                    "mouseover", () => { this.tooltip.show(value.getType()); }
                 );
-                group.addEventListener(
-                    "mouseout", (e: Event) => { this.tooltip.hide(); }
+                group.on(
+                    "mouseout", () => { this.tooltip.hide(); }
                 );
-                group.addEventListener(
-                    "mousemove", (e: Event) => { this.tooltip.move(); }
+                group.on(
+                    "mousemove", () => { this.tooltip.move(); }
                 );
-                group.addEventListener(
-                    "click", (e: Event) => {
+                group.on(
+                    "click", () => {
                         this.enterConstructionDialog(value.getType());
                     }
                 );
@@ -129,7 +129,7 @@ export class MainGameController extends Controller {
         const buttonConfirm = projectProposal.getConfirm();
         buttonConfirm.getGroup().addEventListener(
             "click", () => { this.openConstructionOverlay(); }
-        )
+        );
     }
 
     getView(): MainGameView { return this.view; }
