@@ -1,6 +1,5 @@
 import Konva from "konva";
 
-import { Tooltip } from "./components.ts";
 import { STAGE_WIDTH, STAGE_HEIGHT } from "./constants.ts";
 
 export type Point = {
@@ -63,6 +62,7 @@ export enum BuildingType {
 export type Screen = { type: ScreenType };
 
 export interface ScreenSwitch {
+    getStage(): Konva.Stage;
     switchScreen(screen: Screen): void;
 }
 
@@ -96,11 +96,9 @@ export abstract class View {
 
 export abstract class Controller {
     protected screenSwitch: ScreenSwitch;
-    protected tooltip: Tooltip;
 
-    constructor(screenSwitch: ScreenSwitch, tooltip: Tooltip) {
+    constructor(screenSwitch: ScreenSwitch) {
         this.screenSwitch = screenSwitch;
-        this.tooltip = tooltip;
     }
 
     abstract getView(): View;

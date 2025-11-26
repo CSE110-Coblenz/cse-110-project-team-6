@@ -1,6 +1,6 @@
 import Konva from "konva";
 
-import { Container, MenuBar } from "../../components.ts";
+import { Container, MenuBar, Tooltip } from "../../components.ts";
 import { NAME, ICON_SIZE } from "../../constants.ts";
 import { Building, BuildingMenu } from "./Buildings.ts";
 import { ConstructionDialog } from "./Construction.ts";
@@ -9,14 +9,19 @@ import { Inventory, InventoryItem } from "./Inventory.ts";
 import { Color, MenuItem, View } from "../../types.ts";
 
 export class MainGameView extends View {
+    private tooltip: Tooltip;
+
     private title: TitleContainer;
     private inventory: Inventory;
     private grid: Grid;
     private buildingMenu: BuildingMenu;
     private constructionDialog: ConstructionDialog;
 
-    constructor() {
+    constructor(tooltip: Tooltip) {
         super();
+
+        this.tooltip = tooltip;
+        this.group.add(this.tooltip.getLabel());
 
         this.title = new TitleContainer(
             this.group.x(),

@@ -1,5 +1,4 @@
 import { SettingsView } from "./SettingsView.ts";
-import { Tooltip } from "../../components.ts";
 import { Controller } from "../../types.ts";
 import type { ScreenSwitch } from "../../types.ts";
 
@@ -8,8 +7,8 @@ export class SettingsController extends Controller {
     private volumeVals: number[] = [0.5, 0.5, 0.5]; 
     // 0 = Main, 1 = Effects, 2 = Music
 
-    constructor(screenSwitch: ScreenSwitch, tooltip: Tooltip) {
-        super(screenSwitch, tooltip);
+    constructor(screenSwitch: ScreenSwitch) {
+        super(screenSwitch);
 
         this.view = new SettingsView();
 
