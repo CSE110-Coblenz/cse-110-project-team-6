@@ -1,3 +1,0 @@
-A financial company is designing a rectangular bank building.
-To house teller stations, offices, waiting areas, and security rooms, the building must have at least ${AREA} square units of floor area.
-Current building codes also require a minimum perimeter of ${PERIMETER} units to accommodate multiple entrance points, ATM installations, and security lighting around the outside.

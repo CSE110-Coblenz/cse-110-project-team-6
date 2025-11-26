@@ -161,7 +161,7 @@ export class MainGameController extends Controller {
 
     enterConstructionDialog(building: BuildingType): void {
         const constructionDialog = this.view.getConstructionDialog();
-        constructionDialog.setBuildingType(building);
+        constructionDialog.updateBuildingType(building);
         constructionDialog.show();
     }
 
