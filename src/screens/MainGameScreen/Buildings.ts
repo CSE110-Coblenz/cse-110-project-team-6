@@ -16,11 +16,11 @@ export class BuildingMenu extends Container {
         const iconHeight = this.group.height() / 4;
         let index = 0;
         for (const building in BuildingType) {
-            let row = Math.floor(index / 2);
-            let col = index % 2;
+            const row = Math.floor(index / 2);
+            const col = index % 2;
 
-            let name = BuildingType[building as keyof typeof BuildingType];
-            let buildingIcon = new Building(
+            const name = BuildingType[building as keyof typeof BuildingType];
+            const buildingIcon = new Building(
                 name, `../../assets/buildings/orthographic/${name}.png`,
                 col * iconWidth, row * iconHeight,
                 iconWidth, iconHeight
