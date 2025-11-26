@@ -90,6 +90,9 @@ class MenuIcon extends Icon {
 }
 
 export class NumericInput extends Container {
+    private value: number;
+    private text: Konva.Text;
+
     private focused: boolean;
 
     constructor(x: number, y: number, width: number, height: number) {
@@ -97,7 +100,53 @@ export class NumericInput extends Container {
 
         this.container.stroke(Color.Black);
 
+        this.value = 0;
+        this.text = new Konva.Text(
+            {
+                fontSize: 18,
+                padding: 10,
+                text: this.value.toString()
+            }
+        );
+        this.text.y((this.group.height() - this.text.height()) / 2);
+        this.group.add(this.text);
+
         this.focused = false;
+    }
+
+    bindListeners(container: HTMLElement): void {
+        this.group.on(
+            "click", () => {
+                if (this.focused) {
+                    this.unfocus();
+                } else {
+                    this.focus();
+                }
+            }
+        )
+        container.addEventListener(
+            "keydown", (e: KeyboardEvent) => {
+                switch (e.key) {
+                    case "Backspace":
+                        this.handleBackspace();
+                        break;
+                    case "Delete":
+                        this.handleDelete();
+                        break;
+                    case "Escape":
+                        this.handleEscape();
+                        break;
+                    default:
+                        if (/^[0-9]$/.test(e.key)) {
+                            try {
+                                this.handleNumeric(e.key);
+                            } catch (err: unknown) {
+                                console.error(err);
+                            }
+                        }
+                }
+            }
+        )
     }
 
     isFocused(): boolean { return this.focused; }
@@ -110,6 +159,44 @@ export class NumericInput extends Container {
     unfocus(): void {
         this.container.stroke(Color.Black);
         this.focused = false;
+    }
+
+    getValue(): number { return this.value; }
+
+    setValue(value: number) {
+        this.value = value;
+        this.text.text(this.value.toString());
+    }
+
+    push(digit: number) { this.setValue(10 * this.value + digit); }
+    pop() { this.setValue(Math.floor(this.value / 10)); }
+    clear() { this.setValue(0); }
+
+    handleBackspace(): void {
+        if (this.focused) {
+            this.pop();
+        }
+    }
+
+    handleDelete(): void {
+        if (this.focused) {
+            this.clear();
+        }
+    }
+
+    handleEscape(): void {
+        if (this.focused) {
+            this.unfocus();
+        }
+    }
+
+    handleNumeric(char: string) {
+        if (!/^[0-9]$/.test(char)) {
+            throw new TypeError(char);
+        }
+        if (this.focused) {
+            this.push(parseInt(char));
+        }
     }
 }
 

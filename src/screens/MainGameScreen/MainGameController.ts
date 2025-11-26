@@ -1,3 +1,5 @@
+import Konva from "konva";
+
 import { MainGameView } from "./MainGameView.ts";
 import { Tooltip } from "../../components.ts";
 import {
@@ -14,6 +16,7 @@ export class MainGameController extends Controller {
         super(screenSwitch);
 
         const stage = this.screenSwitch.getStage();
+        const container = stage.container();
 
         this.tooltip = new Tooltip(stage);
         this.view = new MainGameView(this.tooltip);
@@ -99,36 +102,38 @@ export class MainGameController extends Controller {
         );
 
         const constructionDialog = this.view.getConstructionDialog();
-        const projectProposal = constructionDialog.getProposal();
-        const inputLength = projectProposal.getLength();
-        const inputWidth = projectProposal.getWidth();
-        inputLength.getGroup().addEventListener(
-            "click", () => {
-                if (inputLength.isFocused()) {
-                    inputLength.unfocus();
-                } else {
-                    inputLength.focus();
-                }
-                inputWidth.unfocus();
+        const proposal = constructionDialog.getProposal();
+        proposal.getGroup().on(
+            "click", (e: Konva.KonvaEventObject<MouseEvent>) => {
+                this.clickProjectProposal(e);
             }
         );
-        inputWidth.getGroup().addEventListener(
-            "click", () => {
-                inputLength.unfocus();
-                if (inputWidth.isFocused()) {
-                    inputWidth.unfocus();
-                } else {
-                    inputWidth.focus();
-                }
+
+        // Construction dialog length/width numeric inputs
+        const length = proposal.getLength();
+        const width = proposal.getWidth();
+        length.bindListeners(container);
+        width.bindListeners(container);
+        container.addEventListener(
+            "keydown", () => {
+                proposal.updateArea();
+                proposal.updatePerimeter();
             }
         );
-        const buttonCancel = projectProposal.getCancel();
-        buttonCancel.getGroup().addEventListener(
+
+        // Consturction dialog cancel button
+        const cancel = proposal.getCancel();
+        cancel.getGroup().addEventListener(
             "click", () => { this.exitConstructionDialog(); }
         );
-        const buttonConfirm = projectProposal.getConfirm();
-        buttonConfirm.getGroup().addEventListener(
-            "click", () => { this.openConstructionOverlay(); }
+
+        // Construction dialog confirm button
+        const confirm = proposal.getConfirm();
+        confirm.getGroup().addEventListener(
+            "click", () => {
+                this.exitConstructionDialog();
+                this.openConstructionOverlay();
+            }
         );
     }
 
@@ -160,16 +165,36 @@ export class MainGameController extends Controller {
         constructionDialog.show();
     }
 
+    clickProjectProposal(e: Konva.KonvaEventObject<MouseEvent>): void {
+        const constructionDialog = this.view.getConstructionDialog();
+        const proposal = constructionDialog.getProposal();
+        const length = proposal.getLength();
+        const width = proposal.getWidth();
+
+        if (!length.getGroup().children.includes(e.target)) {
+            length.unfocus();
+        }
+        if (!width.getGroup().children.includes(e.target)) {
+            width.unfocus();
+        }
+    }
+
     exitConstructionDialog(): void {
         const constructionDialog = this.view.getConstructionDialog();
+        const proposal = constructionDialog.getProposal();
+        const length = proposal.getLength();
+        const width = proposal.getWidth();
+
+        length.clear();
+        width.clear();
+
+        proposal.updateArea();
+        proposal.updatePerimeter();
+
         constructionDialog.hide();
     }
 
     openConstructionOverlay(): void {
-        // Hide construction dialog
-        const constructionDialog = this.view.getConstructionDialog();
-        constructionDialog.hide();
-
         // Hide inventory
         this.view.getInventoryItems().forEach(
             (value) => { value.getGroup().hide(); }
