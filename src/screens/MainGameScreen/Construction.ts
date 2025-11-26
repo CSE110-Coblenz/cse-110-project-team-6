@@ -4,6 +4,8 @@ import { Building } from "./Buildings.ts";
 import { Container, NumericInput } from "../../components.ts";
 import { BuildingType, Color } from "../../types.ts";
 
+import prompts from "../../data/prompts.json";
+
 export class ConstructionDialog extends Container {
     private title: Konva.Text;
     private details: DetailsForm;
@@ -40,11 +42,11 @@ export class ConstructionDialog extends Container {
     show(): void { this.group.visible(true); }
     hide(): void { this.group.visible(false); }
 
-    setBuildingType(type: BuildingType): void {
+    updateBuildingType(type: BuildingType): void {
         this.title.text(`Current Project: ${type}`);
         this.title.x((this.group.width() - this.title.width()) / 2);
 
-        this.details.setBuildingType(type);
+        this.details.updateBuildingType(type);
     }
 
     getDetails(): DetailsForm { return this.details; }
@@ -74,7 +76,6 @@ class DetailsForm extends Container {
         this.prompt = new Konva.Text(
             {
                 fontSize: 18,
-                text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
                 wrap: "word",
                 x: 0.025 * this.group.width(),
                 y: 0.5 * this.group.height(),
@@ -85,7 +86,7 @@ class DetailsForm extends Container {
         this.group.add(this.prompt);
     }
 
-    setBuildingType(type: BuildingType): void {
+    updateBuildingType(type: BuildingType): void {
         this.building?.getGroup().remove();
         this.building = new Building(
             type, `../../assets/buildings/orthographic/${type}.png`,
@@ -93,6 +94,8 @@ class DetailsForm extends Container {
             0.5 * this.group.width(), 0.5 * this.group.width()
         );
         this.group.add(this.building.getGroup());
+
+        this.prompt.text(prompts[type.toLowerCase() as keyof typeof prompts]);
     }
 }
 

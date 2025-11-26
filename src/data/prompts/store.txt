@@ -1,3 +1,0 @@
-A retail company is planning a new rectangular store building.
-To fit aisles, checkout counters, and inventory storage, the building’s footprint must be at least ${AREA} square units.
-Local codes also require a perimeter of at least ${PERIMETER} units to ensure space for customer entrances, window displays, and delivery access.

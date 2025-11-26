@@ -1,3 +1,0 @@
-A healthcare organization is planning a new rectangular hospital building.
-To fit an emergency room, instake area, and treatment spaces, the building must have at least ${AREA} square units of footprint area.
-Safety standards also require a perimeter of at least ${PERIMETER} units to provide adequate access for ambulances and equipment deliveries along the exterior.
