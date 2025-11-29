@@ -66,7 +66,8 @@ export class MainGameView extends View {
 
     getMenuBar(): MenuBar { return this.title.getMenuBar(); }
     getGrid(): Grid { return this.grid; }
-    getInventoryItems(): InventoryItem[] { return this.inventory.getItems(); }
+    getInventoryWood(): InventoryItem { return this.inventory.getWood(); }
+    getInventoryStone(): InventoryItem { return this.inventory.getStone(); }
     getBuildings(): Building[] { return this.buildingMenu.getBuildings(); }
     getConstructionDialog(): ConstructionDialog { return this.constructionDialog; }
 }

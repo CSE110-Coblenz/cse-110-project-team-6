@@ -23,7 +23,8 @@ export class Inventory extends Container {
         this.group.add(this.inventoryStone.getGroup());
     }
 
-    getItems(): InventoryItem[] { return [this.inventoryWood, this.inventoryStone]; }
+    getWood(): InventoryItem { return this.inventoryWood; }
+    getStone(): InventoryItem { return this.inventoryStone; }
 }
 
 export class InventoryItem extends Container {
@@ -60,13 +61,12 @@ export class InventoryItem extends Container {
         iconGroupPlus.y(height - iconGroupPlus.height());
         this.group.add(iconGroupPlus);
 
-        this.quantity = new Konva.Text(
-            { fontSize: 18, padding: 10, text: "Quantity:\t" }
-        );
+        this.quantity = new Konva.Text({ fontSize: 18, padding: 10 });
         this.quantity.y(height - this.quantity.height());
         this.group.add(this.quantity);
     }
 
     getType(): InventoryType { return this.type; }
     getIconPlus(): Icon { return this.iconPlus; }
+    setQuantity(quantity: number): void { this.quantity.text(`Quantity:\t${quantity}`); }
 }

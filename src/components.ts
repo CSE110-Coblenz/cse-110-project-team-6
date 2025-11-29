@@ -241,6 +241,12 @@ export class Tooltip {
         this.label.add(this.text);
     }
 
+    bindListeners(group: Konva.Group, hoverText: string) {
+        group.on("mouseover", () => { this.show(hoverText); });
+        group.on("mouseout", () => { this.hide() });
+        group.on("mousemove", () => { this.move() });
+    }
+
     getLabel() { return this.label; }
     getText() { return this.text; }
     show(text: string) {
