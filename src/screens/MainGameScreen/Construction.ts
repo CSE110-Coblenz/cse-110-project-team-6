@@ -42,11 +42,9 @@ export class ConstructionDialog extends Container {
     show(): void { this.group.visible(true); }
     hide(): void { this.group.visible(false); }
 
-    updateBuildingType(type: BuildingType): void {
+    setBuildingType(type: BuildingType): void {
         this.title.text(`Current Project: ${type}`);
         this.title.x((this.group.width() - this.title.width()) / 2);
-
-        this.details.updateBuildingType(type);
     }
 
     getDetails(): DetailsForm { return this.details; }
@@ -86,7 +84,7 @@ class DetailsForm extends Container {
         this.group.add(this.prompt);
     }
 
-    updateBuildingType(type: BuildingType): void {
+    setParameters(type: BuildingType, area: number, perimeter: number): void {
         this.building?.getGroup().remove();
         this.building = new Building(
             type, `../../assets/buildings/orthographic/${type}.png`,
@@ -95,7 +93,12 @@ class DetailsForm extends Container {
         );
         this.group.add(this.building.getGroup());
 
-        this.prompt.text(prompts[type.toLowerCase() as keyof typeof prompts]);
+        const text = prompts[type.toLowerCase() as keyof typeof prompts].replace(
+            "%{AREA}", area.toString()
+        ).replace(
+            "%{PERIMETER}", perimeter.toString()
+        )
+        this.prompt.text(text);
     }
 }
 

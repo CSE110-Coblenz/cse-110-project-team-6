@@ -156,8 +156,16 @@ export class MainGameController extends Controller {
     }
 
     enterConstructionDialog(building: BuildingType): void {
+        this.model.generateTargets();
+
         const constructionDialog = this.view.getConstructionDialog();
-        constructionDialog.updateBuildingType(building);
+        constructionDialog.setBuildingType(building);
+
+        const details = constructionDialog.getDetails();
+        details.setParameters(
+            building, this.model.getTargetArea(), this.model.getTargetPerimeter()
+        );
+
         constructionDialog.show();
     }
 
@@ -199,50 +207,65 @@ export class MainGameController extends Controller {
     validateConstructionDialog(): boolean {
         const constructionDialog = this.view.getConstructionDialog();
         const proposal = constructionDialog.getProposal();
+
         const length = proposal.getLength();
         const width = proposal.getWidth();
         const area = proposal.getArea();
         const perimeter = proposal.getPerimeter();
 
-        const wood = this.model.getWood().get();
-        const stone = this.model.getStone().get();
+        let valid: boolean = true;
 
+        // Inputted length must a nonzero positive integer
+        length.unfocus();
+        if (length.getValue() <= 0) {
+            valid = false;
+            length.flag();
+        } else {
+            length.unflag();
+        }
+
+        // Inputted width must be a nonzero positive integer
+        width.unfocus();
+        if (width.getValue() <= 0) {
+            valid = false;
+            width.flag();
+        } else {
+            width.unflag();
+        }
+
+        // Calculated area must be greater than or equal to target area
+        // Calculated area must be less than or equal to available stone
         if (
-            (length.getValue() > 0 && width.getValue() > 0)
-            && (stone >= area.getValue() && wood >= perimeter.getValue())
+            area.getValue() < this.model.getTargetArea()
+            || area.getValue() > this.model.getStone().get()
         ) {
+            valid = false;
+            area.flag();
+        } else {
+            area.unflag();
+        }
+
+        // Calculated perimeter must be greater than or equal to target perimeter
+        // Calculated perimeter must be less than or equal to available wood
+        if (
+            perimeter.getValue() < this.model.getTargetPerimeter()
+            || perimeter.getValue() > this.model.getWood().get()
+        ) {
+            valid = false;
+            perimeter.flag();
+        } else {
+            perimeter.unflag();
+        }
+
+        if (valid) {
             this.subtractWood(perimeter.getValue());
             this.updateWoodQuantity();
 
             this.subtractStone(area.getValue());
             this.updateStoneQuantity();
-
-            return true;
         }
 
-        length.unfocus();
-        if (length.getValue() <= 0) {
-            length.flag();
-        }
-
-        width.unfocus();
-        if (width.getValue() <= 0) {
-            width.flag();
-        }
-
-        if (stone < area.getValue()) {
-            area.flag();
-        } else {
-            area.unfocus();
-        }
-
-        if (wood < perimeter.getValue()) {
-            perimeter.flag();
-        } else {
-            perimeter.unfocus();
-        }
-
-        return false;
+        return valid;
     }
 
     openConstructionOverlay(): void {
