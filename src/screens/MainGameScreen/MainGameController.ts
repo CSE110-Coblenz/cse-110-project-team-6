@@ -263,6 +263,10 @@ export class MainGameController extends Controller {
 
             this.subtractStone(area.getValue());
             this.updateStoneQuantity();
+
+            this.model.incrementScore(
+                this.model.scoreInput(area.getValue(), perimeter.getValue())
+            );
         }
 
         return valid;
