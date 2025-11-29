@@ -1,16 +1,16 @@
 import Konva from "konva";
 
+import { MainGameModel } from "./MainGameModel.ts";
 import { MainGameView } from "./MainGameView.ts";
 import { Tooltip } from "../../components.ts";
-import {
-    BuildingType, Controller, InventoryType, MenuItem, ScreenType
-} from "../../types.ts";
+import { BuildingType, Controller, MenuItem, ScreenType } from "../../types.ts";
 import type { ScreenSwitch } from "../../types.ts";
 
 export class MainGameController extends Controller {
     private tooltip: Tooltip;
 
     private view: MainGameView;
+    private model: MainGameModel;
 
     constructor(screenSwitch: ScreenSwitch) {
         super(screenSwitch);
@@ -21,25 +21,23 @@ export class MainGameController extends Controller {
         this.tooltip = new Tooltip(stage);
         this.view = new MainGameView(this.tooltip);
 
+        this.model = new MainGameModel(100);
+        this.updateWoodQuantity();
+        this.updateStoneQuantity();
+
         const menuItems = this.view.getMenuBar().getIcons();
         menuItems.forEach(
             (value) => {
                 const group = value.getGroup();
                 switch (value.getItem()) {
                     case MenuItem.Information:
-                        group.on(
-                            "click", () => { this.openInformation(); }
-                        )
+                        group.on("click", () => { this.openInformation(); });
                         break;
                     case MenuItem.Settings:
-                        group.on(
-                            "click", () => { this.openSettings(); }
-                        )
+                        group.on("click", () => { this.openSettings(); });
                         break;
                     case MenuItem.Exit:
-                        group.on(
-                            "click", () => { this.exitMainGame(); }
-                        );
+                        group.on("click", () => { this.exitMainGame(); });
                         break;
                     default:
                         throw new TypeError(value.getItem());
@@ -47,56 +45,20 @@ export class MainGameController extends Controller {
             }
         );
 
-        const inventoryItems = this.view.getInventoryItems();
-        inventoryItems.forEach(
-            (value) => {
-                const group = value.getGroup();
-                group.on(
-                    "mouseover", () => { this.tooltip.show(value.getType()); }
-                );
-                group.on(
-                    "mouseout", () => { this.tooltip.hide(); }
-                );
-                group.on(
-                    "mousemove", () => { this.tooltip.move(); }
-                );
+        const inventoryWood = this.view.getInventoryWood();
+        this.tooltip.bindListeners(inventoryWood.getGroup(), inventoryWood.getType());
+        inventoryWood.getIconPlus().getGroup().on("click", () => { this.enterWoodMiniGame(); });
 
-                const iconPlus = value.getIconPlus();
-                const groupPlus = iconPlus.getGroup();
-                switch (value.getType()) {
-                    case InventoryType.Stone:
-                        groupPlus.on(
-                            "click", () => { this.enterStoneMiniGame(); }
-                        );
-                        break;
-                    case InventoryType.Wood:
-                        groupPlus.on(
-                            "click", () => { this.enterWoodMiniGame(); }
-                        );
-                        break;
-                    default:
-                        throw new TypeError(value.getType());
-                }
-            }
-        );
+        const inventoryStone = this.view.getInventoryStone();
+        this.tooltip.bindListeners(inventoryStone.getGroup(), inventoryStone.getType());
+        inventoryStone.getIconPlus().getGroup().on("click", () => { this.enterStoneMiniGame(); });
 
         const buildingItems = this.view.getBuildings();
         buildingItems.forEach(
             (value) => {
-                const group = value.getGroup();
-                group.on(
-                    "mouseover", () => { this.tooltip.show(value.getType()); }
-                );
-                group.on(
-                    "mouseout", () => { this.tooltip.hide(); }
-                );
-                group.on(
-                    "mousemove", () => { this.tooltip.move(); }
-                );
-                group.on(
-                    "click", () => {
-                        this.enterConstructionDialog(value.getType());
-                    }
+                this.tooltip.bindListeners(value.getGroup(), value.getType());
+                value.getGroup().on(
+                    "click", () => { this.enterConstructionDialog(value.getType()); }
                 );
             }
         );
@@ -152,11 +114,43 @@ export class MainGameController extends Controller {
     }
 
     enterWoodMiniGame(): void {
-        this.screenSwitch.switchScreen({ type: ScreenType.WoodMinigame });
+        // this.screenSwitch.switchScreen({ type: ScreenType.WoodMinigame });
+        this.addWood(50);
+    }
+
+    updateWoodQuantity(): void {
+        this.view.getInventoryWood().setQuantity(this.model.getWood().get());
+    }
+
+    addWood(quantity: number): void {
+        this.model.getWood().add(quantity);
+        this.updateWoodQuantity();
+    }
+
+    subtractWood(quantity: number): boolean {
+        const success = this.model.getWood().subtract(quantity);
+        this.updateWoodQuantity();
+        return success;
     }
 
     enterStoneMiniGame(): void {
-        this.screenSwitch.switchScreen({ type: ScreenType.StoneMinigame });
+        // this.screenSwitch.switchScreen({ type: ScreenType.StoneMinigame });
+        this.addStone(50);
+    }
+
+    updateStoneQuantity(): void {
+        this.view.getInventoryStone().setQuantity(this.model.getStone().get());
+    }
+
+    addStone(quantity: number): void {
+        this.model.getStone().add(quantity);
+        this.updateStoneQuantity();
+    }
+
+    subtractStone(quantity: number): boolean {
+        const success = this.model.getStone().subtract(quantity);
+        this.updateStoneQuantity();
+        return success;
     }
 
     enterConstructionDialog(building: BuildingType): void {
@@ -196,9 +190,8 @@ export class MainGameController extends Controller {
 
     openConstructionOverlay(): void {
         // Hide inventory
-        this.view.getInventoryItems().forEach(
-            (value) => { value.getGroup().hide(); }
-        );
+        this.view.getInventoryWood().getGroup().hide();
+        this.view.getInventoryStone().getGroup().hide();
 
         // Hide buildings
         this.view.getBuildings().forEach(
@@ -275,9 +268,8 @@ export class MainGameController extends Controller {
         );
 
         // Show inventory
-        this.view.getInventoryItems().forEach(
-            (value) => { value.getGroup().show(); }
-        );
+        this.view.getInventoryWood().getGroup().show();
+        this.view.getInventoryStone().getGroup().show();
 
         // Show buildings
         this.view.getBuildings().forEach(
