@@ -93,8 +93,10 @@ export class MainGameController extends Controller {
         const confirm = proposal.getConfirm();
         confirm.getGroup().addEventListener(
             "click", () => {
-                this.exitConstructionDialog();
-                this.openConstructionOverlay();
+                if (this.validateConstructionDialog()) {
+                    this.exitConstructionDialog();
+                    this.openConstructionOverlay();
+                }
             }
         );
     }
@@ -162,6 +164,12 @@ export class MainGameController extends Controller {
     clickProjectProposal(e: Konva.KonvaEventObject<MouseEvent>): void {
         const constructionDialog = this.view.getConstructionDialog();
         const proposal = constructionDialog.getProposal();
+
+        const confirm = proposal.getConfirm();
+        if (confirm.getGroup().children.includes(e.target)) {
+            return;
+        }
+
         const length = proposal.getLength();
         const width = proposal.getWidth();
 
@@ -186,6 +194,55 @@ export class MainGameController extends Controller {
         proposal.updatePerimeter();
 
         constructionDialog.hide();
+    }
+
+    validateConstructionDialog(): boolean {
+        const constructionDialog = this.view.getConstructionDialog();
+        const proposal = constructionDialog.getProposal();
+        const length = proposal.getLength();
+        const width = proposal.getWidth();
+        const area = proposal.getArea();
+        const perimeter = proposal.getPerimeter();
+
+        const wood = this.model.getWood().get();
+        const stone = this.model.getStone().get();
+
+        if (
+            (length.getValue() > 0 && width.getValue() > 0)
+            && (stone >= area.getValue() && wood >= perimeter.getValue())
+        ) {
+            this.subtractWood(perimeter.getValue());
+            this.updateWoodQuantity();
+
+            this.subtractStone(area.getValue());
+            this.updateStoneQuantity();
+
+            return true;
+        }
+
+        length.unfocus();
+        if (length.getValue() <= 0) {
+            length.flag();
+        }
+
+        width.unfocus();
+        if (width.getValue() <= 0) {
+            width.flag();
+        }
+
+        if (stone < area.getValue()) {
+            area.flag();
+        } else {
+            area.unfocus();
+        }
+
+        if (wood < perimeter.getValue()) {
+            perimeter.flag();
+        } else {
+            perimeter.unfocus();
+        }
+
+        return false;
     }
 
     openConstructionOverlay(): void {

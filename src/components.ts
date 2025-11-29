@@ -161,6 +161,8 @@ export class NumericInput extends Container {
         this.focused = false;
     }
 
+    flag(): void { this.container.stroke(Color.DarkRed); }
+
     getValue(): number { return this.value; }
 
     setValue(value: number) {
