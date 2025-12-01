@@ -31,6 +31,7 @@ export enum ScreenType {
     About = "ABOUT",
     Leaderboard = "LEADERBOARD",
     MainGame = "MAINGAME",
+    Rules = "RULES",
     Settings = "SETTINGS",
     StoneMinigame = "STONEMINIGAME",
     Title = "TITLE",

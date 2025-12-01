@@ -1,3 +1,4 @@
+import Konva from "konva";
 import { Assets } from "../../assets.ts";
 import { STAGE_HEIGHT, STAGE_WIDTH } from "../../constants.ts";
 import { View } from "../../types.ts";
