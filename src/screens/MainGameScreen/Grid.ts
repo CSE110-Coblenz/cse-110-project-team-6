@@ -14,9 +14,9 @@ export class Grid extends Container {
         this.container.stroke(Color.Black);
 
         this.grid = [];
-        for (let i = 0; i < 2 * height / CELL_HEIGHT - 1; ++i) {
+        for (let i = 0; i < this.nrows(); ++i) {
             const row: GridCell[] = [];
-            for (let j = 0; j < width / CELL_WIDTH - (i % 2); ++j) {
+            for (let j = 0; j < this.ncols() - (i % 2); ++j) {
                 const cell = new GridCell(
                     j * CELL_WIDTH + (i % 2) * CELL_WIDTH / 2,
                     i * CELL_HEIGHT / 2,
@@ -30,28 +30,11 @@ export class Grid extends Container {
         }
     }
 
+    nrows(): number { return 2 * this.group.height() / CELL_HEIGHT - 1; }
+
+    ncols(): number { return this.group.width() / CELL_WIDTH; }
+
     getCells(): GridCell[][] { return this.grid; }
-
-    getNeighbors(i: number, j: number): (GridCell | undefined)[] {
-        let cells: (GridCell | undefined)[];
-        if (i % 2 == 1) {
-            cells = [
-                this.grid[i]?.[j],
-                this.grid[i + 1]?.[j],
-                this.grid[i + 1]?.[j + 1],
-                this.grid[i + 2]?.[j]
-            ];
-        } else {
-            cells = [
-                this.grid[i]?.[j],
-                this.grid[i + 1]?.[j - 1],
-                this.grid[i + 1]?.[j],
-                this.grid[i + 2]?.[j]
-            ];
-        }
-
-        return cells;
-    }
 }
 
 class GridCell {
