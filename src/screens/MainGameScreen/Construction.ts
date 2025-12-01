@@ -87,7 +87,7 @@ class DetailsForm extends Container {
     setParameters(type: BuildingType, area: number, perimeter: number): void {
         this.building?.getGroup().remove();
         this.building = new Building(
-            type, `../../assets/buildings/orthographic/${type}.png`,
+            type, `../../assets/buildings/icons/${type}.png`,
             0.25 * this.group.width(), this.title.y() + this.title.height(),
             0.5 * this.group.width(), 0.5 * this.group.width()
         );

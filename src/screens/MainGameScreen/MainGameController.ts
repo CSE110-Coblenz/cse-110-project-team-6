@@ -60,7 +60,10 @@ export class MainGameController extends Controller {
             (value) => {
                 this.tooltip.bindListeners(value.getGroup(), value.getType());
                 value.getGroup().on(
-                    "click", () => { this.enterConstructionDialog(value.getType()); }
+                    "click", () => {
+                        this.model.getConstruction().setType(value.getType());
+                        this.enterConstructionDialog(value.getType());
+                    }
                 );
             }
         );
@@ -158,14 +161,16 @@ export class MainGameController extends Controller {
     }
 
     enterConstructionDialog(building: BuildingType): void {
-        this.model.generateTargets();
+        this.model.getConstruction().generateTargets();
 
         const constructionDialog = this.view.getConstructionDialog();
         constructionDialog.setBuildingType(building);
 
         const details = constructionDialog.getDetails();
         details.setParameters(
-            building, this.model.getTargetArea(), this.model.getTargetPerimeter()
+            building,
+            this.model.getConstruction().getTargetArea(),
+            this.model.getConstruction().getTargetPerimeter()
         );
 
         constructionDialog.show();
@@ -238,7 +243,7 @@ export class MainGameController extends Controller {
         // Calculated area must be greater than or equal to target area
         // Calculated area must be less than or equal to available stone
         if (
-            area.getValue() < this.model.getTargetArea()
+            area.getValue() < this.model.getConstruction().getTargetArea()
             || area.getValue() > this.model.getStone().get()
         ) {
             valid = false;
@@ -250,7 +255,7 @@ export class MainGameController extends Controller {
         // Calculated perimeter must be greater than or equal to target perimeter
         // Calculated perimeter must be less than or equal to available wood
         if (
-            perimeter.getValue() < this.model.getTargetPerimeter()
+            perimeter.getValue() < this.model.getConstruction().getTargetPerimeter()
             || perimeter.getValue() > this.model.getWood().get()
         ) {
             valid = false;
@@ -282,7 +287,10 @@ export class MainGameController extends Controller {
         // Hide buildings
         this.view.getBuildings().forEach(
             (value) => { value.getGroup().hide(); }
-        )
+        );
+        this.view.getGrid().getBuildings().forEach(
+            (value) => { value.hide(); }
+        );
 
         // Show overlay
         const grid = this.view.getGrid();
@@ -335,8 +343,19 @@ export class MainGameController extends Controller {
                 (value) => { cells[value.i]?.[value.j]?.unhighlight(); }
             );
 
-            // TODO: Add building to grid model
-            // TODO: Add building to grid veiw
+            // Add building to grid model
+            const type = this.model.getConstruction().getType();
+            if (type === undefined) {
+                return;
+            }
+
+            if (!this.model.getGrid().addBuilding(type, i, j)) {
+                return;
+            }
+
+            // Add building to grid veiw
+            this.view.getGrid().addBuilding(type, i, j);
+
             this.closeConstructionOverlay();
         }
     }
@@ -363,6 +382,9 @@ export class MainGameController extends Controller {
         // Show buildings
         this.view.getBuildings().forEach(
             (value) => { value.getGroup().show(); }
-        )
+        );
+        this.view.getGrid().getBuildings().forEach(
+            (value) => { value.show(); }
+        );
     }
 }

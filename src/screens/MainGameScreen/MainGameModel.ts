@@ -6,13 +6,7 @@ export class MainGameModel {
     private wood: InventoryItem;
     private stone: InventoryItem;
     private grid: Grid;
-
-    private targetLength: number = 0;
-    private targetWidth: number = 0;
-
-    static randomizeParameter(min: number = 1, max: number = 100): number {
-        return Math.ceil(Math.random() * (max - min) + min);
-    }
+    private construction: Construction;
 
     static logisticScore(
         d: number, min: number = 0, max: number = 100, k: number = 25, d0: number = 0.25
@@ -22,6 +16,7 @@ export class MainGameModel {
         this.wood = new InventoryItem(initialQuantity);
         this.stone = new InventoryItem(initialQuantity);
         this.grid = new Grid(gridRows, gridCols);
+        this.construction = new Construction();
     }
 
     getWood(): InventoryItem { return this.wood; }
@@ -30,28 +25,17 @@ export class MainGameModel {
 
     getGrid(): Grid { return this.grid; }
 
-    generateTargets(): void {
-        this.targetLength = MainGameModel.randomizeParameter();
-        this.targetWidth = MainGameModel.randomizeParameter();
-    }
-
-    getTargetLength(): number { return this.targetLength; }
-
-    getTargetWidth(): number { return this.targetWidth; }
-
-    getTargetArea(): number { return this.targetLength * this.targetWidth; }
-
-    getTargetPerimeter(): number { return 2 * (this.targetLength + this.targetWidth); }
+    getConstruction(): Construction { return this.construction; }
 
     getScore(): number { return this.score; }
 
     incrementScore(score: number) { this.score += score; }
 
     scoreInput(area: number, perimeter: number): number {
-        const targetArea = this.getTargetArea();
+        const targetArea = this.construction.getTargetArea();
         const scoreArea = MainGameModel.logisticScore((area - targetArea) / targetArea);
 
-        const targetPerimeter = this.getTargetPerimeter();
+        const targetPerimeter = this.construction.getTargetPerimeter();
         const scorePerimeter = MainGameModel.logisticScore(
             (perimeter - targetPerimeter) / targetPerimeter
         );
@@ -207,4 +191,31 @@ class Grid {
 
         return valid;
     }
+}
+
+class Construction {
+    private type?: BuildingType;
+    private targetLength: number = 0;
+    private targetWidth: number = 0;
+
+    static randomizeParameter(min: number = 1, max: number = 100): number {
+        return Math.ceil(Math.random() * (max - min) + min);
+    }
+
+    getType(): BuildingType | undefined { return this.type; }
+
+    setType(type: BuildingType) { this.type = type; }
+
+    generateTargets(): void {
+        this.targetLength = Construction.randomizeParameter();
+        this.targetWidth = Construction.randomizeParameter();
+    }
+
+    getTargetLength(): number { return this.targetLength; }
+
+    getTargetWidth(): number { return this.targetWidth; }
+
+    getTargetArea(): number { return this.targetLength * this.targetWidth; }
+
+    getTargetPerimeter(): number { return 2 * (this.targetLength + this.targetWidth); }
 }
