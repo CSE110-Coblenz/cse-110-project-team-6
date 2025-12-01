@@ -1,0 +1,11 @@
+Topic: Sprint planning
+Author: Varun Prajapati
+Attendees: Gwendal Cardenas Ortiz, Jacob Lee, Nathan Mitchell, Varun Prajapati, Kavya Shah, Qi Wu
+
+- Finalize minor issues to close sprint 1
+- Delegate tasks for sprint 2
+	- Implement controller functionality for respective screens
+	- Main Game: Jacob Lee, Qi Wu
+	- Stone Minigame: Nathan Mitchell, Kavya Shah
+	- Settings: Gwendal Cardenas Ortiz
+	- Assets: Varun Prajapati

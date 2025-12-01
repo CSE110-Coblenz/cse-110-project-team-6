@@ -1,0 +1,9 @@
+Topic: Project Architecture
+Author: Varun Prajapati
+Attendees: Gwendal Cardenas Ortiz, Jacob Lee, Nathan Mitchell, Varun Prajapati, Kavya Shaha, Qi Wu
+
+- Begin work on project architecture dynamic view
+- Begin work on project architecture static view
+- Transfer user stories from requirements document to backlog of GitHub project
+- Valuate quality attribute scenarios
+	- Consensus is to prioritize performance and usability

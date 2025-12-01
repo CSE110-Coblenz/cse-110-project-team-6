@@ -1,0 +1,18 @@
+Topic: Standup meeting
+Author: Jacob Lee
+Attendees: Gwendal Cardenas Ortiz, Jacob Lee, Nathan Mitchell, Varun Prajapati, Kavya Shah, Qi Wu
+
+- Gwendal Cardenas Ortiz
+	- Address review comments for PR 47
+- Jacob Lee
+	- Review and approve PR 47
+	- Implement controller for maingame screen
+- Nathan Mitchell
+	- Update leaderboard view and controller
+	- Continue implementing stone minigame
+- Varun Prajapati
+	- Create assets for menu bar and settings icons
+- Kavya Shah
+	- Address review comments for PR 44
+- Qi Wu
+	- Update implementation of about page controller
