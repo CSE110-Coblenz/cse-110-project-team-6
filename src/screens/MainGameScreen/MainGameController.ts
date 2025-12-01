@@ -285,11 +285,19 @@ export class MainGameController extends Controller {
         this.view.getInventoryStone().getGroup().hide();
 
         // Hide buildings
+        const cells = this.view.getGrid().getCells();
         this.view.getBuildings().forEach(
             (value) => { value.getGroup().hide(); }
         );
         this.view.getGrid().getBuildings().forEach(
             (value) => { value.hide(); }
+        );
+        this.model.getGrid().getBuildings().forEach(
+            (value) => {
+                value.slice.getEntries().forEach(
+                    (value) => { cells[value.i]?.[value.j]?.flag(); }
+                )
+            }
         );
 
         // Show overlay
@@ -315,13 +323,13 @@ export class MainGameController extends Controller {
 
     gridHover(i: number, j: number): void {
         const cells = this.view.getGrid().getCells();
-        const entries = this.model.getGrid().getSlice({ i: i, j: j });
-        if (this.model.getGrid().sliceValid(entries)) {
-            entries.getEntries().forEach(
+        const slice = this.model.getGrid().getSlice({ i: i, j: j });
+        if (this.model.getGrid().sliceValid(slice)) {
+            slice.getEntries().forEach(
                 (value) => { cells[value.i]?.[value.j]?.highlight(); }
             );
         } else {
-            entries.getEntries().forEach(
+            slice.getEntries().forEach(
                 (value) => { cells[value.i]?.[value.j]?.flag(); }
             );
         }
@@ -329,17 +337,24 @@ export class MainGameController extends Controller {
 
     gridUnhover(i: number, j: number): void {
         const cells = this.view.getGrid().getCells();
-        const entries = this.model.getGrid().getSlice({ i: i, j: j });
-        entries.getEntries().forEach(
+        const slice = this.model.getGrid().getSlice({ i: i, j: j });
+        slice.getEntries().forEach(
             (value) => { cells[value.i]?.[value.j]?.unhighlight(); }
+        );
+        this.model.getGrid().getBuildings().forEach(
+            (value) => {
+                value.slice.getEntries().forEach(
+                    (value) => { cells[value.i]?.[value.j]?.flag(); }
+                )
+            }
         );
     }
 
     gridClick(i: number, j: number): void {
         const cells = this.view.getGrid().getCells();
-        const entries = this.model.getGrid().getSlice({ i: i, j: j });
-        if (this.model.getGrid().sliceValid(entries)) {
-            entries.getEntries().forEach(
+        const slice = this.model.getGrid().getSlice({ i: i, j: j });
+        if (this.model.getGrid().sliceValid(slice)) {
+            slice.getEntries().forEach(
                 (value) => { cells[value.i]?.[value.j]?.unhighlight(); }
             );
 

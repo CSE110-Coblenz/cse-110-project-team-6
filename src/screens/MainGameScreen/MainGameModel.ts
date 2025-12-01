@@ -172,6 +172,8 @@ class Grid {
         return slice;
     }
 
+    getBuildings(): Building[] { return this.buildings; }
+
     addBuilding(type: BuildingType, i: number, j: number): boolean {
         const entry = { i: i, j: j };
         const slice = this.getSlice(entry);
