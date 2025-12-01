@@ -1,0 +1,12 @@
+Topic: Standup meeting
+Author: Jacob Lee
+Attendees: Jacob Lee, Varun Prajapati
+
+- Jacob Lee
+	- Create tooltip component to display text on hover
+	- Create containers in contrusction dialog for construction project details/proposal
+	- Review PR 43
+	- Review PR 44
+	- Review PR 65
+- Varun Prajapati
+	- Implement title screen button functionality

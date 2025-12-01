@@ -1,0 +1,7 @@
+Topic: Project Architecture
+Author: Varun Prajapati
+Attendees: Gwendal Cardenas Ortiz, Jacob Lee, Nathan Mitchell, Varun Prajapati, Kavya Shah, Qi Wu
+
+- Complete project architecture dynamic view
+- Complete project architecture static view
+- Complete valuation of quality attribute scenarios
