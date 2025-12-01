@@ -135,7 +135,7 @@ export class RulesView extends View {
       clip: { x: 0, y: 0, width: clipW, height: clipH },
     });
 
-    // Build items - using same relative path pattern as MainGameView
+    // Build items - using relative paths from root assets folder (same pattern as MainGameView)
     this.makeItem(0, ROW_H, ICON, GAP_X, clipW, "../../assets/inventory/wood.png", "Play the Wood mini-game to collect WOOD. Wood is required to construct many buildings.", viewport);
     this.makeItem(1, ROW_H, ICON, GAP_X, clipW, "../../assets/inventory/stone.png", "Play the Rock mini-game to collect STONE. Stone is used for sturdier structures and upgrades.", viewport);
     this.makeItem(2, ROW_H, ICON, GAP_X, clipW, "../../assets/buildings/library.png", "Construct buildings when you have enough resources. Solve area/perimeter word problems correctly to confirm your build.", viewport);
