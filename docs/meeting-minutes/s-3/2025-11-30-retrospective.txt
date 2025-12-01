@@ -1,0 +1,29 @@
+Topic: Sprint Retrospective
+Author: Jacob Lee
+Attendees: Gwendal Cardenas Ortiz, Jacob Lee, Nathan Mitchell, Varun Prajapati, Kavya Shah, Qi Wu
+
+- Summarize contributions made for sprint 3
+- Troubleshoot lingering issues encountered during sprint 3
+- Discuss finalization of final in-progress features, pending code reviews, open pull requests
+
+Gwendal Cardenas Ortiz
+
+Jacob Lee
+- Finish implementation of main game view
+- Implement main game controller
+- Implement main game model
+- Create tests for main game model logic
+
+Nathan Mitchell
+- Implement mini game views
+- Implement mini game controllers
+- Implement mini game models
+
+Varun Prajapati
+- Create assets
+- Update user interface
+
+Kavya Shah
+- Update rules screen
+
+Qi Wu
