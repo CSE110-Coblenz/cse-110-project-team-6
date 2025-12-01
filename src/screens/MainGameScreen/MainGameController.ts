@@ -21,7 +21,9 @@ export class MainGameController extends Controller {
         this.tooltip = new Tooltip(stage);
         this.view = new MainGameView(this.tooltip);
 
-        this.model = new MainGameModel(100);
+        this.model = new MainGameModel(
+            100, this.view.getGrid().nrows(), this.view.getGrid().ncols()
+        );
         this.updateWoodQuantity();
         this.updateStoneQuantity();
 
@@ -304,34 +306,37 @@ export class MainGameController extends Controller {
     }
 
     gridHover(i: number, j: number): void {
-        const grid = this.view.getGrid();
-        const cells = grid.getNeighbors(i, j);
-        if (cells.includes(undefined)) {
-            cells.forEach(
-                (cell) => { cell?.flag(); }
+        const cells = this.view.getGrid().getCells();
+        const entries = this.model.getGrid().getSlice({ i: i, j: j });
+        if (this.model.getGrid().sliceValid(entries)) {
+            entries.getEntries().forEach(
+                (value) => { cells[value.i]?.[value.j]?.highlight(); }
             );
         } else {
-            cells.forEach(
-                (cell) => { cell?.highlight(); }
+            entries.getEntries().forEach(
+                (value) => { cells[value.i]?.[value.j]?.flag(); }
             );
         }
     }
 
     gridUnhover(i: number, j: number): void {
-        const grid = this.view.getGrid();
-        grid.getNeighbors(i, j).forEach(
-            (cell) => { cell?.unhighlight(); }
+        const cells = this.view.getGrid().getCells();
+        const entries = this.model.getGrid().getSlice({ i: i, j: j });
+        entries.getEntries().forEach(
+            (value) => { cells[value.i]?.[value.j]?.unhighlight(); }
         );
     }
 
     gridClick(i: number, j: number): void {
-        const grid = this.view.getGrid();
-        const cells = grid.getNeighbors(i, j);
-        if (!cells.includes(undefined)) {
-            grid.getNeighbors(i, j).forEach(
-                (cell) => { cell?.unhighlight(); }
+        const cells = this.view.getGrid().getCells();
+        const entries = this.model.getGrid().getSlice({ i: i, j: j });
+        if (this.model.getGrid().sliceValid(entries)) {
+            entries.getEntries().forEach(
+                (value) => { cells[value.i]?.[value.j]?.unhighlight(); }
             );
 
+            // TODO: Add building to grid model
+            // TODO: Add building to grid veiw
             this.closeConstructionOverlay();
         }
     }
