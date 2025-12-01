@@ -3,10 +3,11 @@ import Konva from "konva";
 import { Container } from "../../components.ts";
 import { CELL_HEIGHT, CELL_WIDTH } from "../../constants.ts";
 import { Color } from "../../types.ts";
-import type { Point } from "../../types.ts";
+import type { BuildingType, Point } from "../../types.ts";
 
 export class Grid extends Container {
     private grid: GridCell[][];
+    private buildings: Konva.Image[] = [];
 
     constructor(x: number, y: number, width: number, height: number) {
         super(x, y, width, height);
@@ -35,6 +36,29 @@ export class Grid extends Container {
     ncols(): number { return this.group.width() / CELL_WIDTH; }
 
     getCells(): GridCell[][] { return this.grid; }
+
+    getBuildings(): Konva.Image[] { return this.buildings; }
+
+    addBuilding(type: BuildingType, i: number, j: number) {
+        const path = `../../assets/buildings/perspective/${type}.png`;
+        Konva.Image.fromURL(
+            path, (img) => {
+                const scale = 2 * CELL_WIDTH / img.width();
+                img.scaleX(scale);
+                img.scaleY(scale);
+                img.x(j * CELL_WIDTH - ((i + 1) % 2) * CELL_WIDTH / 2);
+                img.y(i * CELL_HEIGHT / 2 + 2 * CELL_HEIGHT - scale * img.height());
+
+                this.group.add(img);
+                this.buildings.push(img);
+                this.buildings.sort(
+                    (a: Konva.Image, b: Konva.Image) => (
+                        (a.y() + a.scale().y * a.height()) - (b.y() + b.scale().y * b.height())
+                    )
+                ).forEach((value) => { value.moveToTop(); });
+            }
+        );
+    }
 }
 
 class GridCell {
