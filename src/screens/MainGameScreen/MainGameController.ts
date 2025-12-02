@@ -1,34 +1,45 @@
+import Konva from "konva";
+
+import { MainGameModel } from "./MainGameModel.ts";
 import { MainGameView } from "./MainGameView.ts";
-import { Controller, InventoryItemType, MenuItemType, ScreenType } from "../../types.ts";
+import { Tooltip } from "../../components.ts";
+import { BuildingType, Controller, MenuItem, ScreenType } from "../../types.ts";
 import type { ScreenSwitch } from "../../types.ts";
 
 export class MainGameController extends Controller {
+    private tooltip: Tooltip;
+
     private view: MainGameView;
+    private model: MainGameModel;
 
     constructor(screenSwitch: ScreenSwitch) {
         super(screenSwitch);
 
-        this.view = new MainGameView();
+        const stage = this.screenSwitch.getStage();
+        const container = stage.container();
 
-        const menuItems = this.view.getMenuItems();
+        this.tooltip = new Tooltip(stage);
+        this.view = new MainGameView(this.tooltip);
+
+        this.model = new MainGameModel(
+            100, this.view.getGrid().nrows(), this.view.getGrid().ncols()
+        );
+        this.updateWoodQuantity();
+        this.updateStoneQuantity();
+
+        const menuItems = this.view.getMenuBar().getIcons();
         menuItems.forEach(
-            (value, index, array) => {
+            (value) => {
                 const group = value.getGroup();
                 switch (value.getItem()) {
-                    case MenuItemType.Information:
-                        group.addEventListener(
-                            "click", (e: Event) => { this.handleInformationClick(); }
-                        )
+                    case MenuItem.Information:
+                        group.on("click", () => { this.openInformation(); });
                         break;
-                    case MenuItemType.Settings:
-                        group.addEventListener(
-                            "click", (e: Event) => { this.handleSettingsClick(); }
-                        )
+                    case MenuItem.Settings:
+                        group.on("click", () => { this.openSettings(); });
                         break;
-                    case MenuItemType.Exit:
-                        group.addEventListener(
-                            "click", (e: Event) => { this.handleExitClick(); }
-                        );
+                    case MenuItem.Exit:
+                        group.on("click", () => { this.exitMainGame(); });
                         break;
                     default:
                         throw new TypeError(value.getItem());
@@ -36,24 +47,60 @@ export class MainGameController extends Controller {
             }
         );
 
-        const inventoryItems = this.view.getInventoryItems();
-        inventoryItems.forEach(
-            (value, index, array) => {
-                const iconPlus = value.getIconPlus();
-                const group = iconPlus.getGroup();
-                switch (value.getType()) {
-                    case InventoryItemType.Stone:
-                        group.addEventListener(
-                            "click", (e: Event) => { this.handleAddStoneClick(); }
-                        );
-                        break;
-                    case InventoryItemType.Wood:
-                        group.addEventListener(
-                            "click", (e: Event) => { this.handleAddWoodClick(); }
-                        );
-                        break;
-                    default:
-                        throw new TypeError(value.getType());
+        const inventoryWood = this.view.getInventoryWood();
+        this.tooltip.bindListeners(inventoryWood.getGroup(), inventoryWood.getType());
+        inventoryWood.getIconPlus().getGroup().on("click", () => { this.enterWoodMiniGame(); });
+
+        const inventoryStone = this.view.getInventoryStone();
+        this.tooltip.bindListeners(inventoryStone.getGroup(), inventoryStone.getType());
+        inventoryStone.getIconPlus().getGroup().on("click", () => { this.enterStoneMiniGame(); });
+
+        const buildingItems = this.view.getBuildings();
+        buildingItems.forEach(
+            (value) => {
+                this.tooltip.bindListeners(value.getGroup(), value.getType());
+                value.getGroup().on(
+                    "click", () => {
+                        this.model.getConstruction().setType(value.getType());
+                        this.enterConstructionDialog(value.getType());
+                    }
+                );
+            }
+        );
+
+        const constructionDialog = this.view.getConstructionDialog();
+        const proposal = constructionDialog.getProposal();
+        proposal.getGroup().on(
+            "click", (e: Konva.KonvaEventObject<MouseEvent>) => {
+                this.clickProjectProposal(e);
+            }
+        );
+
+        // Construction dialog length/width numeric inputs
+        const length = proposal.getLength();
+        const width = proposal.getWidth();
+        length.bindListeners(container);
+        width.bindListeners(container);
+        container.addEventListener(
+            "keydown", () => {
+                proposal.updateArea();
+                proposal.updatePerimeter();
+            }
+        );
+
+        // Consturction dialog cancel button
+        const cancel = proposal.getCancel();
+        cancel.getGroup().addEventListener(
+            "click", () => { this.exitConstructionDialog(); }
+        );
+
+        // Construction dialog confirm button
+        const confirm = proposal.getConfirm();
+        confirm.getGroup().addEventListener(
+            "click", () => {
+                if (this.validateConstructionDialog()) {
+                    this.exitConstructionDialog();
+                    this.openConstructionOverlay();
                 }
             }
         );
@@ -61,23 +108,298 @@ export class MainGameController extends Controller {
 
     getView(): MainGameView { return this.view; }
 
-    handleInformationClick(): void {
+    openInformation(): void {
         // TODO: Switch to information screen
     }
 
-    handleSettingsClick(): void {
+    openSettings(): void {
         this.screenSwitch.switchScreen({ type: ScreenType.Settings });
     }
 
-    handleExitClick(): void {
+    exitMainGame(): void {
         this.screenSwitch.switchScreen({ type: ScreenType.Title });
     }
 
-    handleAddWoodClick(): void {
-        this.screenSwitch.switchScreen({ type: ScreenType.WoodMinigame });
+    enterWoodMiniGame(): void {
+        // this.screenSwitch.switchScreen({ type: ScreenType.WoodMinigame });
+        this.addWood(50);
     }
 
-    handleAddStoneClick(): void {
-        this.screenSwitch.switchScreen({ type: ScreenType.StoneMinigame });
+    updateWoodQuantity(): void {
+        this.view.getInventoryWood().setQuantity(this.model.getWood().get());
+    }
+
+    addWood(quantity: number): void {
+        this.model.getWood().add(quantity);
+        this.updateWoodQuantity();
+    }
+
+    subtractWood(quantity: number): boolean {
+        const success = this.model.getWood().subtract(quantity);
+        this.updateWoodQuantity();
+        return success;
+    }
+
+    enterStoneMiniGame(): void {
+        // this.screenSwitch.switchScreen({ type: ScreenType.StoneMinigame });
+        this.addStone(50);
+    }
+
+    updateStoneQuantity(): void {
+        this.view.getInventoryStone().setQuantity(this.model.getStone().get());
+    }
+
+    addStone(quantity: number): void {
+        this.model.getStone().add(quantity);
+        this.updateStoneQuantity();
+    }
+
+    subtractStone(quantity: number): boolean {
+        const success = this.model.getStone().subtract(quantity);
+        this.updateStoneQuantity();
+        return success;
+    }
+
+    enterConstructionDialog(building: BuildingType): void {
+        this.model.getConstruction().generateTargets();
+
+        const constructionDialog = this.view.getConstructionDialog();
+        constructionDialog.setBuildingType(building);
+
+        const details = constructionDialog.getDetails();
+        details.setParameters(
+            building,
+            this.model.getConstruction().getTargetArea(),
+            this.model.getConstruction().getTargetPerimeter()
+        );
+
+        constructionDialog.show();
+    }
+
+    clickProjectProposal(e: Konva.KonvaEventObject<MouseEvent>): void {
+        const constructionDialog = this.view.getConstructionDialog();
+        const proposal = constructionDialog.getProposal();
+
+        const confirm = proposal.getConfirm();
+        if (confirm.getGroup().children.includes(e.target)) {
+            return;
+        }
+
+        const length = proposal.getLength();
+        const width = proposal.getWidth();
+
+        if (!length.getGroup().children.includes(e.target)) {
+            length.unfocus();
+        }
+        if (!width.getGroup().children.includes(e.target)) {
+            width.unfocus();
+        }
+    }
+
+    exitConstructionDialog(): void {
+        const constructionDialog = this.view.getConstructionDialog();
+        const proposal = constructionDialog.getProposal();
+        const length = proposal.getLength();
+        const width = proposal.getWidth();
+
+        length.clear();
+        width.clear();
+
+        proposal.updateArea();
+        proposal.updatePerimeter();
+
+        constructionDialog.hide();
+    }
+
+    validateConstructionDialog(): boolean {
+        const constructionDialog = this.view.getConstructionDialog();
+        const proposal = constructionDialog.getProposal();
+
+        const length = proposal.getLength();
+        const width = proposal.getWidth();
+        const area = proposal.getArea();
+        const perimeter = proposal.getPerimeter();
+
+        let valid: boolean = true;
+
+        // Inputted length must a nonzero positive integer
+        length.unfocus();
+        if (length.getValue() <= 0) {
+            valid = false;
+            length.flag();
+        } else {
+            length.unflag();
+        }
+
+        // Inputted width must be a nonzero positive integer
+        width.unfocus();
+        if (width.getValue() <= 0) {
+            valid = false;
+            width.flag();
+        } else {
+            width.unflag();
+        }
+
+        // Calculated area must be greater than or equal to target area
+        // Calculated area must be less than or equal to available stone
+        if (
+            area.getValue() < this.model.getConstruction().getTargetArea()
+            || area.getValue() > this.model.getStone().get()
+        ) {
+            valid = false;
+            area.flag();
+        } else {
+            area.unflag();
+        }
+
+        // Calculated perimeter must be greater than or equal to target perimeter
+        // Calculated perimeter must be less than or equal to available wood
+        if (
+            perimeter.getValue() < this.model.getConstruction().getTargetPerimeter()
+            || perimeter.getValue() > this.model.getWood().get()
+        ) {
+            valid = false;
+            perimeter.flag();
+        } else {
+            perimeter.unflag();
+        }
+
+        if (valid) {
+            this.subtractWood(perimeter.getValue());
+            this.updateWoodQuantity();
+
+            this.subtractStone(area.getValue());
+            this.updateStoneQuantity();
+
+            this.model.incrementScore(
+                this.model.scoreInput(area.getValue(), perimeter.getValue())
+            );
+        }
+
+        return valid;
+    }
+
+    openConstructionOverlay(): void {
+        // Hide inventory
+        this.view.getInventoryWood().getGroup().hide();
+        this.view.getInventoryStone().getGroup().hide();
+
+        // Hide buildings
+        const cells = this.view.getGrid().getCells();
+        this.view.getBuildings().forEach(
+            (value) => { value.getGroup().hide(); }
+        );
+        this.view.getGrid().getBuildings().forEach(
+            (value) => { value.hide(); }
+        );
+        this.model.getGrid().getBuildings().forEach(
+            (value) => {
+                value.slice.getEntries().forEach(
+                    (value) => { cells[value.i]?.[value.j]?.flag(); }
+                )
+            }
+        );
+
+        // Show overlay
+        const grid = this.view.getGrid();
+        Array(...grid.getCells()).forEach(
+            (row, i) => {
+                Array(...row).forEach(
+                    (cell, j) => {
+                        cell.getGroup().addEventListener(
+                            "mouseover", () => { this.gridHover(i, j); }
+                        );
+                        cell.getGroup().addEventListener(
+                            "mouseout", () => { this.gridUnhover(i, j); }
+                        );
+                        cell.getGroup().addEventListener(
+                            "click", () => { this.gridClick(i, j); }
+                        );
+                    }
+                );
+            }
+        );
+    }
+
+    gridHover(i: number, j: number): void {
+        const cells = this.view.getGrid().getCells();
+        const slice = this.model.getGrid().getSlice({ i: i, j: j });
+        if (this.model.getGrid().sliceValid(slice)) {
+            slice.getEntries().forEach(
+                (value) => { cells[value.i]?.[value.j]?.highlight(); }
+            );
+        } else {
+            slice.getEntries().forEach(
+                (value) => { cells[value.i]?.[value.j]?.flag(); }
+            );
+        }
+    }
+
+    gridUnhover(i: number, j: number): void {
+        const cells = this.view.getGrid().getCells();
+        const slice = this.model.getGrid().getSlice({ i: i, j: j });
+        slice.getEntries().forEach(
+            (value) => { cells[value.i]?.[value.j]?.unhighlight(); }
+        );
+        this.model.getGrid().getBuildings().forEach(
+            (value) => {
+                value.slice.getEntries().forEach(
+                    (value) => { cells[value.i]?.[value.j]?.flag(); }
+                )
+            }
+        );
+    }
+
+    gridClick(i: number, j: number): void {
+        const cells = this.view.getGrid().getCells();
+        const slice = this.model.getGrid().getSlice({ i: i, j: j });
+        if (this.model.getGrid().sliceValid(slice)) {
+            slice.getEntries().forEach(
+                (value) => { cells[value.i]?.[value.j]?.unhighlight(); }
+            );
+
+            // Add building to grid model
+            const type = this.model.getConstruction().getType();
+            if (type === undefined) {
+                return;
+            }
+
+            if (!this.model.getGrid().addBuilding(type, i, j)) {
+                return;
+            }
+
+            // Add building to grid veiw
+            this.view.getGrid().addBuilding(type, i, j);
+
+            this.closeConstructionOverlay();
+        }
+    }
+
+    closeConstructionOverlay(): void {
+        // Hide overlay
+        const grid = this.view.getGrid();
+        Array(...grid.getCells()).forEach(
+            (row) => {
+                Array(...row).forEach(
+                    (cell) => {
+                        cell.getGroup().removeEventListener("mouseover");
+                        cell.getGroup().removeEventListener("mouseout");
+                        cell.getGroup().removeEventListener("click");
+                    }
+                );
+            }
+        );
+
+        // Show inventory
+        this.view.getInventoryWood().getGroup().show();
+        this.view.getInventoryStone().getGroup().show();
+
+        // Show buildings
+        this.view.getBuildings().forEach(
+            (value) => { value.getGroup().show(); }
+        );
+        this.view.getGrid().getBuildings().forEach(
+            (value) => { value.show(); }
+        );
     }
 }

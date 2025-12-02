@@ -1,0 +1,11 @@
+Topic: Standup meeting
+Author: Jacob Lee
+Attendees: Jacob Lee, Varun Prajapati
+
+Jacob Lee
+- Open PR 71 to modify grid cell dimensions of main game screen
+- Populate construction dialog of main game view
+- Attach event listeners to components of construction dialog
+
+Varun Prajapati
+- Create assets for buildings to be placed on grid of main game screen
