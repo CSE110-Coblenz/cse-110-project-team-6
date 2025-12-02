@@ -1,0 +1,15 @@
+Topic: Sprint retrospective
+Author: Varun Prajapati
+Attendees: Gwendal Cardenas Ortiz, Nathan Mitchell, Varun Prajapati, Kavya Shah, Qi Wu
+
+- Adopt a more structure review system (e.g., assign 1-2 consisten reviewers per pull request)
+- Encourage smaller, more frequent pull requests for simplified reviewing and faster feedback
+- Introduce optional pair-programming session, especially for complex tasks
+	- Pair newer members with those whohave already implemented similar features
+- Assign slightly fewer tasks per team member to ensure more thorough completion and testing
+- Break down large tasks (e.g., minigame logic) into smaller subtasks with clear owners
+- Standardize common operations (e.g., screen-switching, button behavior, controllers)
+- Agree on naming conventions and file structures
+- Start integrating a lightweight testing checklist for each feature
+- Ensure each feature is tested by at least one person who did not contribute to it
+- Finalize a clearer workflow for adding assets to avoid mismatches

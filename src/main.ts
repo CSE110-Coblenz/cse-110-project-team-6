@@ -35,6 +35,8 @@ class Application implements ScreenSwitch {
                 height: STAGE_HEIGHT
             }
         );
+        this.stage.container().tabIndex = 1;
+        this.stage.container().focus();
 
         // Create layer to which to add screens
         this.layer = new Konva.Layer();
@@ -66,6 +68,8 @@ class Application implements ScreenSwitch {
         // Display initial screen
         this.switchScreen({ type: ScreenType.Title });
     }
+
+    getStage(): Konva.Stage { return this.stage; }
 
     switchScreen(screen: Screen): void {
         // Track screens

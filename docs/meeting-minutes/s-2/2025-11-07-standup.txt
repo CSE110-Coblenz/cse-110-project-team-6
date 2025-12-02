@@ -1,0 +1,16 @@
+Topic: Standup meeting
+Author: Varun Prajapati
+Attendees: Gwendal Cardenas Ortiz, Jacob Lee, Nathan Mitchell, Varun Prajapati, Kavya Shah, Qi Wu
+
+- Gwendal Cardenas Ortiz
+	- Implement functionality of settings page
+- Jacob Lee
+	- Reviewed and approved PR 48
+- Nathan Mitchell
+	- Enhance functionality of leaderboard screen
+	- Adjust layout of leaderboard screen
+	- Begin implementing wood minigame screen
+- Varun Prajapati
+	- Create assets for frontend components of application
+- Kavya Shah
+	- Enhance implementation of rules screen
