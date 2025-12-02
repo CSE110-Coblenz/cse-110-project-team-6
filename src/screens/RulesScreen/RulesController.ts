@@ -26,12 +26,17 @@ export class RulesController extends Controller {
 
       // Set up back button click handler
       this.view.backBtn.on("click", () => {
-        this.screenSwitch.switchScreen({ type: ScreenType.Title });
+        const previousScreen = this.screenSwitch.getPreviousScreen();
+        // If there's a previous screen, go back to it; otherwise go to Title
+        const targetScreen = previousScreen || { type: ScreenType.Title };
+        this.screenSwitch.switchScreen(targetScreen);
       });
 
       // Also handle tap events for mobile devices
       this.view.backBtn.on("tap", () => {
-        this.screenSwitch.switchScreen({ type: ScreenType.Title });
+        const previousScreen = this.screenSwitch.getPreviousScreen();
+        const targetScreen = previousScreen || { type: ScreenType.Title };
+        this.screenSwitch.switchScreen(targetScreen);
       });
     }
   }

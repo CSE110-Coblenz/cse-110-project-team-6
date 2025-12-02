@@ -62,6 +62,7 @@ export type Screen = { type: ScreenType };
 export interface ScreenSwitch {
     getStage(): Konva.Stage;
     switchScreen(screen: Screen): void;
+    getPreviousScreen(): Screen | null;
 }
 
 export abstract class View {

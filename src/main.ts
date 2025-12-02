@@ -6,7 +6,7 @@ import { ScreenType } from "./types.ts";
 import { AboutController } from "./screens/AboutScreen/AboutController.ts";
 import { LeaderboardController } from "./screens/LeaderboardScreen/LeaderboardController.ts";
 import { MainGameController } from "./screens/MainGameScreen/MainGameController.ts";
-import { RulesController } from "./screens/RulesScreen/Rules_Controller.ts";
+import { RulesController } from "./screens/RulesScreen/RulesController.ts";
 import { SettingsController } from "./screens/SettingsScreen/SettingsController.ts";
 import { StoneMinigameController } from "./screens/StoneMinigameScreen/StoneMinigameController.ts";
 import { TitleController } from "./screens/TitleScreen/TitleController.ts";
@@ -121,8 +121,6 @@ class Application implements ScreenSwitch {
                 throw new TypeError(screen.type);
         }
 
-        // Redraw layer after switching screens
-        this.layer.draw();
     }
 
     getPreviousScreen(): Screen | null {
