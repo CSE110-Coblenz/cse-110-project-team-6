@@ -6,6 +6,7 @@ import { ScreenType } from "./types.ts";
 import { AboutController } from "./screens/AboutScreen/AboutController.ts";
 import { LeaderboardController } from "./screens/LeaderboardScreen/LeaderboardController.ts";
 import { MainGameController } from "./screens/MainGameScreen/MainGameController.ts";
+import { RulesController } from "./screens/RulesScreen/RulesController.ts";
 import { SettingsController } from "./screens/SettingsScreen/SettingsController.ts";
 import { StoneMinigameController } from "./screens/StoneMinigameScreen/StoneMinigameController.ts";
 import { TitleController } from "./screens/TitleScreen/TitleController.ts";
@@ -15,10 +16,12 @@ import { loadAssets } from "./assets.ts";
 class Application implements ScreenSwitch {
     private stage: Konva.Stage;
     private layer: Konva.Layer;
+    private previousScreen: Screen | null = null;
 
     private aboutController: AboutController;
     private leaderboardController: LeaderboardController;
     private mainGameController: MainGameController;
+    private rulesController: RulesController;
     private settingsController: SettingsController;
     private stoneMinigameController: StoneMinigameController;
     private titleController: TitleController;
@@ -44,6 +47,7 @@ class Application implements ScreenSwitch {
         this.aboutController = new AboutController(this);
         this.leaderboardController = new LeaderboardController(this);
         this.mainGameController = new MainGameController(this);
+        this.rulesController = new RulesController(this);
         this.settingsController = new SettingsController(this);
         this.stoneMinigameController = new StoneMinigameController(this);
         this.titleController = new TitleController(this);
@@ -53,6 +57,7 @@ class Application implements ScreenSwitch {
         this.layer.add(this.aboutController.getView().getGroup());
         this.layer.add(this.leaderboardController.getView().getGroup());
         this.layer.add(this.mainGameController.getView().getGroup());
+        this.layer.add(this.rulesController.getView().getGroup());
         this.layer.add(this.settingsController.getView().getGroup());
         this.layer.add(this.stoneMinigameController.getView().getGroup());
         this.layer.add(this.titleController.getView().getGroup());
@@ -70,10 +75,17 @@ class Application implements ScreenSwitch {
     getStage(): Konva.Stage { return this.stage; }
 
     switchScreen(screen: Screen): void {
+        // Track previous screen before switching
+        const currentScreen = this.getCurrentScreen();
+        if (currentScreen && currentScreen.type !== screen.type) {
+            this.previousScreen = currentScreen;
+        }
+
         // Hide all screens
         this.aboutController.hide();
         this.leaderboardController.hide();
         this.mainGameController.hide();
+        this.rulesController.hide();
         this.settingsController.hide();
         this.stoneMinigameController.hide();
         this.titleController.hide();
@@ -90,6 +102,9 @@ class Application implements ScreenSwitch {
             case ScreenType.MainGame:
                 this.mainGameController.show();
                 break;
+            case ScreenType.Rules:
+                this.rulesController.show();
+                break;
             case ScreenType.Settings:
                 this.settingsController.show();
                 break;
@@ -105,6 +120,39 @@ class Application implements ScreenSwitch {
             default:
                 throw new TypeError(screen.type);
         }
+
+    }
+
+    getPreviousScreen(): Screen | null {
+        return this.previousScreen;
+    }
+
+    private getCurrentScreen(): Screen | null {
+        if (this.aboutController.getView().getGroup().visible()) {
+            return { type: ScreenType.About };
+        }
+        if (this.leaderboardController.getView().getGroup().visible()) {
+            return { type: ScreenType.Leaderboard };
+        }
+        if (this.mainGameController.getView().getGroup().visible()) {
+            return { type: ScreenType.MainGame };
+        }
+        if (this.rulesController.getView().getGroup().visible()) {
+            return { type: ScreenType.Rules };
+        }
+        if (this.settingsController.getView().getGroup().visible()) {
+            return { type: ScreenType.Settings };
+        }
+        if (this.stoneMinigameController.getView().getGroup().visible()) {
+            return { type: ScreenType.StoneMinigame };
+        }
+        if (this.titleController.getView().getGroup().visible()) {
+            return { type: ScreenType.Title };
+        }
+        if (this.woodMinigameController.getView().getGroup().visible()) {
+            return { type: ScreenType.WoodMinigame };
+        }
+        return null;
     }
 }
 

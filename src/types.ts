@@ -28,6 +28,7 @@ export enum ScreenType {
     About = "ABOUT",
     Leaderboard = "LEADERBOARD",
     MainGame = "MAINGAME",
+    Rules = "RULES",
     Settings = "SETTINGS",
     StoneMinigame = "STONEMINIGAME",
     Title = "TITLE",
@@ -61,6 +62,7 @@ export type Screen = { type: ScreenType };
 export interface ScreenSwitch {
     getStage(): Konva.Stage;
     switchScreen(screen: Screen): void;
+    getPreviousScreen(): Screen | null;
 }
 
 export abstract class View {
