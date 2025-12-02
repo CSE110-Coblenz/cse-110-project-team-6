@@ -7,14 +7,16 @@ import { STAGE_WIDTH, STAGE_HEIGHT} from "../../constants.ts";
  */
 
 export class TitleView extends View {
-	private backgroundImage: Konva.Image | Konva.Rect;
-	private titleImage: Konva.Image | Konva.Text;
-	private startButton: Konva.Image | Konva.Rect;
-	private settingsButton: Konva.Image | Konva.Rect;
-	private highScoresButton: Konva.Image | Konva.Rect;
-	private aboutButton: Konva.Image | Konva.Rect;
+	private backgroundImage!: Konva.Image | Konva.Rect;
+	private titleImage!: Konva.Image | Konva.Text;
+	private startButton!: Konva.Image | Konva.Rect;
+	private settingsButton!: Konva.Image | Konva.Rect;
+	private highScoresButton!: Konva.Image | Konva.Rect;
+	private aboutButton!: Konva.Image | Konva.Rect;
 
 	private hoverSound: HTMLAudioElement;
+
+	private onAboutButtonReady?: (button: Konva.Image | Konva.Rect) => void;
 
 	constructor() {
         super();
@@ -149,7 +151,21 @@ export class TitleView extends View {
 
 			this.aboutButton = image;
 			group.add(this.aboutButton);
+			if (this.onAboutButtonReady) {
+				this.onAboutButtonReady(image);
+			}
 		});
+	}
+
+	setOnAboutButtonReady(callback: (button: Konva.Image | Konva.Rect) => void): void {
+		this.onAboutButtonReady = callback;
+		if (this.aboutButton) {
+			callback(this.aboutButton);
+		}
+	}
+
+	getAboutButton(): Konva.Image | Konva.Rect {
+		return this.aboutButton;
 	}
 
 }
