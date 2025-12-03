@@ -113,7 +113,7 @@ class Application implements ScreenSwitch {
         }
     }
 
-    getPreviousScreen(): ScreenType | null {
+    getPreviousScreen(): ScreenType {
         if (this.previousScreen == null) {
             return ScreenType.Title;
         }
