@@ -15,6 +15,8 @@ import { loadAssets } from "./assets.ts";
 class Application implements ScreenSwitch {
     private stage: Konva.Stage;
     private layer: Konva.Layer;
+    private previousScreen: ScreenType | null = null;
+    private currentScreen: ScreenType | null = null;
 
     private aboutController: AboutController;
     private leaderboardController: LeaderboardController;
@@ -64,12 +66,16 @@ class Application implements ScreenSwitch {
         this.layer.draw();
 
         // Display initial screen
-        this.titleController.show();
+        this.switchScreen({ type: ScreenType.Title });
     }
 
     getStage(): Konva.Stage { return this.stage; }
 
     switchScreen(screen: Screen): void {
+        // Track screens
+        this.previousScreen = this.currentScreen;
+        this.currentScreen = screen.type;
+        
         // Hide all screens
         this.aboutController.hide();
         this.leaderboardController.hide();
@@ -105,6 +111,13 @@ class Application implements ScreenSwitch {
             default:
                 throw new TypeError(screen.type);
         }
+    }
+
+    getPreviousScreen(): ScreenType {
+        if (this.previousScreen == null) {
+            return ScreenType.Title;
+        }
+        return this.previousScreen;
     }
 }
 
