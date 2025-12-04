@@ -1,4 +1,5 @@
 import Konva from "konva";
+import { Assets } from "../../assets.ts";
 import { View } from "../../types.ts";
 import { STAGE_WIDTH, STAGE_HEIGHT} from "../../constants.ts";
 
@@ -14,142 +15,70 @@ export class TitleView extends View {
 	private highScoresButton: Konva.Image | Konva.Rect;
 	private aboutButton: Konva.Image | Konva.Rect;
 
-	private hoverSound: HTMLAudioElement;
-
 	constructor() {
         super();
         const group = this.getGroup();
-		this.hoverSound = new Audio('/hover.mp3');
 
-		// Background 
-		Konva.Image.fromURL("/titleBackground.png", (image) => {
-			image.x(0);
-			image.y(0);
-			image.width(STAGE_WIDTH);
-			image.height(STAGE_HEIGHT);
-			this.backgroundImage = image;	
-            group.add(this.backgroundImage);
+		// BACKGROUND
+		const bgImage = Assets["assets/title/titleBackground.png"];
+		this.backgroundImage = new Konva.Image({
+		image: bgImage,
+		x: 0,
+		y: 0,
+		width: STAGE_WIDTH,
+		height: STAGE_HEIGHT
 		});
-        
-   
+		group.add(this.backgroundImage);
 
-		// Title text
-		Konva.Image.fromURL("/titleText.png", (image) => {
-			image.x((STAGE_WIDTH * 0.05));
-			image.y(STAGE_HEIGHT * 0.05);
-			image.scale({ x: 0.8, y: 0.8 });
-			this.titleImage = image;
-			group.add(this.titleImage);
+		// TITLE TEXT
+		const titleImg = Assets["assets/title/titleText.png"];
+		this.titleImage = new Konva.Image({
+		image: titleImg,
+		x: STAGE_WIDTH * 0.05,
+		y: STAGE_HEIGHT * 0.05,
+		scale: { x: 0.8, y: 0.8 }
 		});
+		group.add(this.titleImage);
 
-		//Buttons
-		Konva.Image.fromURL("/startGame.png", (image) => {
-			image.x((STAGE_WIDTH * 0.3) - 256 - STAGE_WIDTH * 0.005);
-			image.y(STAGE_HEIGHT * 0.275);
-			image.scale({ x: 0.4, y: 0.4});
-
-
-			image.on('mouseover', () => {
-				document.body.style.cursor = 'pointer';
-				image.x((STAGE_WIDTH * 0.3) - 264 - STAGE_WIDTH * 0.005);
-				image.y((STAGE_HEIGHT * 0.275) - 2.1);
-				image.scale({ x: 0.425, y: 0.425});
-
-				this.hoverSound.currentTime = 0; 
-				this.hoverSound.play();
-
-			});
-			image.on('mouseout', () => {
-				document.body.style.cursor = 'default';
-				image.x((STAGE_WIDTH * 0.3) - 256 - STAGE_WIDTH * 0.005);
-				image.y(STAGE_HEIGHT * 0.275);
-				image.scale({ x: 0.4, y: 0.4});
-			});
-
-
-
-			this.startButton = image;
-			group.add(this.startButton);
+		// START BUTTON
+		const startImg = Assets["assets/title/startGame.png"];
+		this.startButton = new Konva.Image({
+		image: startImg,
+		x: STAGE_WIDTH * 0.3 - startImg.width * 0.4 - STAGE_WIDTH * 0.005,
+		y: STAGE_HEIGHT * 0.275,
+		scale: { x: 0.4, y: 0.4 }
 		});
+		group.add(this.startButton);
 
-
-		Konva.Image.fromURL("/settings.png", (image) => {
-			image.x((STAGE_WIDTH * 0.3 + STAGE_WIDTH * 0.005));
-			image.y(STAGE_HEIGHT * 0.275);
-			image.scale({ x: 0.4, y: 0.4});
-
-			image.on('mouseover', () => {
-				document.body.style.cursor = 'pointer';
-				image.x((STAGE_WIDTH * 0.3) - 8 + STAGE_WIDTH * 0.005);
-				image.y((STAGE_HEIGHT * 0.275) - 2.1);
-				image.scale({ x: 0.425, y: 0.425});
-
-				this.hoverSound.currentTime = 0; 
-				this.hoverSound.play();
-			});
-			image.on('mouseout', () => {
-				document.body.style.cursor = 'default';
-				image.x((STAGE_WIDTH * 0.3) + STAGE_WIDTH * 0.005);
-				image.y(STAGE_HEIGHT * 0.275);
-				image.scale({ x: 0.4, y: 0.4});
-			});
-
-
-			this.settingsButton = image;
-			group.add(this.settingsButton);
+		// SETTINGS BUTTON
+		const settingsImg = Assets["assets/title/settings.png"];
+		this.settingsButton = new Konva.Image({
+		image: settingsImg,
+		x: STAGE_WIDTH * 0.3 + STAGE_WIDTH * 0.005,
+		y: STAGE_HEIGHT * 0.275,
+		scale: { x: 0.4, y: 0.4 }
 		});
+		group.add(this.settingsButton);
 
-
-		Konva.Image.fromURL("/highScores.png", (image) => {
-			image.x((STAGE_WIDTH * 0.3) - 256 - STAGE_WIDTH * 0.005);
-			image.y(STAGE_HEIGHT * 0.385);
-			image.scale({ x: 0.4, y: 0.4});
-
-			image.on('mouseover', () => {
-				document.body.style.cursor = 'pointer';
-				image.x((STAGE_WIDTH * 0.3) - 264 - STAGE_WIDTH * 0.005);
-				image.y((STAGE_HEIGHT * 0.385) - 2.1);
-				image.scale({ x: 0.425, y: 0.425});
-
-				this.hoverSound.currentTime = 0; 
-				this.hoverSound.play();
-			});
-			image.on('mouseout', () => {
-				document.body.style.cursor = 'default';
-				image.x((STAGE_WIDTH * 0.3) - 256 - STAGE_WIDTH * 0.005);
-				image.y(STAGE_HEIGHT * 0.385);
-				image.scale({ x: 0.4, y: 0.4});
-			});
-
-			this.highScoresButton = image;
-			group.add(this.highScoresButton);
+		// HIGH SCORES BUTTON
+		const scoresImg = Assets["assets/title/highScores.png"];
+		this.highScoresButton = new Konva.Image({
+		image: scoresImg,
+		x: STAGE_WIDTH * 0.3 - scoresImg.width * 0.4 - STAGE_WIDTH * 0.005,
+		y: STAGE_HEIGHT * 0.385,
+		scale: { x: 0.4, y: 0.4 }
 		});
+		group.add(this.highScoresButton);
 
-
-		Konva.Image.fromURL("/about.png", (image) => {
-			image.x((STAGE_WIDTH * 0.3 + STAGE_WIDTH * 0.005));
-			image.y(STAGE_HEIGHT * 0.385);
-			image.scale({ x: 0.4, y: 0.4});
-
-			image.on('mouseover', () => {
-				document.body.style.cursor = 'pointer';
-				image.x((STAGE_WIDTH * 0.3) - 8 + STAGE_WIDTH * 0.005);
-				image.y((STAGE_HEIGHT * 0.385) - 2.1);
-				image.scale({ x: 0.425, y: 0.425});
-
-				this.hoverSound.currentTime = 0; 
-				this.hoverSound.play();
-			});
-			image.on('mouseout', () => {
-				document.body.style.cursor = 'default';
-				image.x((STAGE_WIDTH * 0.3) + STAGE_WIDTH * 0.005);
-				image.y(STAGE_HEIGHT * 0.385);
-				image.scale({ x: 0.4, y: 0.4});
-			});
-
-			this.aboutButton = image;
-			group.add(this.aboutButton);
+		// ABOUT BUTTON
+		const aboutImg = Assets["assets/title/about.png"];
+		this.aboutButton = new Konva.Image({
+		image: aboutImg,
+		x: STAGE_WIDTH * 0.3 + STAGE_WIDTH * 0.005,
+		y: STAGE_HEIGHT * 0.385,
+		scale: { x: 0.4, y: 0.4 }
 		});
+		group.add(this.aboutButton);
 	}
 
 }
