@@ -1,0 +1,9 @@
+Topic: Standup meeting
+Author: Jacob Lee
+Attendees: Jacob Lee
+
+Jacob Lee
+- Attach event listeners to buttons of construction dialog
+- Create numeric inputs for construction dialog
+- Create construction overlay
+- Open PR 73 to implement main game controller
