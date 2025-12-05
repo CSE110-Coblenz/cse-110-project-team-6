@@ -30,7 +30,7 @@ class Application implements ScreenSwitch {
             {
                 container,
                 width: STAGE_WIDTH,
-                height: STAGE_HEIGHT
+                height: STAGE_HEIGHT,
             }
         );
         this.stage.container().tabIndex = 1;
@@ -108,9 +108,30 @@ class Application implements ScreenSwitch {
     }
 }
 
+
 async function main(): Promise<void> {
     await loadAssets([
-        "/settings.png",
+    // Stone Tiers
+      "/assets/icons/Tier1Rock.png",
+      "/assets/icons/Tier2Rock.png",
+      "/assets/icons/Tier3Rock.png",
+      // Stone Minigame Tools
+      "/assets/inventory/pickaxe.png",
+      "/assets/inventory/drill.png",
+      "/assets/inventory/dynamite.png",
+      // Wood Tiers
+      "/assets/icons/tier1Tree.png",
+      "/assets/icons/tier2Tree.png",
+      "/assets/icons/tier3Tree.png",
+      // Wood Minigame Tools
+      "/assets/inventory/saw.png",
+      "/assets/inventory/axe.png",
+      "/assets/inventory/chainsaw1.png",
+      // Resource Collection Counters
+      "/assets/inventory/stone.png",
+      "/assets/inventory/wood.png",
+      // Other
+      "/settings.png",
     ]);
 
     const application = new Application("container");
